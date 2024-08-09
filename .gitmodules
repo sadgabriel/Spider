@@ -1,0 +1,3 @@
+[submodule "src/pypower"]
+	path = src/pypower
+	url = git@github.com:sadgabriel/PyPower
