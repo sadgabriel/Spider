@@ -1,52 +1,41 @@
-using Unity.VisualScripting;
+using UnityEditor.Rendering.Analytics;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : UnitController
 {
-    public Node currentNode { get; private set; }
-    private float yOffset;
-
-    public void SetStartNode(Node startNode, float yOffset)
-    {
-        this.yOffset = yOffset;
-        currentNode = startNode;
-        transform.position = startNode.transform.position + Vector3.up * yOffset;  
-    }
-
+    [SerializeField] private int life;
+    
     private void Update()
     {
+        if (!GameManager.Instance.IsPlayerTurn()) return;
+
         if (Input.GetMouseButtonDown(0))
         {
             TryMoveToClickedNode();
         }
     }
 
-    private void TryMoveToClickedNode()
+    private bool TryMoveToClickedNode()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             Node targetNode = hit.collider.GetComponent<Node>();
-            if (targetNode != null && CanMoveTo(targetNode))
+            if (TryMoveTo(targetNode))
             {
-                MoveTo(targetNode);
+                GameManager.Instance.EndPlayerTurn();
+                return true;
             }
         }
-    }
-
-    public void MoveTo(Node target)
-    {
-        currentNode = target;
-        transform.position = target.transform.position + Vector3.up * yOffset;
-    }
-
-    private bool CanMoveTo(Node targetNode)
-    {
-        if (targetNode != null)
-        {
-            return currentNode.neighbors.Contains(targetNode);
-        }
         return false;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        life -= damage;
+        if (life <= 0)
+        {
+            GameManager.Instance.GameOver();
+        }
     }
 }
