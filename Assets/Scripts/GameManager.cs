@@ -1,6 +1,6 @@
-using NUnit.Framework;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum TurnState
@@ -16,17 +16,21 @@ public class GameManager : MonoBehaviour
     [SerializeField] private MapManager mapManager;
     [SerializeField] private PlayerController playerPrefab;
     [SerializeField] private EnemyController enemyPrefab;
+    [SerializeField] private int waveInterval = 5;
 
     private PlayerController player;
     private List<EnemyController> enemies = new();
 
     private TurnState currentTurn;
+    private int turnCount = 0;
+    private int waveNumber = 1;
 
     private void Awake()
     {
         Instance = this;
     }
-    void Start()
+
+    private void Start()
     {
         InitializeGame();
     }
@@ -34,10 +38,8 @@ public class GameManager : MonoBehaviour
     private void InitializeGame()
     {
         mapManager.GenerateMap();
-        
         InitializePlayer();
         SpawnInitialEnemies();
-
         currentTurn = TurnState.PlayerTurn;
     }
 
@@ -47,16 +49,42 @@ public class GameManager : MonoBehaviour
         player = Instantiate(playerPrefab);
         player.SetStartNode(startNode, mapManager.GetPlayerYOffset());
     }
+
     private void SpawnInitialEnemies()
     {
-        List<Node> nodes = mapManager.GetNodes();
-        foreach (Node node in nodes)
+        foreach (var node in mapManager.GetNodes())
         {
-            if (node != player.currentNode && node.neighbors.Count > 0 && Random.value < 0.05f)
+            if (node != player.CurrentNode && node.Neighbors.Count > 0 && Random.value < 0.05f)
             {
                 SpawnEnemy(node);
             }
         }
+    }
+
+    private void SpawnWave(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            SpawnEnemyAtRandomSpawner();
+        }
+    }
+
+    private int GetEnemyCountForWave(int wave)
+    {
+        return 2 + wave;
+    }
+
+    private void SpawnEnemyAtRandomSpawner()
+    {
+        var availableSpawners = MapManager.Instance
+            .GetSpawnerNodes()
+            .Where(node => !node.IsOccupied)
+            .ToList();
+
+        if (availableSpawners.Count == 0) return;
+
+        Node spawnNode = availableSpawners[Random.Range(0, availableSpawners.Count)];
+        SpawnEnemy(spawnNode);
     }
 
     private void SpawnEnemy(Node spawnNode)
@@ -67,11 +95,6 @@ public class GameManager : MonoBehaviour
         enemies.Add(enemy);
     }
 
-    public void GameOver()
-    {
-        Debug.Log("Game Over");
-    }
-
     public bool IsPlayerTurn()
     {
         return currentTurn == TurnState.PlayerTurn;
@@ -79,9 +102,14 @@ public class GameManager : MonoBehaviour
 
     public void EndPlayerTurn()
     {
-        if (currentTurn != TurnState.PlayerTurn)
+        if (currentTurn != TurnState.PlayerTurn) return;
+
+        turnCount++;
+
+        if (turnCount % waveInterval == 0)
         {
-            return;
+            SpawnWave(GetEnemyCountForWave(waveNumber));
+            waveNumber++;
         }
 
         currentTurn = TurnState.EnemyTurn;
@@ -92,19 +120,25 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("적 턴 시작");
 
-        List<EnemyController> enemiesCopy = new(enemies);
+        var activeEnemies = new List<EnemyController>(enemies);
 
-        foreach (EnemyController enemy in enemiesCopy)
+        foreach (var enemy in activeEnemies)
         {
             if (enemy != null)
-            enemy.Act();
-            yield return new WaitForSeconds(0.25f);
+            {
+                enemy.Act();
+                yield return new WaitForSeconds(0.05f);
+            }
         }
 
-        enemies.RemoveAll(enemy => enemy == null);
+        enemies.RemoveAll(e => e == null);
 
         Debug.Log("적 턴 종료");
-
         currentTurn = TurnState.PlayerTurn;
+    }
+
+    public void GameOver()
+    {
+        Debug.Log("Game Over");
     }
 }

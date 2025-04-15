@@ -1,19 +1,33 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
+
+public enum NodeSize
+{
+    Small,
+    Large
+}
 
 public class Node : MonoBehaviour
 {
-    public List<Node> neighbors = new();
+    public bool isSpawner;
 
-    public UnitController occupier { get; private set; }
+    public NodeSize size;
 
-    public bool IsOccupied => occupier != null;
+    public bool IsLarge => size == NodeSize.Large;
+    public bool IsSmall => size == NodeSize.Small;
+
+    public List<Node> Neighbors { get; private set; } = new();
+
+    public UnitController Occupier { get; private set; }
+    public bool IsOccupied => Occupier != null;
+
+    
 
     public bool SetOccupier(UnitController unit)
     {
         if (!IsOccupied)
         {
-            occupier = unit;
+            Occupier = unit;
             return true;
         }
 
@@ -22,24 +36,24 @@ public class Node : MonoBehaviour
 
     public void ClearOccupier()
     {
-        occupier = null;
+        Occupier = null;
     }
-    
+
     public void ConnectTo(Node other)
     {
-        if (!neighbors.Contains(other))
+        if (!Neighbors.Contains(other))
         {
-            neighbors.Add(other);
-            other.neighbors.Add(this);
+            Neighbors.Add(other);
+            other.Neighbors.Add(this);
         }
     }
 
     public void DisconnectFrom(Node other)
     {
-        if (neighbors.Contains(other))
+        if (Neighbors.Contains(other))
         {
-            neighbors.Remove(other);
-            other.neighbors.Remove(this);
+            Neighbors.Remove(other);
+            other.Neighbors.Remove(this);
         }
     }
 }

@@ -8,13 +8,13 @@ public class GridMapManager : MapManager
     [SerializeField] private GameObject nodePrefab;
     [SerializeField] private float playerYOffset;
 
-     private Node[,] grid;
+    private Node[,] grid;
 
     public override void GenerateMap()
     {
         grid = new Node[width, height];
-        
-        for (int x  = 0; x < width; x++)
+
+        for (int x = 0; x < width; x++)
         {
             for (int z = 0; z < height; z++)
             {
@@ -23,8 +23,15 @@ public class GridMapManager : MapManager
                 nodeGO.name = $"Node ({x}, {z})";
 
                 Node node = nodeGO.GetComponent<Node>();
+
+                if (x == 0 || x == width - 1 || z == 0 || z == height - 1)
+                {
+                    node.isSpawner = true;
+                    SpawnerNodes.Add(node);
+                }
+
                 grid[x, z] = node;
-                nodes.Add(node);
+                Nodes.Add(node);
             }
         }
 
@@ -35,16 +42,16 @@ public class GridMapManager : MapManager
                 Node node = grid[x, z];
 
                 TryConnect(node, x + 1, z);
-                TryConnect(node, x - 1, z); 
-                TryConnect(node, x, z + 1); 
-                TryConnect(node, x, z - 1); 
+                TryConnect(node, x - 1, z);
+                TryConnect(node, x, z + 1);
+                TryConnect(node, x, z - 1);
             }
         }
     }
 
     public override Node GetStartNode()
     {
-        return nodes[0];
+        return Nodes.Count > 0 ? Nodes[0] : null;
     }
 
     public override float GetPlayerYOffset()
