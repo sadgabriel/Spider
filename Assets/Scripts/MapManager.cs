@@ -6,41 +6,9 @@ public abstract class MapManager : MonoBehaviour
     public static MapManager Instance { get; private set; }
 
     protected List<Node> Nodes { get; private set; } = new();
-    protected List<Node> SpawnerNodes { get; private set; } = new();
-
     private void Awake()
     {
         Instance = this;
-    }
-
-    public void RegenerateMap()
-    {
-        ResetMap();
-        GenerateMap();
-    }
-
-    protected virtual void ResetMap()
-    {
-        foreach (Node node in Nodes)
-        {
-            if (node != null)
-            {
-                Destroy(node.gameObject);
-            }
-        }
-
-        Nodes.Clear();
-        SpawnerNodes.Clear();
-    }
-
-    public virtual List<Node> GetNodes()
-    {
-        return Nodes;
-    }
-
-    public virtual List<Node> GetSpawnerNodes()
-    {
-        return SpawnerNodes;
     }
 
     public virtual List<Node> FindRoute(Node from, Node to)
@@ -89,6 +57,4 @@ public abstract class MapManager : MonoBehaviour
     }
 
     public abstract void GenerateMap();
-    public abstract Node GetStartNode();
-    public abstract float GetPlayerYOffset();
 }
