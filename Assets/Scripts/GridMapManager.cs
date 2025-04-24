@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GridMapManager : MapManager
@@ -5,8 +6,7 @@ public class GridMapManager : MapManager
     [SerializeField] private int width;
     [SerializeField] private int height;
     [SerializeField] private float spacing;
-    [SerializeField] private GameObject pillarPrefab;
-    [SerializeField] private GameObject bridgePrefab;
+    
     [SerializeField] private float playerYOffset;
 
     private Pillar[,] grid;
@@ -25,7 +25,7 @@ public class GridMapManager : MapManager
             for (int z = 0; z < height; z++)
             {
                 Vector3 position = new Vector3(x * spacing, 0, z * spacing);
-                GameObject pillarGO = Instantiate(pillarPrefab, position, pillarPrefab.transform.rotation);
+                GameObject pillarGO = Instantiate(SmallPillarPrefab, position, SmallPillarPrefab.transform.rotation);
                 pillarGO.name = $"Pillar ({x}, {z})";
 
                 Pillar pillar = pillarGO.GetComponent<Pillar>();
@@ -54,11 +54,7 @@ public class GridMapManager : MapManager
         Pillar neighbor = grid[x, z];
         if (neighbor != null)
         {
-            Bridge bridge = pillar.CreateBridgeTo(neighbor, bridgePrefab);
-            if (bridge != null)
-            {
-                Nodes.Add(bridge);
-            }
+            ConnectPillars(pillar, neighbor);
         }
     }
 }

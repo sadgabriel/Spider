@@ -9,8 +9,6 @@ class Node {
 class Pillar {
     -PillarSize size
     +PillarSize Size
-    +List<Pillar> AdjacentPillars
-    +Bridge CreateBridgeTo(Pillar other)
 }
 
 class Bridge{
@@ -21,6 +19,7 @@ class MapManager {
     +static MapManager Instance
     -List<Node> Nodes
     +virtual List<Node> FindRoute(Node from, Node to)
+    +void ConnectPillars(Pillar pillar1, Pillar pillar2)
     +abstract void GenerateMap()
 }
 

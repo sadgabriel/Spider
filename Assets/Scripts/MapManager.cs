@@ -5,13 +5,17 @@ public abstract class MapManager : MonoBehaviour
 {
     public static MapManager Instance { get; private set; }
 
+    [SerializeField] protected GameObject LargePillarPrefab;
+    [SerializeField] protected GameObject SmallPillarPrefab;
+    [SerializeField] protected GameObject bridgePrefab;
+
     protected List<Node> Nodes { get; private set; } = new();
     private void Awake()
     {
         Instance = this;
     }
 
-    public virtual List<Node> FindRoute(Node from, Node to)
+    public List<Node> FindRoute(Node from, Node to)
     {
         if (from == null || to == null) return null;
 
@@ -54,6 +58,28 @@ public abstract class MapManager : MonoBehaviour
 
         path.Reverse();
         return path;
+    }
+
+    public void ConnectPillars(Pillar pillar1, Pillar pillar2){
+        if (pillar1 == null || pillar2 == null) return;
+
+        Vector3 diff = pillar2.transform.position - pillar1.transform.position;
+        float distance = diff.magnitude;
+        Vector3 direction = diff.normalized;
+
+        Vector3 bridgePosition = pillar1.transform.position + direction * (distance / 2);
+        Quaternion bridgeRotation = Quaternion.LookRotation(direction);
+
+        GameObject bridgeGO = Instantiate(bridgePrefab, bridgePosition, bridgeRotation);
+        Bridge bridge = bridgeGO.GetComponent<Bridge>();
+
+        Vector3 scale = bridge.transform.localScale;
+        scale.z = distance;
+        bridge.transform.localScale = scale;
+
+        pillar1.ConnectTo(bridge);
+        pillar2.ConnectTo(bridge);
+        Nodes.Add(bridge);
     }
 
     public abstract void GenerateMap();
