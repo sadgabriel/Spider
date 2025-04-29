@@ -167,7 +167,7 @@ MonoBehaviour:
   SmallPillarPrefab: {fileID: 8514450172584871814, guid: fb4783176770afe499093f2c77e28bdb, type: 3}
   bridgePrefab: {fileID: 8745796165396008747, guid: 3de796aaf518d1846bed7e30eedcb1f0, type: 3}
   largePillarCount: 10
-  smallPillarCount: 50
+  totalPillarCount: 60
   largePillarRadius: 3
   smallPillarRadius: 3
   maxAttempts: 10000
@@ -339,6 +339,50 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!1 &353809270
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 353809272}
+  - component: {fileID: 353809271}
+  m_Layer: 0
+  m_Name: TurnSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &353809271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 353809270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01a5ce8d554d84f45b37ac8971b49951, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &353809272
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 353809270}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -518,3 +562,4 @@ SceneRoots:
   - {fileID: 832575519}
   - {fileID: 33680578}
   - {fileID: 284499933}
+  - {fileID: 353809272}

@@ -8,6 +8,11 @@ public class Node : MonoBehaviour
 
     public bool IsOccupied { get; set; } = false;
 
+    public Vector3 Position
+    {
+        get => transform.position + Vector3.up * GetComponent<Renderer>().bounds.extents.y;
+    }
+
     public void ConnectTo(Node other)
     {
         if (!Neighbors.Contains(other))
