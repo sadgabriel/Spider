@@ -11,13 +11,13 @@ public class Player : MonoBehaviour, IPlayer
     public int Life
     {
         get => life;
-        protected set => life = value;
+        private set => life = value;
     }
 
     public Node CurrentNode
     {
         get => currentNode;
-        protected set => currentNode = value;
+        private set => currentNode = value;
     }
 
     private void Update()
@@ -35,9 +35,7 @@ public class Player : MonoBehaviour, IPlayer
 
     public void Initialize(Node startNode)
     {
-        currentNode = startNode;
-        transform.position = GetPosition(startNode);
-        currentNode.IsOccupied = true;
+        MoveTo(startNode);
     }
 
     public void TakeDamage(int damage)
@@ -87,6 +85,18 @@ public class Player : MonoBehaviour, IPlayer
 
     private void MoveTo(Node targetNode)
     {
+        if (targetNode == null)
+        {
+            Debug.LogError("Target node is null.");
+            return;
+        }
+
+        if (targetNode.IsOccupied)
+        {
+            Debug.LogError("Target node is occupied.");
+            return;
+        }
+
         if (currentNode != null)
         {
             currentNode.IsOccupied = false;

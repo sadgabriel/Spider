@@ -18,10 +18,8 @@ public class Enemy : MonoBehaviour, IEnemy
 
     public void Initialize(Node startNode, IPlayer player)
     {
-        currentNode = startNode;
+        MoveTo(startNode);
         this.player = player;
-        transform.position = GetPosition(startNode);
-        currentNode.IsOccupied = true;
     }
 
     public void Act()
@@ -41,7 +39,7 @@ public class Enemy : MonoBehaviour, IEnemy
         }
         else
         {
-            Node next = FindNextStepTowards(currentNode, player.CurrentNode);
+            Node next = FindNextStepTowards(player.CurrentNode);
             TryMoveTo(next);
         }
     }
@@ -65,6 +63,18 @@ public class Enemy : MonoBehaviour, IEnemy
 
     private void MoveTo(Node targetNode)
     {
+        if (targetNode == null)
+        {
+            Debug.LogError("Target node is null.");
+            return;
+        }
+
+        if (targetNode.IsOccupied)
+        {
+            Debug.LogError("Target node is occupied.");
+            return;
+        }
+        
         if (currentNode != null)
         {
             currentNode.IsOccupied = false;
@@ -75,9 +85,9 @@ public class Enemy : MonoBehaviour, IEnemy
         currentNode.IsOccupied = true;
     }
 
-    private Node FindNextStepTowards(Node from, Node to)
+    private Node FindNextStepTowards(Node targetNode)
     {
-        var route = MapManager.Instance.FindRoute(from, to);
+        var route = MapManager.Instance.FindRoute(currentNode, targetNode);
         return (route != null && route.Count > 1) ? route[1] : null;
     }
 
