@@ -2,6 +2,7 @@
 class Node {
     +List<Node> Neighbors
     +bool IsOccupied
+    +Vector3 Position
     +void ConnectTo(Node other)
     +void DisconnectFrom(Node other)
 }
@@ -12,7 +13,7 @@ class Pillar {
 }
 
 class Bridge{
-
+    +void Initialize(Vector3 from, Vector3 to)
 }
 
 class MapManager {
@@ -23,15 +24,100 @@ class MapManager {
     +abstract void GenerateMap()
 }
 
-class RandomMapManager {
+class PoissonSampler{
+    +GeneratePoissonPoints(int count, float radius, (float, float) xRange, (float, float) yRange, int maxAttempts, List<Vector2> existingPoints)
+}
 
+class TriangleNetWrapper {
+    +GenerateDelaunayEdges(List<Vector2> points)
+    +List<(Vector2, Vector2)> GenerateConstrainedDelaunayEdges(List<Vector2> points, List<(Vector2, Vector2)> constraints)
+    -IMesh Triangulate(List<Vector2> points, List<(Vector2, Vector2)> constraints)
+    -List<(Vector2, Vector2)> ExtractEdgesFromMesh(IMesh mesh)
+}
+
+class RandomMapManager {
+    -int largePillarCount
+    -int totalPillarCount
+    -float largePillarRadius
+    -float smallPillarRadius
+    -(float, float) mapXRange
+    -(float, float) mapZRange
+    -int maxAttempts
+    +override void GenerateMap()
+    -Pillar InstantiatePillar(Vector3 position, GameObject prefab, string name)
+}
+
+interface IUnit {
+    +Node CurrentNode
+    +bool TryMoveTo(Node targetNode)
+    +bool CanMoveTo(Node targetNode)
+}
+
+interface IPlayer {
+    +int Life
+    +void TakeDamage(int damage)
+}
+
+interface IEnemy {
+    +void Act
+}
+
+class Player {
+    +int Life
+    -float yOffset
+    +Node CurrentNode
+    +bool TryMoveTo(Node targetNode)
+    +bool CanMoveTo(Node targetNode)
+    +void TakeDamage(int damage)
+    +void Initialize(Node startNode)
+    -bool TryMoveToClickedNode()
+    -void MoveTo(Node targetNode)
+    -Vector3 GetPosition(Node node)
+}
+
+class Enemy {
+    -int lifeTime
+    -float yOffset
+    -IPlayer player
+    +Node CurrentNode
+    +void Initialize(Node startNode, IPlayer player)
+    +bool TryMoveTo(Node targetNode)
+    +bool CanMoveTo(Node targetNode)
+    -void MoveTo(Node targetNode)
+    -Node FindNextStepTowards(Node targetNode)
+    -Vector3 GetPosition(Node node)
+    -bool IsAttackable()
+    -void Attack()
+    -void Die()
+    +void Act()
+}
+
+class TurnSystem {
+    +TurnState CurrentTurn
+    +int TurnCount
+    +TurnSystem Instance
+    +bool IsPlayerTurn()
+    +bool IsEnemyTurn()
+    +void EndPlayerTurn()
+    +void EndEnemyTurn()
 }
 
 Node <|-- Pillar
 Node <|-- Bridge
 MapManager <|-- RandomMapManager
+IUnit <|-- IPlayer
+IUnit <|-- IEnemy
+IPlayer <|-- Player
+IEnemy <|-- Enemy
 Node *-- MapManager
 Pillar *-- RandomMapManager
 Bridge *-- RandomMapManager
+PoissonSampler *-- RandomMapManager
+TriangleNetWrapper *-- RandomMapManager
+Node *-- IUnit
+Node *-- Player
+Node *-- Enemy
+IPlayer *-- Enemy
+TurnSystem *-- Player
 @enduml
 

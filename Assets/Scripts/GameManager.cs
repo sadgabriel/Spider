@@ -5,24 +5,21 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // public static GameManager Instance { get; private set; }
+    public static GameManager Instance { get; private set; }
 
-    // [SerializeField] private MapManager mapManager;
-    // [SerializeField] private PlayerController playerPrefab;
-    // [SerializeField] private EnemyController enemyPrefab;
-    // [SerializeField] private int waveInterval = 5;
+    [SerializeField] private Player playerPrefab;
+    [SerializeField] private Enemy enemyPrefab;
+    [SerializeField] private int waveInterval = 5;
 
     // private PlayerController player;
     // private List<EnemyController> enemies = new();
 
-    // private TurnState currentTurn;
-    // private int turnCount = 0;
     // private int waveNumber = 1;
 
-    // private void Awake()
-    // {
-    //     Instance = this;
-    // }
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     // private void Start()
     // {
@@ -129,10 +126,5 @@ public class GameManager : MonoBehaviour
 
     //     Debug.Log("�� �� ����");
     //     currentTurn = TurnState.PlayerTurn;
-    // }
-
-    // public void GameOver()
-    // {
-    //     Debug.Log("Game Over");
     // }
 }

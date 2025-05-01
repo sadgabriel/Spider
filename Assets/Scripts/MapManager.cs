@@ -63,19 +63,10 @@ public abstract class MapManager : MonoBehaviour
     public void ConnectPillars(Pillar pillar1, Pillar pillar2){
         if (pillar1 == null || pillar2 == null) return;
 
-        Vector3 diff = pillar2.transform.position - pillar1.transform.position;
-        float distance = diff.magnitude;
-        Vector3 direction = diff.normalized;
-
-        Vector3 bridgePosition = pillar1.transform.position + direction * (distance / 2);
-        Quaternion bridgeRotation = Quaternion.LookRotation(direction);
-
-        GameObject bridgeGO = Instantiate(bridgePrefab, bridgePosition, bridgeRotation);
+        GameObject bridgeGO = Instantiate(bridgePrefab);
         Bridge bridge = bridgeGO.GetComponent<Bridge>();
 
-        Vector3 scale = bridge.transform.localScale;
-        scale.z = distance;
-        bridge.transform.localScale = scale;
+        bridge.Initialize(pillar1.Position, pillar2.Position);
 
         pillar1.ConnectTo(bridge);
         pillar2.ConnectTo(bridge);
