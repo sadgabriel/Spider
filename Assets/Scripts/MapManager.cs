@@ -5,11 +5,17 @@ public abstract class MapManager : MonoBehaviour
 {
     public static MapManager Instance { get; private set; }
 
+    public List<Node> Nodes { get; private set; } = new();
+    public List<Pillar> Pillars { get; private set; } = new();
+    public List<Bridge> Bridges { get; private set; } = new();
+    public List<Node> Spawners { get; private set; } = new();
+
     [SerializeField] protected GameObject LargePillarPrefab;
     [SerializeField] protected GameObject SmallPillarPrefab;
     [SerializeField] protected GameObject bridgePrefab;
 
-    protected List<Node> Nodes { get; private set; } = new();
+    public abstract Pillar StartPillar { get; }
+
     private void Awake()
     {
         Instance = this;
@@ -66,11 +72,12 @@ public abstract class MapManager : MonoBehaviour
         GameObject bridgeGO = Instantiate(bridgePrefab);
         Bridge bridge = bridgeGO.GetComponent<Bridge>();
 
-        bridge.Initialize(pillar1.Position, pillar2.Position);
+        bridge.Initialize(pillar1.transform.position, pillar2.transform.position);
 
         pillar1.ConnectTo(bridge);
         pillar2.ConnectTo(bridge);
         Nodes.Add(bridge);
+        Bridges.Add(bridge);
     }
 
     public abstract void GenerateMap();

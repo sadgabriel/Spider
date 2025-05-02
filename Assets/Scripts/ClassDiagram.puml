@@ -18,10 +18,14 @@ class Bridge{
 
 class MapManager {
     +static MapManager Instance
-    -List<Node> Nodes
+    +List<Node> Nodes
+    +List<Pillar> Pillars
+    +List<Bridge> Bridges
+    +List<Node> Spawners
     +virtual List<Node> FindRoute(Node from, Node to)
     +void ConnectPillars(Pillar pillar1, Pillar pillar2)
     +abstract void GenerateMap()
+    +abstract Pillar StartPillar
 }
 
 class PoissonSampler{
@@ -44,6 +48,7 @@ class RandomMapManager {
     -(float, float) mapZRange
     -int maxAttempts
     +override void GenerateMap()
+    +override Pillar StartPillar
     -Pillar InstantiatePillar(Vector3 position, GameObject prefab, string name)
 }
 
@@ -95,11 +100,26 @@ class Enemy {
 class TurnSystem {
     +TurnState CurrentTurn
     +int TurnCount
+    +event Action<TurnState> OnTurnChanged
     +TurnSystem Instance
     +bool IsPlayerTurn()
     +bool IsEnemyTurn()
     +void EndPlayerTurn()
     +void EndEnemyTurn()
+}
+
+class UnitManager {
+    -Player playerPrefab
+    -Enemy enemyPrefab
+    -Player player
+    -List<Enemy> enemies
+}
+
+class GameManager {
+    -int waveInterval
+    -void InitializeGame()
+    -void HandleTurnChange(TurnState newTurn)
+    -void StartEnemyTurn()
 }
 
 Node <|-- Pillar
@@ -119,5 +139,12 @@ Node *-- Player
 Node *-- Enemy
 IPlayer *-- Enemy
 TurnSystem *-- Player
+MapManager *-- UnitManager
+Player *-- UnitManager
+Enemy *-- UnitManager
+Node *-- GameManager
+MapManager *-- GameManager
+UnitManager *-- GameManager
+TurnSystem *-- GameManager
 @enduml
 

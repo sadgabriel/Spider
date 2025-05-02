@@ -11,10 +11,6 @@ public class RandomMapManager : MapManager
     [SerializeField] private (float, float) mapZRange = (-10f, 10f);
     [SerializeField] private int maxAttempts = 10000;
 
-    private void Start()
-    {
-        GenerateMap();
-    }
     public override void GenerateMap()
     {
         List<Vector2> largePillarPositions = PoissonSampler.GeneratePoissonPoints(largePillarCount, largePillarRadius, mapXRange, mapZRange, maxAttempts);
@@ -61,7 +57,16 @@ public class RandomMapManager : MapManager
         pillarGO.name = name;
         Pillar pillar = pillarGO.GetComponent<Pillar>();
         Nodes.Add(pillar);
+        Pillars.Add(pillar);
 
         return pillar;
+    }
+
+    public override Pillar StartPillar {
+        get
+        {
+            if (Nodes.Count == 0) return null;
+            return Pillars[Random.Range(0, Pillars.Count)];
+        }
     }
 }

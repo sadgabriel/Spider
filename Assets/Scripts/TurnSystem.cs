@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public enum TurnState
@@ -8,8 +9,10 @@ public enum TurnState
 
 public class TurnSystem : MonoBehaviour
 {
-    private TurnState currentTurn;
-    private int turnCount = 0;
+    private TurnState currentTurn = TurnState.PlayerTurn;
+    private int turnCount = 1;
+
+    public event Action<TurnState> OnTurnChanged;
     
     public static TurnSystem Instance { get; private set; }
 
@@ -41,6 +44,7 @@ public class TurnSystem : MonoBehaviour
         if (currentTurn == TurnState.PlayerTurn)
         {
             currentTurn = TurnState.EnemyTurn;
+            OnTurnChanged?.Invoke(currentTurn);
         }
     }
 
@@ -49,6 +53,7 @@ public class TurnSystem : MonoBehaviour
         {
             currentTurn = TurnState.PlayerTurn;
             turnCount++;
+            OnTurnChanged?.Invoke(currentTurn);
         }
     }
 }

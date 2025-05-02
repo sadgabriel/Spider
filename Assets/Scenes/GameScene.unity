@@ -180,6 +180,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 284499933}
+  - component: {fileID: 284499934}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -202,6 +203,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &284499934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 284499931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb46ab21b5b4a84ea5ff6c679674ba4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: -5596155573772310588, guid: 43143db9b82036240a955db0e3157552, type: 3}
+  enemyPrefab: {fileID: 4562439228764274942, guid: 0ed1023a132726d4fa1ae3dbd92ec7b7, type: 3}
+  waveInterval: 5
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
