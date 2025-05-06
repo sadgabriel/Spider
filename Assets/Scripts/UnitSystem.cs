@@ -28,8 +28,6 @@ public class UnitSystem : MonoBehaviour
 
     private void StartEnemyTurn()
     {
-        UnitManager.Instance.Enemies.RemoveAll(enemy => enemy == null || enemy.gameObject == null);
-
         foreach (var enemy in UnitManager.Instance.Enemies)
         {
             if (enemy.gameObject.activeSelf)
@@ -37,6 +35,8 @@ public class UnitSystem : MonoBehaviour
                 enemy.Act();
             }
         }
+
+        UnitManager.Instance.RemoveDestroyedEnemies();
 
         if (TurnSystem.Instance.TurnCount % waveInterval == 0)
         {

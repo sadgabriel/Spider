@@ -49,5 +49,10 @@ public class UnitManager : MonoBehaviour
         Enemy enemy = Instantiate(enemyPrefab);
         enemy.Initialize(node, Player);
         Enemies.Add(enemy);
-    }    
+    }
+
+    public void RemoveDestroyedEnemies()
+    {
+        Enemies.RemoveAll(enemy => enemy == null || enemy.gameObject == null);
+    }
 }
