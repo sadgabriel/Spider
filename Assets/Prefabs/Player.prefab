@@ -122,4 +122,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   life: 3
-  yOffset: 0.5
+  yOffset: 0.2
