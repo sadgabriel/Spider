@@ -9,6 +9,7 @@ public class RandomMapManager : MapManager
     [SerializeField] private float smallPillarRadius = 1f;
     [SerializeField] private (float, float) mapXRange = (-10f, 10f);
     [SerializeField] private (float, float) mapZRange = (-10f, 10f);
+    [SerializeField] private float margin = 2f;
     [SerializeField] private int maxAttempts = 10000;
 
     public override void GenerateMap()
@@ -27,8 +28,31 @@ public class RandomMapManager : MapManager
 
         foreach (var pos in largePillarPositions)
         {
-            Pillar pillar = InstantiatePillar(new Vector3(pos.x, 0, pos.y), LargePillarPrefab, $"LargePillar ({pos.x}, {pos.y})");
+            Vector3 pillarPosition = new Vector3(pos.x, 0, pos.y);
+
+            Pillar pillar = InstantiatePillar(pillarPosition, LargePillarPrefab, $"LargePillar ({pos.x}, {pos.y})");
             pillarMap[pos] = pillar;
+
+            if (hullPoints.Contains(pos))
+            {
+                Vector3 center = new Vector3(mapXRange.Item1 + mapXRange.Item2, 0, mapZRange.Item1 + mapZRange.Item2) / 2;
+                Vector3 direction = (new Vector3(pos.x, 0, pos.y) - center).normalized;
+                
+                float t = Mathf.Min(
+                    direction.x > 0 ? (mapXRange.Item2 + margin - pos.x) / direction.x : (mapXRange.Item1 - margin - pos.x) / direction.x,
+                    direction.z > 0 ? (mapZRange.Item2 + margin - pos.y) / direction.z : (mapZRange.Item1 - margin - pos.y) / direction.z
+                );
+
+                Vector3 edgePoint = new Vector3(pos.x + direction.x * t, 0, pos.y + direction.z * t);
+
+                GameObject bridgeGO = Instantiate(bridgePrefab);
+                Bridge bridge = bridgeGO.GetComponent<Bridge>();
+                bridge.Initialize(pillarPosition, edgePoint);
+                pillar.ConnectTo(bridge);
+                Nodes.Add(bridge);
+                Bridges.Add(bridge);
+                Spawners.Add(bridge);
+            }
         }
         
         foreach (var pos in pillarPositions)

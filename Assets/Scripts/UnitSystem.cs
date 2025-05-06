@@ -5,7 +5,7 @@ public class UnitSystem : MonoBehaviour
     public static UnitSystem Instance { get; private set; }
 
     [SerializeField] private int waveInterval = 5;
-    
+
     private void Awake()
     {
         Instance = this;
@@ -28,9 +28,14 @@ public class UnitSystem : MonoBehaviour
 
     private void StartEnemyTurn()
     {
+        UnitManager.Instance.Enemies.RemoveAll(enemy => enemy == null || enemy.gameObject == null);
+
         foreach (var enemy in UnitManager.Instance.Enemies)
         {
-            enemy.Act();
+            if (enemy.gameObject.activeSelf)
+            {
+                enemy.Act();
+            }
         }
 
         if (TurnSystem.Instance.TurnCount % waveInterval == 0)

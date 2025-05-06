@@ -51,7 +51,10 @@ public abstract class MapManager : MonoBehaviour
             }
         }
 
-        if (!cameFrom.ContainsKey(to)) return null;
+        if (!cameFrom.ContainsKey(to)) 
+        {
+            return null;
+        }
 
         List<Node> path = new();
         Node step = to;
@@ -63,6 +66,7 @@ public abstract class MapManager : MonoBehaviour
         }
 
         path.Reverse();
+
         return path;
     }
 
