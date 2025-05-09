@@ -4,7 +4,6 @@ using System.Linq;
 
 public static class GeometryUtils
 {
-    // Convex Hull 생성: Andrew's Monotone Chain 알고리즘 (O(n log n))
     public static List<Vector2> ComputeConvexHull(List<Vector2> points)
     {
         points = points.Distinct(new Vector2Comparer()).ToList();
@@ -44,7 +43,6 @@ public static class GeometryUtils
         return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
     }
 
-    // Convex Hull을 Segment constraint 목록으로 변환
     public static List<(Vector2, Vector2)> GetHullEdges(List<Vector2> convexHull)
     {
         List<(Vector2, Vector2)> edges = new();

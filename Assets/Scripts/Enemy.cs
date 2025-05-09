@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class Enemy : MonoBehaviour, IEnemy
 {
@@ -7,6 +8,10 @@ public class Enemy : MonoBehaviour, IEnemy
     
     [SerializeField] private int lifeTime = 5;
     [SerializeField] private float yOffset = 0.5f;
+
+    [SerializeField] private int attackDamage = 1;
+
+    private Node currentTargetPillar;
 
     private IPlayer player;
 
@@ -32,6 +37,13 @@ public class Enemy : MonoBehaviour, IEnemy
             return;
         }
 
+        if (currentTargetPillar == null)
+        {
+            currentTargetPillar = FindNextPillar();
+        }
+
+        Node nextNode = FindNextStepTowards(currentTargetPillar);
+
         if (IsAttackable())
         {
             Attack();
@@ -39,8 +51,18 @@ public class Enemy : MonoBehaviour, IEnemy
         }
         else
         {
-            Node next = FindNextStepTowards(player.CurrentNode);
-            TryMoveTo(next);
+            TryMoveTo(nextNode);
+
+            if (currentNode == currentTargetPillar)
+            {
+                currentTargetPillar = null;
+                LookAt(null);
+            }
+            else
+            {
+                nextNode = FindNextStepTowards(currentTargetPillar);
+                LookAt(nextNode);
+            }
         }
     }
 
@@ -85,10 +107,71 @@ public class Enemy : MonoBehaviour, IEnemy
         currentNode.IsOccupied = true;
     }
 
+    private void LookAt(Node targetNode = null)
+    {
+        Vector3 direction;
+        if (currentNode == null)
+        {
+            Debug.LogError("Current node is null.");
+            return;
+        }
+        else if (targetNode == null)
+        {
+            transform.rotation = Quaternion.identity;
+            return;
+        }
+        else
+        {
+            direction = (targetNode.Position - currentNode.Position).normalized;
+            transform.rotation = Quaternion.LookRotation(direction);
+        }   
+    }
+
     private Node FindNextStepTowards(Node targetNode)
     {
         var route = MapManager.Instance.FindRoute(currentNode, targetNode);
         return (route != null && route.Count > 1) ? route[1] : null;
+    }
+
+    private Node FindNextPillar(int recognitionDistance = 4)
+    {
+        var route = MapManager.Instance.FindRoute(currentNode, player.CurrentNode);
+        if (route != null && route.Count > 1 && route.Count <= recognitionDistance + 1)
+        {
+            for (int i = 1; i < route.Count; i++)
+            {
+                if (route[i] is Pillar)
+                {
+                    return route[i];
+                }
+            }
+        }
+
+        return FindRandomAdjacentPillar();
+    }
+
+    private Node FindRandomAdjacentPillar()
+    {
+        List<Node> adjacentPillars;
+        if (currentNode is Pillar)
+        {
+            adjacentPillars = currentNode.Neighbors
+            .Where(n => !n.IsOccupied)
+            .SelectMany(n => n.Neighbors)
+            .Where(n => n is Pillar && !n.IsOccupied).ToList();
+        }
+        else
+        {
+            adjacentPillars = currentNode.Neighbors
+            .Where(n => n is Pillar && !n.IsOccupied).ToList();
+        }
+
+        if (adjacentPillars.Count > 0)
+        {
+            return adjacentPillars[Random.Range(0, adjacentPillars.Count)];
+        }
+
+        return null;
     }
 
     private Vector3 GetPosition(Node node)
@@ -98,14 +181,16 @@ public class Enemy : MonoBehaviour, IEnemy
 
     private bool IsAttackable()
     {
+        Node nextNode = FindNextStepTowards(currentTargetPillar);
         return player != null &&
                currentNode != null &&
-               currentNode.Neighbors.Contains(player.CurrentNode);
+               nextNode != null &&
+               player.CurrentNode == nextNode;
     }
 
     private void Attack()
     {
-        player.TakeDamage(1);
+        player.TakeDamage(attackDamage);
     }
     
     private void Die()

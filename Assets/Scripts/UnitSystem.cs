@@ -14,7 +14,7 @@ public class UnitSystem : MonoBehaviour
     public void Initialize()
     {
         UnitManager.Instance.InitializePlayer();
-        UnitManager.Instance.SpawnWave(5);
+        UnitManager.Instance.SpawnWave(1);
         TurnSystem.Instance.OnTurnChanged += HandleTurnChanged;
     }
 
@@ -28,6 +28,7 @@ public class UnitSystem : MonoBehaviour
 
     private void StartEnemyTurn()
     {
+        UnitManager.Instance.RemoveDestroyedEnemies();
         foreach (var enemy in UnitManager.Instance.Enemies)
         {
             if (enemy.gameObject.activeSelf)
@@ -35,12 +36,11 @@ public class UnitSystem : MonoBehaviour
                 enemy.Act();
             }
         }
-
         UnitManager.Instance.RemoveDestroyedEnemies();
 
         if (TurnSystem.Instance.TurnCount % waveInterval == 0)
         {
-            UnitManager.Instance.SpawnWave(5);
+            UnitManager.Instance.SpawnWave(1);
         }
 
         TurnSystem.Instance.EndEnemyTurn();

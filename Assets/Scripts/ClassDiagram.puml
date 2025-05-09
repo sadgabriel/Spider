@@ -8,7 +8,6 @@ class Node {
 }
 
 class Pillar {
-    -PillarSize size
     +PillarSize Size
 }
 
@@ -22,34 +21,34 @@ class MapManager {
     +List<Pillar> Pillars
     +List<Bridge> Bridges
     +List<Node> Spawners
+    +abstarct Pillar StartPillar
     +virtual List<Node> FindRoute(Node from, Node to)
     +void ConnectPillars(Pillar pillar1, Pillar pillar2)
     +abstract void GenerateMap()
-    +abstract Pillar StartPillar
 }
 
-class PoissonSampler{
-    +GeneratePoissonPoints(int count, float radius, (float, float) xRange, (float, float) yRange, int maxAttempts, List<Vector2> existingPoints)
+class PoissonSampler {
+    +static List<Vector2> GeneratePoissonPoints(int count, float radius, (float, float) xRange, (float, float) yRange, int maxAttempts, List<Vector2> existingPoints)
+}
+
+class Vector2Comparer {
+    +bool Equals(Vector2 a, Vector2 b)
+    +int GetHashCode(Vector2 v)
 }
 
 class TriangleNetWrapper {
-    +GenerateDelaunayEdges(List<Vector2> points)
-    +List<(Vector2, Vector2)> GenerateConstrainedDelaunayEdges(List<Vector2> points, List<(Vector2, Vector2)> constraints)
-    -IMesh Triangulate(List<Vector2> points, List<(Vector2, Vector2)> constraints)
-    -List<(Vector2, Vector2)> ExtractEdgesFromMesh(IMesh mesh)
+    +static List<(Vector2, Vector2)> GenerateDelaunayEdges(List<Vector2> points)
+    +static List<(Vector2, Vector2)> GenerateConstrainedDelaunayEdges(List<Vector2> points, List<(Vector2, Vector2)> constraints)
+}
+
+class GeometryUtils {
+    +static List<Vector2> ComputeConvexHull(List<Vector2> points)
+    +static List<(Vector2, Vector2)> GetHullEdges(List<Vector2> convexHull)
 }
 
 class RandomMapManager {
-    -int largePillarCount
-    -int totalPillarCount
-    -float largePillarRadius
-    -float smallPillarRadius
-    -(float, float) mapXRange
-    -(float, float) mapZRange
-    -int maxAttempts
-    +override void GenerateMap()
     +override Pillar StartPillar
-    -Pillar InstantiatePillar(Vector3 position, GameObject prefab, string name)
+    +override void GenerateMap()
 }
 
 interface IUnit {
@@ -64,44 +63,31 @@ interface IPlayer {
 }
 
 interface IEnemy {
-    +void Act
+    +void Act()
 }
 
 class Player {
     +int Life
-    -float yOffset
     +Node CurrentNode
+    +void Initialize(Node startNode)
+    +void TakeDamage(int damage)
     +bool TryMoveTo(Node targetNode)
     +bool CanMoveTo(Node targetNode)
-    +void TakeDamage(int damage)
-    +void Initialize(Node startNode)
-    -bool TryMoveToClickedNode()
-    -void MoveTo(Node targetNode)
-    -Vector3 GetPosition(Node node)
 }
 
 class Enemy {
-    -int lifeTime
-    -float yOffset
-    -IPlayer player
     +Node CurrentNode
     +void Initialize(Node startNode, IPlayer player)
     +bool TryMoveTo(Node targetNode)
     +bool CanMoveTo(Node targetNode)
-    -void MoveTo(Node targetNode)
-    -Node FindNextStepTowards(Node targetNode)
-    -Vector3 GetPosition(Node node)
-    -bool IsAttackable()
-    -void Attack()
-    -void Die()
     +void Act()
 }
 
 class TurnSystem {
+    +static TurnSystem Instance
     +TurnState CurrentTurn
     +int TurnCount
     +event Action<TurnState> OnTurnChanged
-    +TurnSystem Instance
     +bool IsPlayerTurn()
     +bool IsEnemyTurn()
     +void EndPlayerTurn()
@@ -109,17 +95,23 @@ class TurnSystem {
 }
 
 class UnitManager {
-    -Player playerPrefab
-    -Enemy enemyPrefab
-    -Player player
-    -List<Enemy> enemies
+    +static UnitManager Instance
+    +Player Player
+    +List<Enemy> Enemies
+    +void InitializePlayer()
+    +void SpawnWave(int count)
+    +void SpawnEnemyAtRandomSpawner()
+    +void SpawnEnemy(Node node)
+    +void RemoveDestroyedEnemies()
+}
+
+class UnitSystem {
+    +static UnitSystem Instance
+    +Initialize()
 }
 
 class GameManager {
-    -int waveInterval
-    -void InitializeGame()
-    -void HandleTurnChange(TurnState newTurn)
-    -void StartEnemyTurn()
+    +static GameManager Instance
 }
 
 Node <|-- Pillar
@@ -130,10 +122,13 @@ IUnit <|-- IEnemy
 IPlayer <|-- Player
 IEnemy <|-- Enemy
 Node *-- MapManager
+Vector2Comparer *-- TriangleNetWrapper
+Vector2Comparer *-- GeometryUtils
 Pillar *-- RandomMapManager
 Bridge *-- RandomMapManager
 PoissonSampler *-- RandomMapManager
 TriangleNetWrapper *-- RandomMapManager
+GeometryUtils *-- RandomMapManager
 Node *-- IUnit
 Node *-- Player
 Node *-- Enemy
@@ -142,9 +137,9 @@ TurnSystem *-- Player
 MapManager *-- UnitManager
 Player *-- UnitManager
 Enemy *-- UnitManager
-Node *-- GameManager
+UnitManager *-- UnitSystem
+TurnSystem *-- UnitSystem
 MapManager *-- GameManager
-UnitManager *-- GameManager
-TurnSystem *-- GameManager
+UnitSystem *-- GameManager
 @enduml
 

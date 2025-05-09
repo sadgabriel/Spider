@@ -5,7 +5,7 @@ public class Player : MonoBehaviour, IPlayer
 {
     private Node currentNode;
     
-    [SerializeField] private int life;
+    [SerializeField] private int life = 1;
     [SerializeField] private float yOffset = 0.5f;
     
     public int Life

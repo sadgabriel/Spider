@@ -5,11 +5,24 @@ public class UnitManager : MonoBehaviour
 {
     public static UnitManager Instance { get; private set; }
 
+    private List<Enemy> enemies = new List<Enemy>();
+
     [SerializeField] private Player playerPrefab;
     [SerializeField] private Enemy enemyPrefab;
 
     public Player Player { get; private set; }
-    public List<Enemy> Enemies { get; private set; } = new List<Enemy>();
+    public List<Enemy> Enemies 
+    {
+        get
+        {
+            RemoveDestroyedEnemies();
+            return enemies; 
+        }
+        private set
+        { 
+            enemies = value;
+        }
+    }
 
     private void Awake()
     {
