@@ -66,6 +66,6 @@ public class UnitManager : MonoBehaviour
 
     public void RemoveDestroyedEnemies()
     {
-        Enemies.RemoveAll(enemy => enemy == null || enemy.gameObject == null);
+        enemies.RemoveAll(enemy => enemy == null || enemy.gameObject == null);
     }
 }
