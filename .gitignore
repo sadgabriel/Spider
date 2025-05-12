@@ -482,3 +482,5 @@ FodyWeavers.xsd
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,unity
 
 .vscode/
+
+Assets/Modern UI Pack/
