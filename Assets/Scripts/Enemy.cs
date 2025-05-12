@@ -58,23 +58,32 @@ public class Enemy : Unit
 
     private void LookAt(Node targetNode = null)
     {
-        Vector3 direction;
         if (CurrentNode == null)
         {
             Debug.LogError("Current node is null.");
             return;
         }
-        else if (targetNode == null)
+
+        if (targetNode == null)
         {
-            transform.rotation = Quaternion.identity;
+            transform.rotation = getRotation(CurrentNode);
             return;
         }
-        else
+        
+        Vector3 surfaceNormal = CurrentNode.transform.up;
+
+        Vector3 forward = Vector3.ProjectOnPlane(
+            targetNode.Position - CurrentNode.Position,
+            surfaceNormal
+        ).normalized;
+
+        if (forward == Vector3.zero)
         {
-            direction = (targetNode.Position - CurrentNode.Position).normalized;
-            transform.rotation = Quaternion.LookRotation(direction);
-        }   
-    }
+            forward = Vector3.Cross(surfaceNormal, Vector3.right);
+        }
+
+        transform.rotation = Quaternion.LookRotation(forward, surfaceNormal);
+    } 
 
     private Node FindNextStepTowards(Node targetNode)
     {

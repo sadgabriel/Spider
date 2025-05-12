@@ -49,13 +49,24 @@ public abstract class Unit : MonoBehaviour
         }
 
         CurrentNode = targetNode;
-        transform.position = GetPosition(targetNode);
+        transform.position = getPosition(targetNode);
+        transform.rotation = getRotation(targetNode);
         CurrentNode.IsOccupied = true;
     }
 
-    private Vector3 GetPosition(Node node)
+    protected Vector3 getPosition(Node node)
     {
-        return node.Position + Vector3.up * verticalOffset;
+        return node.Position + node.transform.up * verticalOffset;
+    }
+
+    protected Quaternion getRotation(Node node)
+    {
+        Vector3 forward = Vector3.ProjectOnPlane(transform.forward, node.transform.up).normalized;
+
+        if (forward == Vector3.zero)
+            forward = Vector3.Cross(node.transform.up, Vector3.right);
+
+        return Quaternion.LookRotation(forward, node.transform.up);
     }
 
     private void OnDestroy()

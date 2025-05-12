@@ -10,7 +10,7 @@ public class Node : MonoBehaviour
 
     public Vector3 Position
     {
-        get => transform.position + Vector3.up * GetComponent<Renderer>().bounds.extents.y;
+        get => transform.position + transform.up * GetComponent<Renderer>().bounds.extents.y;
     }
 
     public void ConnectTo(Node other)
