@@ -2,26 +2,16 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-public class Enemy : MonoBehaviour, IEnemy
+public class Enemy : Unit
 {
-    private Node currentNode;
-    
     [SerializeField] private int lifeTime = 5;
-    [SerializeField] private float yOffset = 0.5f;
 
     [SerializeField] private int attackDamage = 1;
 
     private Node currentTargetPillar;
+    private Player player;
 
-    private IPlayer player;
-
-    public Node CurrentNode
-    {
-        get => currentNode;
-        protected set => currentNode = value;
-    }
-
-    public void Initialize(Node startNode, IPlayer player)
+    public void Initialize(Node startNode, Player player)
     {
         MoveTo(startNode);
         this.player = player;
@@ -53,7 +43,7 @@ public class Enemy : MonoBehaviour, IEnemy
         {
             TryMoveTo(nextNode);
 
-            if (currentNode == currentTargetPillar)
+            if (CurrentNode == currentTargetPillar)
             {
                 currentTargetPillar = null;
                 LookAt(null);
@@ -66,51 +56,10 @@ public class Enemy : MonoBehaviour, IEnemy
         }
     }
 
-    public bool TryMoveTo(Node targetNode)
-    {
-        if (CanMoveTo(targetNode))
-        {
-            MoveTo(targetNode);
-            return true;
-        }
-        return false;
-    }
-
-    public bool CanMoveTo(Node targetNode)
-    {
-        return targetNode != null &&
-               currentNode.Neighbors.Contains(targetNode) &&
-               !targetNode.IsOccupied;
-    }
-
-    private void MoveTo(Node targetNode)
-    {
-        if (targetNode == null)
-        {
-            Debug.LogError("Target node is null.");
-            return;
-        }
-
-        if (targetNode.IsOccupied)
-        {
-            Debug.LogError("Target node is occupied.");
-            return;
-        }
-        
-        if (currentNode != null)
-        {
-            currentNode.IsOccupied = false;
-        }
-
-        currentNode = targetNode;
-        transform.position = GetPosition(targetNode);
-        currentNode.IsOccupied = true;
-    }
-
     private void LookAt(Node targetNode = null)
     {
         Vector3 direction;
-        if (currentNode == null)
+        if (CurrentNode == null)
         {
             Debug.LogError("Current node is null.");
             return;
@@ -122,20 +71,20 @@ public class Enemy : MonoBehaviour, IEnemy
         }
         else
         {
-            direction = (targetNode.Position - currentNode.Position).normalized;
+            direction = (targetNode.Position - CurrentNode.Position).normalized;
             transform.rotation = Quaternion.LookRotation(direction);
         }   
     }
 
     private Node FindNextStepTowards(Node targetNode)
     {
-        var route = MapManager.Instance.FindRoute(currentNode, targetNode);
+        var route = MapManager.Instance.FindRoute(CurrentNode, targetNode);
         return (route != null && route.Count > 1) ? route[1] : null;
     }
 
     private Node FindNextPillar(int recognitionDistance = 4)
     {
-        var route = MapManager.Instance.FindRoute(currentNode, player.CurrentNode);
+        var route = MapManager.Instance.FindRoute(CurrentNode, player.CurrentNode);
         if (route != null && route.Count > 1 && route.Count <= recognitionDistance + 1)
         {
             for (int i = 1; i < route.Count; i++)
@@ -153,16 +102,16 @@ public class Enemy : MonoBehaviour, IEnemy
     private Node FindRandomAdjacentPillar()
     {
         List<Node> adjacentPillars;
-        if (currentNode is Pillar)
+        if (CurrentNode is Pillar)
         {
-            adjacentPillars = currentNode.Neighbors
+            adjacentPillars = CurrentNode.Neighbors
             .Where(n => !n.IsOccupied)
             .SelectMany(n => n.Neighbors)
             .Where(n => n is Pillar && !n.IsOccupied).ToList();
         }
         else
         {
-            adjacentPillars = currentNode.Neighbors
+            adjacentPillars = CurrentNode.Neighbors
             .Where(n => n is Pillar && !n.IsOccupied).ToList();
         }
 
@@ -174,16 +123,11 @@ public class Enemy : MonoBehaviour, IEnemy
         return null;
     }
 
-    private Vector3 GetPosition(Node node)
-    {
-        return node.Position + Vector3.up * yOffset;
-    }
-
     private bool IsAttackable()
     {
         Node nextNode = FindNextStepTowards(currentTargetPillar);
         return player != null &&
-               currentNode != null &&
+               CurrentNode != null &&
                nextNode != null &&
                player.CurrentNode == nextNode;
     }
@@ -196,13 +140,5 @@ public class Enemy : MonoBehaviour, IEnemy
     private void Die()
     {
         Destroy(gameObject);
-    }
-
-    private void OnDestroy()
-    {
-        if (currentNode != null)
-        {
-            currentNode.IsOccupied = false;
-        }
     }
 }

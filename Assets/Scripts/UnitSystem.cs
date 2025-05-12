@@ -5,6 +5,7 @@ public class UnitSystem : MonoBehaviour
     public static UnitSystem Instance { get; private set; }
 
     [SerializeField] private int waveInterval = 5;
+    [SerializeField] private int enemyCount = 1;
 
     private void Awake()
     {
@@ -14,7 +15,7 @@ public class UnitSystem : MonoBehaviour
     public void Initialize()
     {
         UnitManager.Instance.InitializePlayer();
-        UnitManager.Instance.SpawnWave(1);
+        UnitManager.Instance.SpawnWave(enemyCount);
         TurnSystem.Instance.OnTurnChanged += HandleTurnChanged;
     }
 
@@ -40,7 +41,7 @@ public class UnitSystem : MonoBehaviour
 
         if (TurnSystem.Instance.TurnCount % waveInterval == 0)
         {
-            UnitManager.Instance.SpawnWave(1);
+            UnitManager.Instance.SpawnWave(enemyCount);
         }
 
         TurnSystem.Instance.EndEnemyTurn();

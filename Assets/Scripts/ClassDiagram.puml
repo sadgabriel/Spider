@@ -51,35 +51,20 @@ class RandomMapManager {
     +override void GenerateMap()
 }
 
-interface IUnit {
+class Unit {
     +Node CurrentNode
     +bool TryMoveTo(Node targetNode)
     +bool CanMoveTo(Node targetNode)
-}
-
-interface IPlayer {
-    +int Life
-    +void TakeDamage(int damage)
-}
-
-interface IEnemy {
-    +void Act()
 }
 
 class Player {
     +int Life
-    +Node CurrentNode
     +void Initialize(Node startNode)
     +void TakeDamage(int damage)
-    +bool TryMoveTo(Node targetNode)
-    +bool CanMoveTo(Node targetNode)
 }
 
 class Enemy {
-    +Node CurrentNode
     +void Initialize(Node startNode, IPlayer player)
-    +bool TryMoveTo(Node targetNode)
-    +bool CanMoveTo(Node targetNode)
     +void Act()
 }
 
@@ -117,10 +102,8 @@ class GameManager {
 Node <|-- Pillar
 Node <|-- Bridge
 MapManager <|-- RandomMapManager
-IUnit <|-- IPlayer
-IUnit <|-- IEnemy
-IPlayer <|-- Player
-IEnemy <|-- Enemy
+Unit <|-- Player
+Unit <|-- Enemy
 Node *-- MapManager
 Vector2Comparer *-- TriangleNetWrapper
 Vector2Comparer *-- GeometryUtils
@@ -129,10 +112,10 @@ Bridge *-- RandomMapManager
 PoissonSampler *-- RandomMapManager
 TriangleNetWrapper *-- RandomMapManager
 GeometryUtils *-- RandomMapManager
-Node *-- IUnit
+Node *-- Unit
 Node *-- Player
 Node *-- Enemy
-IPlayer *-- Enemy
+Player *-- Enemy
 TurnSystem *-- Player
 MapManager *-- UnitManager
 Player *-- UnitManager

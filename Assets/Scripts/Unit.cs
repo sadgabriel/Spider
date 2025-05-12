@@ -1,0 +1,68 @@
+using UnityEngine;
+
+public abstract class Unit : MonoBehaviour
+{
+    private Node currentNode;
+
+    public Node CurrentNode
+    {
+        get => currentNode;
+        protected set => currentNode = value;
+    }
+
+    [SerializeField] protected float verticalOffset = 0.5f;
+
+    public bool TryMoveTo(Node targetNode)
+    {
+        if (CanMoveTo(targetNode))
+        {
+            MoveTo(targetNode);
+            return true;
+        }
+        return false;
+    }
+
+    public virtual bool CanMoveTo(Node targetNode)
+    {
+        return targetNode != null &&
+               CurrentNode.Neighbors.Contains(targetNode) &&
+               !targetNode.IsOccupied;
+    }
+
+    protected void MoveTo(Node targetNode)
+    {
+        if (targetNode == null)
+        {
+            Debug.LogError("Target node is null.");
+            return;
+        }
+
+        if (targetNode.IsOccupied)
+        {
+            Debug.LogError("Target node is occupied.");
+            return;
+        }
+        
+        if (currentNode != null)
+        {
+            CurrentNode.IsOccupied = false;
+        }
+
+        CurrentNode = targetNode;
+        transform.position = GetPosition(targetNode);
+        CurrentNode.IsOccupied = true;
+    }
+
+    private Vector3 GetPosition(Node node)
+    {
+        return node.Position + Vector3.up * verticalOffset;
+    }
+
+    private void OnDestroy()
+    {
+        if (CurrentNode != null)
+        {
+            CurrentNode.IsOccupied = false;
+        }
+    }
+}

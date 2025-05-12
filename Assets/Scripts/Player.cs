@@ -1,10 +1,8 @@
 using UnityEngine;
 using System.Linq;
 
-public class Player : MonoBehaviour, IPlayer
+public class Player : Unit
 {
-    private Node currentNode;
-    
     [SerializeField] private int life = 1;
     [SerializeField] private float yOffset = 0.5f;
     
@@ -12,12 +10,6 @@ public class Player : MonoBehaviour, IPlayer
     {
         get => life;
         private set => life = value;
-    }
-
-    public Node CurrentNode
-    {
-        get => currentNode;
-        private set => currentNode = value;
     }
 
     private void Update()
@@ -48,20 +40,10 @@ public class Player : MonoBehaviour, IPlayer
         }
     }
 
-    public bool TryMoveTo(Node targetNode)
-    {
-        if (CanMoveTo(targetNode))
-        {
-            MoveTo(targetNode);
-            return true;
-        }
-        return false;
-    }
-
-    public bool CanMoveTo(Node targetNode)
+    public override bool CanMoveTo(Node targetNode)
     {
         return targetNode != null &&
-            currentNode.Neighbors
+            CurrentNode.Neighbors
                 .Where(n => !n.IsOccupied)
                 .SelectMany(n => n.Neighbors)
                 .Any(n => n == targetNode && !n.IsOccupied);
@@ -83,40 +65,8 @@ public class Player : MonoBehaviour, IPlayer
         return false;
     }
 
-    private void MoveTo(Node targetNode)
-    {
-        if (targetNode == null)
-        {
-            Debug.LogError("Target node is null.");
-            return;
-        }
-
-        if (targetNode.IsOccupied)
-        {
-            Debug.LogError("Target node is occupied.");
-            return;
-        }
-
-        if (currentNode != null)
-        {
-            currentNode.IsOccupied = false;
-        }
-
-        currentNode = targetNode;
-        transform.position = GetPosition(targetNode);
-        currentNode.IsOccupied = true;
-    }
-
     private Vector3 GetPosition(Node node)
     {
         return node.Position + Vector3.up * yOffset;
-    }
-
-    private void OnDestroy()
-    {
-        if (currentNode != null)
-        {
-            currentNode.IsOccupied = false;
-        }
     }
 }
