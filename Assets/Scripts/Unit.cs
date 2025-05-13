@@ -69,7 +69,7 @@ public abstract class Unit : MonoBehaviour
         return Quaternion.LookRotation(forward, node.transform.up);
     }
 
-    private void OnDestroy()
+    protected virtual void OnDestroy()
     {
         if (CurrentNode != null)
         {

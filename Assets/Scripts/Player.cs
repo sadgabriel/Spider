@@ -3,13 +3,24 @@ using System.Linq;
 
 public class Player : Unit
 {
+    public static Player Instance { get; private set; }
     [SerializeField] private int life = 1;
-    [SerializeField] private float yOffset = 0.5f;
     
     public int Life
     {
         get => life;
         private set => life = value;
+    }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
     }
 
     private void Update()
@@ -65,8 +76,12 @@ public class Player : Unit
         return false;
     }
 
-    private Vector3 GetPosition(Node node)
+    protected override void OnDestroy()
     {
-        return node.Position + Vector3.up * yOffset;
+        base.OnDestroy();
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
 }

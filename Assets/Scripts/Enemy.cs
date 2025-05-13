@@ -2,14 +2,42 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
+enum EnemyState
+{
+    Idle,
+    Alerted
+}
+
 public class Enemy : Unit
 {
     [SerializeField] private int lifeTime = 5;
 
     [SerializeField] private int attackDamage = 1;
 
+    [SerializeField] private Material defaultMaterial;
+    [SerializeField] private Material alertedMaterial;
+
     private Node currentTargetPillar;
     private Player player;
+
+    private Renderer[] childrenRenderers;
+
+    private EnemyState state = EnemyState.Idle;
+    private EnemyState State
+    {
+        get => state;
+        set
+        {
+            if (state == value) return;
+            state = value;
+            UpdateMaterial();
+        }
+    }
+
+    private void Awake()
+    {
+        childrenRenderers = GetComponentsInChildren<Renderer>();
+    }
 
     public void Initialize(Node startNode, Player player)
     {
@@ -100,11 +128,12 @@ public class Enemy : Unit
             {
                 if (route[i] is Pillar)
                 {
+                    State = EnemyState.Alerted;
                     return route[i];
                 }
             }
         }
-
+        State = EnemyState.Idle;
         return FindRandomAdjacentPillar();
     }
 
@@ -149,5 +178,21 @@ public class Enemy : Unit
     private void Die()
     {
         Destroy(gameObject);
+    }
+
+    private void UpdateMaterial()
+    {
+        foreach (Renderer childRenderer in childrenRenderers)
+        {
+            switch (State)
+            {
+                case EnemyState.Idle:
+                    childRenderer.material = defaultMaterial;
+                    break;
+                case EnemyState.Alerted:
+                    childRenderer.material = alertedMaterial;
+                    break;
+            }
+        }
     }
 }
