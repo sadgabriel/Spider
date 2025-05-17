@@ -75,7 +75,7 @@ public abstract class MapManager : MonoBehaviour
     public void ConnectPillars(Pillar pillar1, Pillar pillar2){
         if (pillar1 == null || pillar2 == null) return;
 
-        GameObject bridgeGO = Instantiate(bridgePrefab);
+        GameObject bridgeGO = Instantiate(bridgePrefab, map.transform);
         Bridge bridge = bridgeGO.GetComponent<Bridge>();
 
         bridge.Initialize(CalcBridgeJointPosition(pillar1), CalcBridgeJointPosition(pillar2));
@@ -88,7 +88,7 @@ public abstract class MapManager : MonoBehaviour
 
     protected Pillar InstantiatePillar(GameObject prefab, Vector3 position, Quaternion rotation, string name)
     {
-        GameObject pillarGO = Instantiate(prefab, position, rotation);
+        GameObject pillarGO = Instantiate(prefab, position, rotation, map.transform);
         pillarGO.name = name;
         Pillar pillar = pillarGO.GetComponent<Pillar>();
         Nodes.Add(pillar);

@@ -33,13 +33,14 @@ class RandomSphereMapManager : MapManager
         List<Vector3> largePillarVectors = PoissonSampler.GeneratePoissonSpherePoints(largePillarCount, largePillarAngle, maxAttempts);
         List<Vector3> allPillarVectors = PoissonSampler.GeneratePoissonSpherePoints(totalPillarCount, smallPillarAngle, maxAttempts, largePillarVectors);
 
-        List<Vector3> largePillarPositions = largePillarVectors.Select(v => v * radius).ToList();
-        List<Vector3> allPillarPositions = allPillarVectors.Select(v => v * radius).ToList();
+        List<Vector3> largePillarPositions = largePillarVectors.Select(v => v * radius + map.transform.position).ToList();
+        List<Vector3> allPillarPositions = allPillarVectors.Select(v => v * radius + map.transform.position).ToList();
 
         foreach (var pos in allPillarPositions)
         {
+            Vector3 v = pos - map.transform.position;
             GameObject prefab = largePillarPositions.Contains(pos) ? LargePillarPrefab : SmallPillarPrefab;
-            Quaternion rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(Vector3.back, pos).normalized, pos);
+            Quaternion rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(Vector3.back, v).normalized, v);
             string name = (prefab == LargePillarPrefab ? "LargePillar" : "SmallPillar") + $" ({pos})";
             Pillar pillar = InstantiatePillar(prefab, pos, rotation, name);
         }
@@ -55,7 +56,7 @@ class RandomSphereMapManager : MapManager
 
                 Vector3 bridgePosition = (CalcBridgeJointPosition(pillar1) + CalcBridgeJointPosition(pillar2)) / 2;
 
-                if (bridgePosition.magnitude > bridgeMinRadius)
+                if ((bridgePosition - map.transform.position).magnitude > bridgeMinRadius)
                 {
                     ConnectPillars(pillar1, pillar2);
                 }
