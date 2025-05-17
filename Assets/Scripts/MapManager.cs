@@ -14,6 +14,7 @@ public abstract class MapManager : MonoBehaviour
     [SerializeField] protected GameObject SmallPillarPrefab;
     [SerializeField] protected GameObject bridgePrefab;
     [SerializeField] protected GameObject map;
+    [SerializeField] protected float bridgeOffset = -0.5f;
 
     public abstract Pillar StartPillar { get; }
 
@@ -77,7 +78,7 @@ public abstract class MapManager : MonoBehaviour
         GameObject bridgeGO = Instantiate(bridgePrefab);
         Bridge bridge = bridgeGO.GetComponent<Bridge>();
 
-        bridge.Initialize(pillar1.transform.position, pillar2.transform.position);
+        bridge.Initialize(CalcBridgeJunctionPosition(pillar1), CalcBridgeJunctionPosition(pillar2));
 
         pillar1.ConnectTo(bridge);
         pillar2.ConnectTo(bridge);
@@ -94,6 +95,11 @@ public abstract class MapManager : MonoBehaviour
         Pillars.Add(pillar);
         
         return pillar;
+    }
+
+    protected Vector3 CalcBridgeJunctionPosition(Pillar pillar)
+    {
+        return pillar.TopPosition + pillar.transform.up * bridgeOffset;
     }
 
     public abstract void GenerateMap();

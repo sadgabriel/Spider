@@ -8,7 +8,7 @@ class RandomSphereMapManager : MapManager
     [SerializeField] private int totalPillarCount = 60;
     [SerializeField] private float largePillarAngle = 30f;
     [SerializeField] private float smallPillarAngle = 15f;
-    [SerializeField] private float radius = 10f;
+    [SerializeField] private float radius = 8f;
     [SerializeField] private int maxAttempts = 10000;
 
     public override Pillar StartPillar {

@@ -49,17 +49,17 @@ public abstract class Unit : MonoBehaviour
         }
 
         CurrentNode = targetNode;
-        transform.position = getPosition(targetNode);
-        transform.rotation = getRotation(targetNode);
+        transform.position = CalcUnitPosition(targetNode);
+        transform.rotation = CalcUnitRotation(targetNode);
         CurrentNode.IsOccupied = true;
     }
 
-    protected Vector3 getPosition(Node node)
+    protected Vector3 CalcUnitPosition(Node node)
     {
-        return node.Position + node.transform.up * verticalOffset;
+        return node.TopPosition + node.transform.up * verticalOffset;
     }
 
-    protected Quaternion getRotation(Node node)
+    protected Quaternion CalcUnitRotation(Node node)
     {
         Vector3 forward = Vector3.ProjectOnPlane(transform.forward, node.transform.up).normalized;
 

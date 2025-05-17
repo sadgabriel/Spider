@@ -94,14 +94,14 @@ public class Enemy : Unit
 
         if (targetNode == null)
         {
-            transform.rotation = getRotation(CurrentNode);
+            transform.rotation = CalcUnitRotation(CurrentNode);
             return;
         }
         
         Vector3 surfaceNormal = CurrentNode.transform.up;
 
         Vector3 forward = Vector3.ProjectOnPlane(
-            targetNode.Position - CurrentNode.Position,
+            targetNode.TopPosition - CurrentNode.TopPosition,
             surfaceNormal
         ).normalized;
 

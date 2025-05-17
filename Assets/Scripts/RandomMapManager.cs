@@ -55,7 +55,7 @@ public class RandomMapManager : MapManager
 
                 GameObject bridgeGO = Instantiate(bridgePrefab);
                 Bridge bridge = bridgeGO.GetComponent<Bridge>();
-                bridge.Initialize(pillarPosition, edgePoint);
+                bridge.Initialize(CalcBridgeJunctionPosition(pillar), edgePoint);
                 pillar.ConnectTo(bridge);
                 Nodes.Add(bridge);
                 Bridges.Add(bridge);
