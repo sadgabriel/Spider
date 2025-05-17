@@ -13,6 +13,7 @@ public abstract class MapManager : MonoBehaviour
     [SerializeField] protected GameObject LargePillarPrefab;
     [SerializeField] protected GameObject SmallPillarPrefab;
     [SerializeField] protected GameObject bridgePrefab;
+    [SerializeField] protected GameObject map;
 
     public abstract Pillar StartPillar { get; }
 
@@ -82,6 +83,17 @@ public abstract class MapManager : MonoBehaviour
         pillar2.ConnectTo(bridge);
         Nodes.Add(bridge);
         Bridges.Add(bridge);
+    }
+
+    protected Pillar InstantiatePillar(GameObject prefab, Vector3 position, Quaternion rotation, string name)
+    {
+        GameObject pillarGO = Instantiate(prefab, position, rotation);
+        pillarGO.name = name;
+        Pillar pillar = pillarGO.GetComponent<Pillar>();
+        Nodes.Add(pillar);
+        Pillars.Add(pillar);
+        
+        return pillar;
     }
 
     public abstract void GenerateMap();

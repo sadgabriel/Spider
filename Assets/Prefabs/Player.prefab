@@ -121,6 +121,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9899454b786795a4394891a3e7add763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verticalOffset: 0.5
+  verticalOffset: 1
   life: 3
-  yOffset: 0.2

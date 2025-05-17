@@ -38,7 +38,7 @@ public class RandomMapManager : MapManager
         {
             Vector3 pillarPosition = new Vector3(pos.x, 0, pos.y);
 
-            Pillar pillar = InstantiatePillar(pillarPosition, LargePillarPrefab, $"LargePillar ({pos.x}, {pos.y})");
+            Pillar pillar = InstantiatePillar(LargePillarPrefab, pillarPosition, Quaternion.identity, $"LargePillar ({pos.x}, {pos.y})");
             pillarMap[pos] = pillar;
 
             if (hullPoints.Contains(pos))
@@ -67,7 +67,7 @@ public class RandomMapManager : MapManager
         {
             if (largePillarPositions.Contains(pos)) continue;
 
-            Pillar pillar = InstantiatePillar(new Vector3(pos.x, 0, pos.y), SmallPillarPrefab, $"SmallPillar ({pos.x}, {pos.y})");
+            Pillar pillar = InstantiatePillar(SmallPillarPrefab, new Vector3(pos.x, 0, pos.y), Quaternion.identity, $"SmallPillar ({pos.x}, {pos.y})");
             pillarMap[pos] = pillar;
         }
 
@@ -81,16 +81,5 @@ public class RandomMapManager : MapManager
                 ConnectPillars(startPillar, endPillar);
             }
         }
-    }
-
-    private Pillar InstantiatePillar(Vector3 position, GameObject prefab, string name)
-    {
-        GameObject pillarGO = Instantiate(prefab, position, Quaternion.identity);
-        pillarGO.name = name;
-        Pillar pillar = pillarGO.GetComponent<Pillar>();
-        Nodes.Add(pillar);
-        Pillars.Add(pillar);
-
-        return pillar;
     }
 }
