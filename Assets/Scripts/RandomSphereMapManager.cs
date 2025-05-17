@@ -10,8 +10,10 @@ class RandomSphereMapManager : MapManager
     [SerializeField] private float smallPillarAngle = 15f;
     [SerializeField] private float radius = 8f;
     [SerializeField] private int maxAttempts = 10000;
+    [SerializeField] private float bridgeMinRadius = 7f;
 
-    public override Pillar StartPillar {
+    public override Pillar StartPillar
+    {
         get
         {
             if (Nodes.Count == 0) return null;
@@ -21,20 +23,18 @@ class RandomSphereMapManager : MapManager
 
     public override void GenerateMap()
     {
+        GeneratePillars();
+        GenerateBridges();
+        RemoveIsolatedPillars();
+    }
+
+    private void GeneratePillars()
+    {
         List<Vector3> largePillarVectors = PoissonSampler.GeneratePoissonSpherePoints(largePillarCount, largePillarAngle, maxAttempts);
-
         List<Vector3> allPillarVectors = PoissonSampler.GeneratePoissonSpherePoints(totalPillarCount, smallPillarAngle, maxAttempts, largePillarVectors);
-
-        float largeConnectDist = 10f;
-        float smallConnectDist = 6f;
 
         List<Vector3> largePillarPositions = largePillarVectors.Select(v => v * radius).ToList();
         List<Vector3> allPillarPositions = allPillarVectors.Select(v => v * radius).ToList();
-
-        var largeEdges = ConnectByDistance(largePillarPositions, largeConnectDist);
-        var smallEdges = ConnectByDistance(allPillarPositions, smallConnectDist);
-
-        Dictionary<Vector3, Pillar> pillarMap = new();
 
         foreach (var pos in allPillarPositions)
         {
@@ -42,33 +42,33 @@ class RandomSphereMapManager : MapManager
             Quaternion rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(Vector3.back, pos).normalized, pos);
             string name = (prefab == LargePillarPrefab ? "LargePillar" : "SmallPillar") + $" ({pos})";
             Pillar pillar = InstantiatePillar(prefab, pos, rotation, name);
-            pillarMap[pos] = pillar;
         }
+    }
 
-        foreach (var (start, end) in largeEdges.Concat(smallEdges))
+    private void GenerateBridges()
+    {
+        foreach (var pillar1 in Pillars)
         {
-            if (pillarMap.TryGetValue(start, out var p1) && pillarMap.TryGetValue(end, out var p2))
+            foreach (var pillar2 in Pillars)
             {
-                ConnectPillars(p1, p2);
+                if (pillar1 == pillar2) continue;
+
+                Vector3 bridgePosition = (CalcBridgeJointPosition(pillar1) + CalcBridgeJointPosition(pillar2)) / 2;
+
+                if (bridgePosition.magnitude > bridgeMinRadius)
+                {
+                    ConnectPillars(pillar1, pillar2);
+                }
             }
         }
     }
 
-    private List<(Vector3, Vector3)> ConnectByDistance(List<Vector3> points, float maxDistance)
+    private void RemoveIsolatedPillars()
     {
-        var edges = new List<(Vector3, Vector3)>();
-
-        for (int i = 0; i < points.Count; i++)
+        var isolatedPillars = Pillars.Where(p => p.Neighbors.Count == 0).ToList();
+        foreach (var pillar in isolatedPillars)
         {
-            for (int j = i + 1; j < points.Count; j++)
-            {
-                if (Vector3.Distance(points[i], points[j]) <= maxDistance)
-                {
-                    edges.Add((points[i], points[j]));
-                }
-            }
+            RemoveNode(pillar);
         }
-
-        return edges;
     }
 }

@@ -78,7 +78,7 @@ public abstract class MapManager : MonoBehaviour
         GameObject bridgeGO = Instantiate(bridgePrefab);
         Bridge bridge = bridgeGO.GetComponent<Bridge>();
 
-        bridge.Initialize(CalcBridgeJunctionPosition(pillar1), CalcBridgeJunctionPosition(pillar2));
+        bridge.Initialize(CalcBridgeJointPosition(pillar1), CalcBridgeJointPosition(pillar2));
 
         pillar1.ConnectTo(bridge);
         pillar2.ConnectTo(bridge);
@@ -97,7 +97,27 @@ public abstract class MapManager : MonoBehaviour
         return pillar;
     }
 
-    protected Vector3 CalcBridgeJunctionPosition(Pillar pillar)
+    protected void RemoveNode(Node node)
+    {
+        if (node == null) return;
+
+        Nodes.Remove(node);
+        if (node is Pillar pillar)
+        {
+            Pillars.Remove(pillar);
+        }
+        else if (node is Bridge bridge)
+        {
+            Bridges.Remove(bridge);
+        }
+        
+        if (Spawners.Contains(node))
+        {
+            Spawners.Remove(node);
+        }
+    }
+
+    protected Vector3 CalcBridgeJointPosition(Pillar pillar)
     {
         return pillar.TopPosition + pillar.transform.up * bridgeOffset;
     }

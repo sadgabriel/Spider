@@ -10,7 +10,12 @@ public class Node : MonoBehaviour
 
     public Vector3 TopPosition
     {
-        get => transform.position + transform.up * GetComponent<Renderer>().bounds.extents.y;
+        get
+        {
+            var mesh = GetComponent<MeshFilter>().sharedMesh;
+            float halfHeight = mesh.bounds.extents.y * transform.lossyScale.y;
+            return transform.position + transform.up * halfHeight;
+        }
     }
 
     public void ConnectTo(Node other)
