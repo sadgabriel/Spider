@@ -33,7 +33,7 @@ public class UnitManager : MonoBehaviour
     {
         if (Player == null)
         {
-            Player = Instantiate(playerPrefab);
+            Player = Instantiate(playerPrefab, MapManager.Instance.Origin);
             Player.Initialize(MapManager.Instance.StartPillar);
         }
     }
@@ -59,7 +59,7 @@ public class UnitManager : MonoBehaviour
     public void SpawnEnemy(Node node)
     {   
         if (node == null || node.IsOccupied) return;
-        Enemy enemy = Instantiate(enemyPrefab);
+        Enemy enemy = Instantiate(enemyPrefab, MapManager.Instance.Origin);
         enemy.Initialize(node, Player);
         Enemies.Add(enemy);
     }

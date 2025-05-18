@@ -16,6 +16,15 @@ public abstract class MapManager : MonoBehaviour
     [SerializeField] protected GameObject map;
     [SerializeField] protected float bridgeOffset = -0.5f;
 
+    public Transform Origin
+    {
+        get
+        {
+            if (map == null) return null;
+            return map.transform;
+        }
+    }
+
     public abstract Pillar StartPillar { get; }
 
     private void Awake()
@@ -75,7 +84,7 @@ public abstract class MapManager : MonoBehaviour
     public void ConnectPillars(Pillar pillar1, Pillar pillar2){
         if (pillar1 == null || pillar2 == null) return;
 
-        GameObject bridgeGO = Instantiate(bridgePrefab, map.transform);
+        GameObject bridgeGO = Instantiate(bridgePrefab, Origin);
         Bridge bridge = bridgeGO.GetComponent<Bridge>();
 
         bridge.Initialize(CalcBridgeJointPosition(pillar1), CalcBridgeJointPosition(pillar2));
@@ -88,7 +97,7 @@ public abstract class MapManager : MonoBehaviour
 
     protected Pillar InstantiatePillar(GameObject prefab, Vector3 position, Quaternion rotation, string name)
     {
-        GameObject pillarGO = Instantiate(prefab, position, rotation, map.transform);
+        GameObject pillarGO = Instantiate(prefab, position, rotation, Origin);
         pillarGO.name = name;
         Pillar pillar = pillarGO.GetComponent<Pillar>();
         Nodes.Add(pillar);
