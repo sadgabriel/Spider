@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   verticalOffset: 0.5
-  lifeTime: 5
+  lifeTime: 15
   attackDamage: 1
   defaultMaterial: {fileID: 2100000, guid: 08a28a72be3820d43a5920ac080e2814, type: 2}
   alertedMaterial: {fileID: 2100000, guid: 5d73bd7fa895e8441a927b8c04dd7ab2, type: 2}

@@ -8,7 +8,7 @@ public abstract class MapManager : MonoBehaviour
     public List<Node> Nodes { get; private set; } = new();
     public List<Pillar> Pillars { get; private set; } = new();
     public List<Bridge> Bridges { get; private set; } = new();
-    public List<Node> Spawners { get; private set; } = new();
+    public virtual List<Node> Spawners { get; private set; } = new();
 
     [SerializeField] protected GameObject LargePillarPrefab;
     [SerializeField] protected GameObject SmallPillarPrefab;

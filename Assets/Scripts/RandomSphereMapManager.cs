@@ -12,6 +12,17 @@ class RandomSphereMapManager : MapManager
     [SerializeField] private int maxAttempts = 10000;
     [SerializeField] private float bridgeMinHeight = 9f;
 
+    public override List<Node> Spawners
+    {
+        get
+        {
+            return Pillars
+                .Where(p => p.Size == PillarSize.Small)
+                .Select(p => p as Node)
+                .ToList();
+        }
+    }
+
     public override Pillar StartPillar
     {
         get
