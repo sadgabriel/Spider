@@ -61,12 +61,12 @@ public abstract class Unit : MonoBehaviour
 
     protected Quaternion CalcUnitRotation(Node node)
     {
-        Vector3 forward = Vector3.ProjectOnPlane(transform.forward, node.transform.up).normalized;
+        Vector3 forward = Vector3.ProjectOnPlane(transform.forward, node.DirectionFromOrigin).normalized;
 
         if (forward == Vector3.zero)
-            forward = Vector3.Cross(node.transform.up, Vector3.right);
+            forward = Vector3.Cross(node.DirectionFromOrigin, Vector3.right);
 
-        return Quaternion.LookRotation(forward, node.transform.up);
+        return Quaternion.LookRotation(forward, node.DirectionFromOrigin);
     }
 
     protected virtual void OnDestroy()

@@ -81,11 +81,11 @@ public abstract class MapManager : MonoBehaviour
         return path;
     }
 
-    public void ConnectPillars(Pillar pillar1, Pillar pillar2){
-        if (pillar1 == null || pillar2 == null) return;
+    public virtual Bridge ConnectPillars(Pillar pillar1, Pillar pillar2)
+    {
+        if (pillar1 == null || pillar2 == null) return null;
 
-        GameObject bridgeGO = Instantiate(bridgePrefab, Origin);
-        Bridge bridge = bridgeGO.GetComponent<Bridge>();
+        Bridge bridge = Instantiate(bridgePrefab, Origin).GetComponent<Bridge>();
 
         bridge.Initialize(CalcBridgeJointPosition(pillar1), CalcBridgeJointPosition(pillar2));
 
@@ -93,6 +93,8 @@ public abstract class MapManager : MonoBehaviour
         pillar2.ConnectTo(bridge);
         Nodes.Add(bridge);
         Bridges.Add(bridge);
+        
+        return bridge;
     }
 
     protected Pillar InstantiatePillar(GameObject prefab, Vector3 position, Quaternion rotation, string name)

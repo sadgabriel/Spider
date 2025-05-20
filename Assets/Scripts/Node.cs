@@ -18,6 +18,15 @@ public class Node : MonoBehaviour
         }
     }
 
+    public Vector3 DirectionFromOrigin
+    {
+        get
+        {
+            Vector3 origin = transform.parent.position;
+            return (transform.position - origin).normalized;
+        }
+    }
+
     public void ConnectTo(Node other)
     {
         if (!Neighbors.Contains(other))

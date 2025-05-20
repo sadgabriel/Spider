@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.Security.Cryptography;
 
 class RandomSphereMapManager : MapManager
 {
@@ -37,6 +38,27 @@ class RandomSphereMapManager : MapManager
         GeneratePillars();
         GenerateBridges();
         RemoveIsolatedPillars();
+    }
+
+    public override Bridge ConnectPillars(Pillar pillar1, Pillar pillar2)
+    {
+        if (pillar1 == null || pillar2 == null) return null;
+
+        Bridge bridge = Instantiate(bridgePrefab, Origin).GetComponent<Bridge>();
+
+        Vector3 from = CalcBridgeJointPosition(pillar1);
+        Vector3 to = CalcBridgeJointPosition(pillar2);
+
+        Vector3 upwards = (from + to) / 2 - Origin.position;
+
+        bridge.Initialize(from, to, upwards);
+        
+        pillar1.ConnectTo(bridge);
+        pillar2.ConnectTo(bridge);
+        Nodes.Add(bridge);
+        Bridges.Add(bridge);
+        
+        return bridge;
     }
 
     private void GeneratePillars()
