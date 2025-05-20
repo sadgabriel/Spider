@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using System.Security.Cryptography;
+using System.Diagnostics;
 
 class RandomSphereMapManager : MapManager
 {
@@ -68,7 +68,7 @@ class RandomSphereMapManager : MapManager
 
         HashSet<Vector3> largePillarPositions = largePillarVectors.Select(v => v * radius + Origin.position).ToHashSet();
 
-        foreach (var pos in allPillarVectors.Select(v => v * radius + Origin.position))
+        foreach (Vector3 pos in allPillarVectors.Select(v => v * radius + Origin.position))
         {
             Vector3 v = pos - Origin.position;
             GameObject prefab = largePillarPositions.Contains(pos) ? LargePillarPrefab : SmallPillarPrefab;
@@ -81,8 +81,6 @@ class RandomSphereMapManager : MapManager
     private void GenerateBridges()
     {
         List<(Pillar, Pillar)> possibleBridges = new List<(Pillar, Pillar)>();
-        HashSet<(int, int)> seen = new HashSet<(int, int)>();
-
 
         for (int i = 0; i < Pillars.Count; i++)
         {
@@ -95,16 +93,13 @@ class RandomSphereMapManager : MapManager
 
                 if ((bridgePosition - Origin.position).magnitude > bridgeMinHeight)
                 {
-                    int id1 = pillar1.GetInstanceID();
-                    int id2 = pillar2.GetInstanceID();
-                    if (!seen.Add((id1, id2))) continue;
-
                     possibleBridges.Add((pillar1, pillar2));
                 }
             }
         }
 
-        foreach (var (pillar1, pillar2) in RemoveCrossingBridges(possibleBridges))
+        List<(Pillar, Pillar)> validBridges = RemoveCrossingBridges(possibleBridges);
+        foreach (var (pillar1, pillar2) in validBridges)
         {
             ConnectPillars(pillar1, pillar2);
         }
@@ -113,37 +108,57 @@ class RandomSphereMapManager : MapManager
     private List<(Pillar, Pillar)> RemoveCrossingBridges(List<(Pillar, Pillar)> possibleBridges)
     {
         int n = possibleBridges.Count;
-        int[] cross = new int[n];
+        int[] crossCount = new int[n];
+        List<int>[] crossWith = new List<int>[n];
+        for (int i = 0; i < n; i++)
+        {
+            crossCount[i] = 0;
+            crossWith[i] = new List<int>();
+        }
 
         for (int i = 0; i < n - 1; i++)
+        {
+            var (a1, a2) = possibleBridges[i];
             for (int j = i + 1; j < n; j++)
-                if (SegmentsCross(possibleBridges[i].Item1, possibleBridges[i].Item2, possibleBridges[j].Item1, possibleBridges[j].Item2, Origin.position))
+            {
+                var (b1, b2) = possibleBridges[j];
+                if (SegmentsCross(a1, a2, b1, b2, Origin.position))
                 {
-                    cross[i]++; cross[j]++;
+                    crossCount[i]++;
+                    crossCount[j]++;
+                    crossWith[i].Add(j);
+                    crossWith[j].Add(i);
                 }
+            }
+        }
 
-        var order = Enumerable.Range(0, n)
-            .OrderByDescending(idx => cross[idx])
+        int[] order = Enumerable.Range(0, n)
+            .OrderByDescending(idx => crossCount[idx])
             .ThenByDescending(idx =>
                 System.Math.Min(possibleBridges[idx].Item1.Neighbors.Count, possibleBridges[idx].Item2.Neighbors.Count))
-            .ToList();
+            .ToArray();
 
-        var keep = new HashSet<(Pillar,Pillar)>(possibleBridges);
+        HashSet<(Pillar, Pillar)> vaild = new HashSet<(Pillar, Pillar)>(possibleBridges);
 
         foreach (int idx in order)
         {
-            var e = possibleBridges[idx];
+            var bridge = possibleBridges[idx];
 
-            bool stillCross = keep.Any(k => SegmentsCross(e.Item1, e.Item2, k.Item1, k.Item2, Origin.position));
+            if (crossCount[idx] == 0) continue;
 
-            if (!stillCross) continue;
+            bool removed = true;
+            vaild.Remove(bridge);
 
-            keep.Remove(e);
-
-            if (!IsValidBridgeSet(keep))
-                keep.Add(e);  
+            if (removed)
+            {
+                foreach (int crossIdx in crossWith[idx])
+                {
+                    crossCount[crossIdx]--;
+                    crossWith[crossIdx].Remove(idx);
+                }
+            }
         }
-        return keep.ToList();
+        return vaild.ToList();
     }
 
     private static bool SegmentsCross(Pillar a1, Pillar a2, Pillar b1, Pillar b2, Vector3 origin)
@@ -169,57 +184,6 @@ class RandomSphereMapManager : MapManager
         Vector2 q2 = GeometryUtils.ProjectOntoPlane2D(posB2, origin, xAxis, yAxis);
 
         return GeometryUtils.DoIntersect(p1, p2, q1, q2);
-    }
-
-    private bool IsValidBridgeSet(HashSet<(Pillar, Pillar)> bridges)
-    {
-        return IsGraphConnected(bridges, Pillars) &&
-               MinDegreeSatisfied(bridges, Pillars, 2) &&
-               IsLargePillarConnected(bridges, Pillars);
-    }
-
-    private bool IsGraphConnected(HashSet<(Pillar, Pillar)> bridges, List<Pillar> pillars)
-    {
-        if (pillars.Count == 0) return true;
-
-        HashSet<Pillar> visited = new();
-        Stack<Pillar> stack = new();
-        stack.Push(pillars[0]);
-
-        while (stack.Count > 0)
-        {
-            var current = stack.Pop();
-            if (!visited.Add(current)) continue;
-
-            foreach (var (a, b) in bridges)
-            {
-                if (a == current && !visited.Contains(b)) stack.Push(b);
-                else if (b == current && !visited.Contains(a)) stack.Push(a);
-            }
-        }
-
-        return visited.Count == pillars.Count;
-    }
-
-    private bool IsLargePillarConnected(HashSet<(Pillar, Pillar)> bridges, List<Pillar> Pillars)
-    {
-        var largePillars = Pillars.Where(p => p.Size == PillarSize.Large).ToList();
-        return IsGraphConnected(bridges.Where(edge => largePillars.Contains(edge.Item1) && largePillars.Contains(edge.Item2)).ToHashSet(), largePillars);
-    }
-
-    private bool MinDegreeSatisfied(HashSet<(Pillar, Pillar)> bridges, List<Pillar> pillars, int min)
-    {
-        Dictionary<Pillar, int> degree = new();
-        foreach (var pillar in pillars)
-            degree[pillar] = 0;
-
-        foreach (var (a, b) in bridges)
-        {
-            degree[a]++;
-            degree[b]++;
-        }
-
-        return degree.Values.All(d => d >= min);
     }
 
     private void RemoveIsolatedPillars()
