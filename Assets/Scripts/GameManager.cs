@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     private void InitializeGame()
     {
-        MapManager.Instance.GenerateMap();
+        Map.Instance.GenerateMap();
         UnitSystem.Instance.Initialize();
     }
 }

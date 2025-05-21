@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class MapManager : MonoBehaviour
+public abstract class Map : MonoBehaviour
 {
-    public static MapManager Instance { get; private set; }
+    public static Map Instance { get; private set; }
 
     public List<Node> Nodes { get; private set; } = new();
     public List<Pillar> Pillars { get; private set; } = new();
@@ -13,15 +13,13 @@ public abstract class MapManager : MonoBehaviour
     [SerializeField] protected GameObject LargePillarPrefab;
     [SerializeField] protected GameObject SmallPillarPrefab;
     [SerializeField] protected GameObject bridgePrefab;
-    [SerializeField] protected GameObject map;
     [SerializeField] protected float bridgeOffset = -0.5f;
 
-    public Transform Origin
+    public Vector3 Origin
     {
         get
         {
-            if (map == null) return null;
-            return map.transform;
+            return transform.position;
         }
     }
 
@@ -85,7 +83,7 @@ public abstract class MapManager : MonoBehaviour
     {
         if (pillar1 == null || pillar2 == null) return null;
 
-        Bridge bridge = Instantiate(bridgePrefab, Origin).GetComponent<Bridge>();
+        Bridge bridge = Instantiate(bridgePrefab, transform).GetComponent<Bridge>();
 
         bridge.Initialize(CalcBridgeJointPosition(pillar1), CalcBridgeJointPosition(pillar2));
 
@@ -99,7 +97,7 @@ public abstract class MapManager : MonoBehaviour
 
     protected Pillar InstantiatePillar(GameObject prefab, Vector3 position, Quaternion rotation, string name)
     {
-        GameObject pillarGO = Instantiate(prefab, position, rotation, Origin);
+        GameObject pillarGO = Instantiate(prefab, position, rotation, transform);
         pillarGO.name = name;
         Pillar pillar = pillarGO.GetComponent<Pillar>();
         Nodes.Add(pillar);

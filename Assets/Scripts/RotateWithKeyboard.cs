@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class MapController : MonoBehaviour
+public class RotateWithKeyboard : MonoBehaviour
 {
-    [SerializeField] private float rotationSpeed = 10f;
+    [SerializeField] private float rotationSpeed = 40f;
 
     private void Update()
     {
@@ -26,10 +26,10 @@ public class MapController : MonoBehaviour
             direction += Vector3.up;
         }
         
-        RotateMap(direction.normalized);
+        Rotate(direction.normalized);
     }
 
-    private void RotateMap(Vector3 direction)
+    private void Rotate(Vector3 direction)
     {
         float rotationAmount = rotationSpeed * Time.deltaTime;
         transform.Rotate(direction, rotationAmount, Space.World);

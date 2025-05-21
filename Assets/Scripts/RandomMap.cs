@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class RandomMapManager : MapManager
+public class RandomMap : Map
 {
     [SerializeField] private int largePillarCount = 20;
     [SerializeField] private int totalPillarCount = 60;

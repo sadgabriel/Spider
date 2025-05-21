@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Linq;
 using System.Diagnostics;
 
-class RandomSphereMapManager : MapManager
+class RandomSphereMap : Map
 {
     [SerializeField] private int largePillarCount = 20;
     [SerializeField] private int totalPillarCount = 60;
@@ -44,12 +44,12 @@ class RandomSphereMapManager : MapManager
     {
         if (pillar1 == null || pillar2 == null) return null;
 
-        Bridge bridge = Instantiate(bridgePrefab, Origin).GetComponent<Bridge>();
+        Bridge bridge = Instantiate(bridgePrefab, transform).GetComponent<Bridge>();
 
         Vector3 from = CalcBridgeJointPosition(pillar1);
         Vector3 to = CalcBridgeJointPosition(pillar2);
 
-        Vector3 upwards = (from + to) / 2 - Origin.position;
+        Vector3 upwards = (from + to) / 2 - Origin;
 
         bridge.Initialize(from, to, upwards);
         
@@ -66,11 +66,11 @@ class RandomSphereMapManager : MapManager
         List<Vector3> largePillarVectors = PoissonSampler.GeneratePoissonSpherePoints(largePillarCount, largePillarAngle, maxAttempts);
         List<Vector3> allPillarVectors = PoissonSampler.GeneratePoissonSpherePoints(totalPillarCount, smallPillarAngle, maxAttempts, largePillarVectors);
 
-        HashSet<Vector3> largePillarPositions = largePillarVectors.Select(v => v * radius + Origin.position).ToHashSet();
+        HashSet<Vector3> largePillarPositions = largePillarVectors.Select(v => v * radius + Origin).ToHashSet();
 
-        foreach (Vector3 pos in allPillarVectors.Select(v => v * radius + Origin.position))
+        foreach (Vector3 pos in allPillarVectors.Select(v => v * radius + Origin))
         {
-            Vector3 v = pos - Origin.position;
+            Vector3 v = pos - Origin;
             GameObject prefab = largePillarPositions.Contains(pos) ? LargePillarPrefab : SmallPillarPrefab;
             Quaternion rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(Vector3.back, v).normalized, v);
             string name = (prefab == LargePillarPrefab ? "LargePillar" : "SmallPillar") + $" ({pos})";
@@ -91,7 +91,7 @@ class RandomSphereMapManager : MapManager
 
                 Vector3 bridgePosition = (CalcBridgeJointPosition(pillar1) + CalcBridgeJointPosition(pillar2)) / 2;
 
-                if ((bridgePosition - Origin.position).magnitude > bridgeMinHeight)
+                if ((bridgePosition - Origin).magnitude > bridgeMinHeight)
                 {
                     possibleBridges.Add((pillar1, pillar2));
                 }
@@ -122,7 +122,7 @@ class RandomSphereMapManager : MapManager
             for (int j = i + 1; j < n; j++)
             {
                 var (b1, b2) = possibleBridges[j];
-                if (SegmentsCross(a1, a2, b1, b2, Origin.position))
+                if (SegmentsCross(a1, a2, b1, b2, Origin))
                 {
                     crossCount[i]++;
                     crossCount[j]++;

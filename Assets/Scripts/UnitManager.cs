@@ -33,8 +33,8 @@ public class UnitManager : MonoBehaviour
     {
         if (Player == null)
         {
-            Player = Instantiate(playerPrefab, MapManager.Instance.Origin);
-            Player.Initialize(MapManager.Instance.StartPillar);
+            Player = Instantiate(playerPrefab, Map.Instance.transform);
+            Player.Initialize(Map.Instance.StartPillar);
         }
     }
 
@@ -48,7 +48,7 @@ public class UnitManager : MonoBehaviour
 
     public void SpawnEnemyAtRandomSpawner()
     {
-        List<Node> spawners = MapManager.Instance.Spawners;
+        List<Node> spawners = Map.Instance.Spawners;
         if (spawners.Count > 0)
         {
             List<Node> emptySpawners = spawners.FindAll(node => !node.IsOccupied);
@@ -59,7 +59,7 @@ public class UnitManager : MonoBehaviour
     public void SpawnEnemy(Node node)
     {   
         if (node == null || node.IsOccupied) return;
-        Enemy enemy = Instantiate(enemyPrefab, MapManager.Instance.Origin);
+        Enemy enemy = Instantiate(enemyPrefab, Map.Instance.transform);
         enemy.Initialize(node, Player);
         Enemies.Add(enemy);
     }
