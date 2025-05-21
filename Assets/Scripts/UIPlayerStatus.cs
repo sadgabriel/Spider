@@ -1,9 +1,10 @@
 using TMPro;
 using UnityEngine;
 
-public class UIPlayerHP : MonoBehaviour
+public class UIPlayerStatus : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI hpText;
+    [SerializeField] private TextMeshProUGUI staminaText;
 
     private void Update()
     {
@@ -11,6 +12,10 @@ public class UIPlayerHP : MonoBehaviour
         if (player != null && hpText != null)
         {
             hpText.text = $"HP: {player.Life}";
+        }
+        if (player != null && staminaText != null)
+        {
+            staminaText.text = $"Stamina: {player.Stamina}";
         }
     }
 }

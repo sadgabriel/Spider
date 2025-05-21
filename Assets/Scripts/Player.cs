@@ -4,12 +4,31 @@ using System.Linq;
 public class Player : Unit
 {
     public static Player Instance { get; private set; }
-    [SerializeField] private int life = 1;
+    [SerializeField] private int life = 3;
+    [SerializeField] private int maxLife = 3;
+    [SerializeField] private int stamina = 0;
+    [SerializeField] private int maxStamina = 3;
     
     public int Life
     {
         get => life;
-        private set => life = value;
+        private set
+        {
+            life = Mathf.Clamp(value, 0, maxLife);
+            if (life <= 0)
+            {
+                Debug.Log("Game Over");
+            }
+        }
+    }
+
+    public int Stamina
+    {
+        get => stamina;
+        private set
+        {
+            stamina = Mathf.Clamp(value, 0, maxStamina);
+        }
     }
 
     private void Awake()
@@ -23,17 +42,17 @@ public class Player : Unit
         Instance = this;
     }
 
-    private void Update()
-    {
-        if (!GameStateManager.Instance.IsPlayerTurn()) return;
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (TryMoveToClickedNode())
-            {
-                GameStateManager.Instance.EndPlayerTurn();
-            }
-        }
+    private void OnEnable()
+    {
+        GameStateManager.Instance.OnTurnChanged += HandleTurnChanged;
+        InputManager.Instance.OnMouseClicked += HandleMouseClicked;
+    }
+
+    private void OnDisable()
+    {
+        GameStateManager.Instance.OnTurnChanged -= HandleTurnChanged;
+        InputManager.Instance.OnMouseClicked -= HandleMouseClicked;
     }
 
     public void Initialize(Node startNode)
@@ -43,12 +62,7 @@ public class Player : Unit
 
     public void TakeDamage(int damage)
     {
-        life -= damage;
-
-        if (life <= 0)
-        {
-            Debug.Log("Game Over");
-        }
+        Life -= damage;
     }
 
     public override bool CanMoveTo(Node targetNode)
@@ -60,9 +74,30 @@ public class Player : Unit
                 .Any(n => n == targetNode && !n.IsOccupied);
     }
 
-    private bool TryMoveToClickedNode()
+    private void HandleMouseClicked(int button, Vector3 position)
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        switch (button)
+        {
+            case 0: // Left click
+                if (TryMoveToClickedNode(position))
+                {
+                    GameStateManager.Instance.EndPlayerTurn();
+                }
+                break;
+        }
+    }
+
+    private void HandleTurnChanged(TurnState turnState)
+    {
+        if (turnState == TurnState.PlayerTurn)
+        {
+            Stamina += 1;
+        }
+    }
+
+    private bool TryMoveToClickedNode(Vector3 position)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(position);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             Node targetNode = hit.collider.GetComponent<Node>();
