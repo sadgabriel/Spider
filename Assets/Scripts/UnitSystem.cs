@@ -16,7 +16,7 @@ public class UnitSystem : MonoBehaviour
     {
         UnitManager.Instance.InitializePlayer();
         UnitManager.Instance.SpawnWave(enemyCount);
-        TurnSystem.Instance.OnTurnChanged += HandleTurnChanged;
+        GameStateManager.Instance.OnTurnChanged += HandleTurnChanged;
     }
 
     private void HandleTurnChanged(TurnState newTurn)
@@ -39,11 +39,11 @@ public class UnitSystem : MonoBehaviour
         }
         UnitManager.Instance.RemoveDestroyedEnemies();
 
-        if (TurnSystem.Instance.TurnCount % waveInterval == 0)
+        if (GameStateManager.Instance.TurnCount % waveInterval == 0)
         {
             UnitManager.Instance.SpawnWave(enemyCount);
         }
 
-        TurnSystem.Instance.EndEnemyTurn();
+        GameStateManager.Instance.EndEnemyTurn();
     }
 }

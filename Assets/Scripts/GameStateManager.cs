@@ -1,5 +1,5 @@
-using System;
 using UnityEngine;
+using System;
 
 public enum TurnState
 {
@@ -7,20 +7,25 @@ public enum TurnState
     EnemyTurn
 }
 
-public class TurnSystem : MonoBehaviour
+class GameStateManager : MonoBehaviour
 {
+    public static GameStateManager Instance { get; private set; }
     private TurnState currentTurn = TurnState.PlayerTurn;
     private int turnCount = 1;
 
     public event Action<TurnState> OnTurnChanged;
-    
-    public static TurnSystem Instance { get; private set; }
 
     public TurnState CurrentTurn
     {
         get => currentTurn;
-        private set => currentTurn = value;
+        private set
+        {
+            if (currentTurn == value) return;
+            currentTurn = value;
+            OnTurnChanged?.Invoke(currentTurn);
+        }
     }
+
     public int TurnCount
     {
         get => turnCount;
@@ -41,19 +46,17 @@ public class TurnSystem : MonoBehaviour
     }
 
     public void EndPlayerTurn(){
-        if (currentTurn == TurnState.PlayerTurn)
+        if (CurrentTurn == TurnState.PlayerTurn)
         {
-            currentTurn = TurnState.EnemyTurn;
-            OnTurnChanged?.Invoke(currentTurn);
+            CurrentTurn = TurnState.EnemyTurn;
         }
     }
 
     public void EndEnemyTurn(){
-        if (currentTurn == TurnState.EnemyTurn)
+        if (CurrentTurn == TurnState.EnemyTurn)
         {
-            currentTurn = TurnState.PlayerTurn;
+            CurrentTurn = TurnState.PlayerTurn;
             turnCount++;
-            OnTurnChanged?.Invoke(currentTurn);
         }
     }
 }

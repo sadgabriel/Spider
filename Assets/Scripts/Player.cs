@@ -25,13 +25,13 @@ public class Player : Unit
 
     private void Update()
     {
-        if (!TurnSystem.Instance.IsPlayerTurn()) return;
+        if (!GameStateManager.Instance.IsPlayerTurn()) return;
 
         if (Input.GetMouseButtonDown(0))
         {
             if (TryMoveToClickedNode())
             {
-                TurnSystem.Instance.EndPlayerTurn();
+                GameStateManager.Instance.EndPlayerTurn();
             }
         }
     }
