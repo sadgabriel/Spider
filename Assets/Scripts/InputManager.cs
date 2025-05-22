@@ -4,7 +4,8 @@ class InputManager : MonoBehaviour
 {
     public static InputManager Instance { get; private set; }
 
-    public event System.Action<int, Vector3> OnMouseClicked;
+    public event System.Action<int, Vector3, GameObject> OnMouseClickedWhenIdle;
+    public event System.Action<int, Vector3, GameObject> OnMouseClickedWhenSpecialAction;
 
 
     private void Awake()
@@ -18,7 +19,26 @@ class InputManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            OnMouseClicked?.Invoke(0, Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            GameObject clickedGO = null;
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                clickedGO = hit.collider.gameObject;
+            }
+
+            if (GameStateManager.Instance.CurrentState == GameState.Idle)
+            {
+                OnMouseClickedWhenIdle?.Invoke(0, Input.mousePosition, clickedGO);
+            }
+            else if (GameStateManager.Instance.CurrentState == GameState.SpecialAction)
+            {
+                OnMouseClickedWhenSpecialAction?.Invoke(0, Input.mousePosition, clickedGO);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            GameStateManager.Instance.UseSpecialAction();
         }
     }
 }

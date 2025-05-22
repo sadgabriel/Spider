@@ -29,7 +29,7 @@ public abstract class Unit : MonoBehaviour
                !targetNode.IsOccupied;
     }
 
-    protected void MoveTo(Node targetNode)
+    public void MoveTo(Node targetNode)
     {
         if (targetNode == null)
         {

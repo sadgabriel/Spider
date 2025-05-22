@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 
 public class Player : Unit
 {
@@ -8,6 +10,7 @@ public class Player : Unit
     [SerializeField] private int maxLife = 3;
     [SerializeField] private int stamina = 0;
     [SerializeField] private int maxStamina = 3;
+    [SerializeField] private int staminaRegen = 1;
     
     public int Life
     {
@@ -42,19 +45,6 @@ public class Player : Unit
         Instance = this;
     }
 
-
-    private void OnEnable()
-    {
-        GameStateManager.Instance.OnTurnChanged += HandleTurnChanged;
-        InputManager.Instance.OnMouseClicked += HandleMouseClicked;
-    }
-
-    private void OnDisable()
-    {
-        GameStateManager.Instance.OnTurnChanged -= HandleTurnChanged;
-        InputManager.Instance.OnMouseClicked -= HandleMouseClicked;
-    }
-
     public void Initialize(Node startNode)
     {
         MoveTo(startNode);
@@ -65,50 +55,39 @@ public class Player : Unit
         Life -= damage;
     }
 
+    public void RegenerateStamina(int amount)
+    {
+        Stamina += amount;
+    }
+
+    public void RegenerateStamina()
+    {
+        RegenerateStamina(staminaRegen);
+    }
+
     public override bool CanMoveTo(Node targetNode)
     {
-        return targetNode != null &&
-            CurrentNode.Neighbors
-                .Where(n => !n.IsOccupied)
+        return CanMoveTo(targetNode, 1);
+    }
+
+    public bool CanMoveTo(Node targetNode, int maxDistance)
+    {
+        if (targetNode == null || targetNode is not Pillar || targetNode.IsOccupied || maxDistance <= 0)
+        {
+            return false;
+        }
+
+        IEnumerable<Node> reachableNodes = new List<Node> { CurrentNode };
+
+        for (int i = 0; i < 2 * maxDistance; i++)
+        {
+            reachableNodes = reachableNodes
                 .SelectMany(n => n.Neighbors)
-                .Any(n => n == targetNode && !n.IsOccupied);
-    }
-
-    private void HandleMouseClicked(int button, Vector3 position)
-    {
-        switch (button)
-        {
-            case 0: // Left click
-                if (TryMoveToClickedNode(position))
-                {
-                    GameStateManager.Instance.EndPlayerTurn();
-                }
-                break;
+                .Where(n => !n.IsOccupied)
+                .Distinct();
         }
-    }
-
-    private void HandleTurnChanged(TurnState turnState)
-    {
-        if (turnState == TurnState.PlayerTurn)
-        {
-            Stamina += 1;
-        }
-    }
-
-    private bool TryMoveToClickedNode(Vector3 position)
-    {
-        Ray ray = Camera.main.ScreenPointToRay(position);
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
-            Node targetNode = hit.collider.GetComponent<Node>();
-
-            if (targetNode != null && TryMoveTo(targetNode))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        
+        return reachableNodes.Contains(targetNode);
     }
 
     protected override void OnDestroy()

@@ -11,15 +11,15 @@ public class UnitManager : MonoBehaviour
     [SerializeField] private Enemy enemyPrefab;
 
     public Player Player { get; private set; }
-    public List<Enemy> Enemies 
+    public List<Enemy> Enemies
     {
         get
         {
             RemoveDestroyedEnemies();
-            return enemies; 
+            return enemies;
         }
         private set
-        { 
+        {
             enemies = value;
         }
     }
@@ -57,7 +57,7 @@ public class UnitManager : MonoBehaviour
     }
 
     public void SpawnEnemy(Node node)
-    {   
+    {
         if (node == null || node.IsOccupied) return;
         Enemy enemy = Instantiate(enemyPrefab, Map.Instance.transform);
         enemy.Initialize(node, Player);
@@ -67,5 +67,25 @@ public class UnitManager : MonoBehaviour
     public void RemoveDestroyedEnemies()
     {
         enemies.RemoveAll(enemy => enemy == null || enemy.gameObject == null);
+    }
+
+    public bool TryMovePlayerTo(Node targetNode)
+    {
+        return Player.TryMoveTo(targetNode);
+    }
+
+    public bool TryUseSpecialAction(Node targetNode)
+    {
+        return TrySprintTo(targetNode);
+    }
+
+    public bool TrySprintTo(Node targetNode)
+    {
+        if (Player.CanMoveTo(targetNode, 2))
+        {
+            Player.MoveTo(targetNode);
+            return true;
+        }
+        return false;
     }
 }

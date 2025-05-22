@@ -30,7 +30,7 @@ public abstract class Map : MonoBehaviour
         Instance = this;
     }
 
-    public List<Node> FindRoute(Node from, Node to)
+    public List<Node> FindRoute(Node from, Node to, bool ignoreOccupied = false)
     {
         if (from == null || to == null) return null;
 
@@ -42,7 +42,8 @@ public abstract class Map : MonoBehaviour
         visited.Add(from);
         cameFrom[from] = null;
 
-        while (frontier.Count > 0)
+        bool found = false;
+        while (frontier.Count > 0 && !found)
         {
             Node current = frontier.Dequeue();
 
@@ -51,11 +52,17 @@ public abstract class Map : MonoBehaviour
 
             foreach (Node neighbor in current.Neighbors)
             {
-                if (!visited.Contains(neighbor) && (!neighbor.IsOccupied || neighbor == to))
+                if (!visited.Contains(neighbor) && (ignoreOccupied || !neighbor.IsOccupied || neighbor == to))
                 {
                     visited.Add(neighbor);
                     frontier.Enqueue(neighbor);
                     cameFrom[neighbor] = current;
+
+                    if (neighbor == to)
+                    {
+                        found = true;
+                        break;
+                    }
                 }
             }
         }
@@ -79,6 +86,26 @@ public abstract class Map : MonoBehaviour
         return path;
     }
 
+    public int CalcTrueDistance(Node from, Node to)
+    {
+        return CalcDistance(from, to, true);
+    }
+
+    public int CalcPathDistance(Node from, Node to)
+    {
+        return CalcDistance(from, to, false);
+    }
+
+    private int CalcDistance(Node from, Node to, bool ignoreOccupied)
+    {
+        if (from == null || to == null) return -1;
+
+        List<Node> path = FindRoute(from, to, ignoreOccupied);
+        if (path == null) return -1;
+
+        return path.Count - 1;
+    }
+
     public virtual Bridge ConnectPillars(Pillar pillar1, Pillar pillar2)
     {
         if (pillar1 == null || pillar2 == null) return null;
@@ -91,7 +118,7 @@ public abstract class Map : MonoBehaviour
         pillar2.ConnectTo(bridge);
         Nodes.Add(bridge);
         Bridges.Add(bridge);
-        
+
         return bridge;
     }
 

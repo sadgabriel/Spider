@@ -17,6 +17,8 @@ public class UnitSystem : MonoBehaviour
         UnitManager.Instance.InitializePlayer();
         UnitManager.Instance.SpawnWave(enemyCount);
         GameStateManager.Instance.OnTurnChanged += HandleTurnChanged;
+        InputManager.Instance.OnMouseClickedWhenIdle += HandleMouseClickedWhenIdle;
+        InputManager.Instance.OnMouseClickedWhenSpecialAction += HandleMouseClickedWhenSpecialAction;
     }
 
     private void HandleTurnChanged(TurnState newTurn)
@@ -24,6 +26,37 @@ public class UnitSystem : MonoBehaviour
         if (newTurn == TurnState.EnemyTurn)
         {
             StartEnemyTurn();
+        }
+        else if (newTurn == TurnState.PlayerTurn)
+        {
+            Player.Instance.RegenerateStamina();
+        }
+    }
+
+    private void HandleMouseClickedWhenIdle(int button, Vector3 position, GameObject clickedGO)
+    {
+        if (button == 0) 
+        {
+            if (GameStateManager.Instance.IsPlayerTurn())
+            {
+                Node targetNode = clickedGO.GetComponent<Node>();
+                if (UnitManager.Instance.TryMovePlayerTo(targetNode))
+                {
+                    GameStateManager.Instance.EndPlayerTurn();
+                }
+            }
+        }
+    }
+
+    private void HandleMouseClickedWhenSpecialAction(int button, Vector3 position, GameObject clickedGO)
+    {
+        if (button == 0)
+        {
+            Node targetNode = clickedGO.GetComponent<Node>();
+            if (UnitManager.Instance.TryUseSpecialAction(targetNode))
+            {
+                GameStateManager.Instance.EndPlayerTurn();
+            }
         }
     }
 
