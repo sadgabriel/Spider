@@ -25,8 +25,6 @@ class InputManager : MonoBehaviour
 
     private void Update()
     {
-        if (!GameStateManager.Instance.IsPlayerTurn()) return;
-
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
         {
             int button = Input.GetMouseButtonDown(0) ? 0 : 1;

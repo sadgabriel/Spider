@@ -8,6 +8,8 @@ public class UnitSystem : MonoBehaviour
     [SerializeField] private int waveInterval = 5;
     [SerializeField] private int enemyCount = 1;
 
+    private static HashSet<SpecialAction.SpecialAction> specialActions = new HashSet<SpecialAction.SpecialAction>();
+
     private void Awake()
     {
         Instance = this;
@@ -19,7 +21,12 @@ public class UnitSystem : MonoBehaviour
         UnitManager.Instance.SpawnWave(enemyCount);
         GameStateManager.Instance.OnTurnChange += HandleTurnChange;
         InputManager.Instance.OnMouseButtonDown += HandleMouseButtonDown;
-        InputManager.Instance.OnKeyDown += OnKeyDown;
+        
+        specialActions.Add(new SpecialAction.Sprint());
+        foreach (var action in specialActions)
+        {
+            action.Activate();
+        }
     }
 
     private void HandleTurnChange(TurnState newTurn)
@@ -58,7 +65,7 @@ public class UnitSystem : MonoBehaviour
     {
         if (button == 0)
         {
-            if (GameStateManager.Instance.IsPlayerTurn())
+            if (GameStateManager.Instance.IsPlayerTurn && GameStateManager.Instance.IsIdle)
             {
                 Node targetNode = clickedGO.GetComponent<Node>();
 
@@ -69,25 +76,6 @@ public class UnitSystem : MonoBehaviour
                         GameStateManager.Instance.EndPlayerTurn();
                     }
                 }
-                else if (GameStateManager.Instance.IsSpecialActionState())
-                {
-                    if (Player.Instance.TrySprintTo(targetNode, 2))
-                    {
-                        GameStateManager.Instance.ResetState();
-                        GameStateManager.Instance.EndPlayerTurn();
-                    }
-                }
-            }
-        }
-    }
-    
-    private void OnKeyDown(HashSet<KeyCode> pressedKeys)
-    {
-        if (pressedKeys.Contains(KeyCode.Space))
-        {
-            if (GameStateManager.Instance.IsPlayerTurn())
-            {
-                GameStateManager.Instance.SetSpecialActionState();
             }
         }
     }

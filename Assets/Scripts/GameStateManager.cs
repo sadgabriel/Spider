@@ -51,19 +51,29 @@ class GameStateManager : MonoBehaviour
         private set => turnCount = value;
     }
 
+    public bool IsPlayerTurn
+    {
+        get => currentTurn == TurnState.PlayerTurn;
+    }
+
+    public bool IsEnemyTurn
+    {
+        get => currentTurn == TurnState.EnemyTurn;
+    }
+
+    public bool IsIdle
+    {
+        get => currentState == GameState.Idle;
+    }
+
+    public bool IsSpecialActionState
+    {
+        get => currentState == GameState.SpecialAction;
+    }
+
     private void Awake()
     {
         Instance = this;
-    }
-
-    public bool IsPlayerTurn()
-    {
-        return currentTurn == TurnState.PlayerTurn;
-    }
-
-    public bool IsEnemyTurn()
-    {
-        return currentTurn == TurnState.EnemyTurn;
     }
 
     public void EndPlayerTurn()
@@ -81,11 +91,6 @@ class GameStateManager : MonoBehaviour
             CurrentTurn = TurnState.PlayerTurn;
             turnCount++;
         }
-    }
-
-    public bool IsSpecialActionState()
-    {
-        return CurrentState == GameState.SpecialAction;
     }
 
     public void SetSpecialActionState()
