@@ -30,7 +30,7 @@ public abstract class Map : MonoBehaviour
         Instance = this;
     }
 
-    public List<Node> FindRoute(Node from, Node to, bool ignoreOccupied = false)
+    public List<Node> FindPath(Node from, Node to, bool ignoreOccupied = false)
     {
         if (from == null || to == null) return null;
 
@@ -100,7 +100,7 @@ public abstract class Map : MonoBehaviour
     {
         if (from == null || to == null) return -1;
 
-        List<Node> path = FindRoute(from, to, ignoreOccupied);
+        List<Node> path = FindPath(from, to, ignoreOccupied);
         if (path == null) return -1;
 
         return path.Count - 1;

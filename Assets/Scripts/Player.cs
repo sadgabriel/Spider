@@ -70,24 +70,27 @@ public class Player : Unit
         return CanMoveTo(targetNode, 1);
     }
 
-    public bool CanMoveTo(Node targetNode, int maxDistance)
+    private bool CanMoveTo(Node targetNode, int maxPillarDistance)
     {
-        if (targetNode == null || targetNode is not Pillar || targetNode.IsOccupied || maxDistance <= 0)
+        if (targetNode != null && targetNode is Pillar && !targetNode.IsOccupied && maxPillarDistance > 0)
         {
-            return false;
+            int nodeDistance = Map.Instance.CalcPathDistance(CurrentNode, targetNode);
+            if (nodeDistance != -1 && nodeDistance <= 2 * maxPillarDistance)
+            {
+                return true;
+            }
         }
+        return false;
+    }
 
-        IEnumerable<Node> reachableNodes = new List<Node> { CurrentNode };
-
-        for (int i = 0; i < 2 * maxDistance; i++)
+    public bool TrySprintTo(Node targetNode, int maxPillarDistance)
+    {
+        if (CanMoveTo(targetNode, maxPillarDistance))
         {
-            reachableNodes = reachableNodes
-                .SelectMany(n => n.Neighbors)
-                .Where(n => !n.IsOccupied)
-                .Distinct();
+            MoveTo(targetNode);
+            return true;
         }
-        
-        return reachableNodes.Contains(targetNode);
+        return false;
     }
 
     protected override void OnDestroy()

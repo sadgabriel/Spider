@@ -68,24 +68,4 @@ public class UnitManager : MonoBehaviour
     {
         enemies.RemoveAll(enemy => enemy == null || enemy.gameObject == null);
     }
-
-    public bool TryMovePlayerTo(Node targetNode)
-    {
-        return Player.TryMoveTo(targetNode);
-    }
-
-    public bool TryUseSpecialAction(Node targetNode)
-    {
-        return TrySprintTo(targetNode);
-    }
-
-    public bool TrySprintTo(Node targetNode)
-    {
-        if (Player.CanMoveTo(targetNode, 2))
-        {
-            Player.MoveTo(targetNode);
-            return true;
-        }
-        return false;
-    }
 }

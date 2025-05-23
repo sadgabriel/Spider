@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UnitSystem : MonoBehaviour
@@ -16,12 +17,12 @@ public class UnitSystem : MonoBehaviour
     {
         UnitManager.Instance.InitializePlayer();
         UnitManager.Instance.SpawnWave(enemyCount);
-        GameStateManager.Instance.OnTurnChanged += HandleTurnChanged;
-        InputManager.Instance.OnMouseClickedWhenIdle += HandleMouseClickedWhenIdle;
-        InputManager.Instance.OnMouseClickedWhenSpecialAction += HandleMouseClickedWhenSpecialAction;
+        GameStateManager.Instance.OnTurnChange += HandleTurnChange;
+        InputManager.Instance.OnMouseButtonDown += HandleMouseButtonDown;
+        InputManager.Instance.OnKeyDown += OnKeyDown;
     }
 
-    private void HandleTurnChanged(TurnState newTurn)
+    private void HandleTurnChange(TurnState newTurn)
     {
         if (newTurn == TurnState.EnemyTurn)
         {
@@ -30,33 +31,6 @@ public class UnitSystem : MonoBehaviour
         else if (newTurn == TurnState.PlayerTurn)
         {
             Player.Instance.RegenerateStamina();
-        }
-    }
-
-    private void HandleMouseClickedWhenIdle(int button, Vector3 position, GameObject clickedGO)
-    {
-        if (button == 0) 
-        {
-            if (GameStateManager.Instance.IsPlayerTurn())
-            {
-                Node targetNode = clickedGO.GetComponent<Node>();
-                if (UnitManager.Instance.TryMovePlayerTo(targetNode))
-                {
-                    GameStateManager.Instance.EndPlayerTurn();
-                }
-            }
-        }
-    }
-
-    private void HandleMouseClickedWhenSpecialAction(int button, Vector3 position, GameObject clickedGO)
-    {
-        if (button == 0)
-        {
-            Node targetNode = clickedGO.GetComponent<Node>();
-            if (UnitManager.Instance.TryUseSpecialAction(targetNode))
-            {
-                GameStateManager.Instance.EndPlayerTurn();
-            }
         }
     }
 
@@ -78,5 +52,43 @@ public class UnitSystem : MonoBehaviour
         }
 
         GameStateManager.Instance.EndEnemyTurn();
+    }
+
+    private void HandleMouseButtonDown(int button, Vector3 position, GameObject clickedGO)
+    {
+        if (button == 0)
+        {
+            if (GameStateManager.Instance.IsPlayerTurn())
+            {
+                Node targetNode = clickedGO.GetComponent<Node>();
+
+                if (GameStateManager.Instance.CurrentState == GameState.Idle)
+                {
+                    if (Player.Instance.TryMoveTo(targetNode))
+                    {
+                        GameStateManager.Instance.EndPlayerTurn();
+                    }
+                }
+                else if (GameStateManager.Instance.IsSpecialActionState())
+                {
+                    if (Player.Instance.TrySprintTo(targetNode, 2))
+                    {
+                        GameStateManager.Instance.ResetState();
+                        GameStateManager.Instance.EndPlayerTurn();
+                    }
+                }
+            }
+        }
+    }
+    
+    private void OnKeyDown(HashSet<KeyCode> pressedKeys)
+    {
+        if (pressedKeys.Contains(KeyCode.Space))
+        {
+            if (GameStateManager.Instance.IsPlayerTurn())
+            {
+                GameStateManager.Instance.SetSpecialActionState();
+            }
+        }
     }
 }

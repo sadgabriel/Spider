@@ -20,8 +20,8 @@ class GameStateManager : MonoBehaviour
     private GameState currentState = GameState.Idle;
     private int turnCount = 1;
 
-    public event Action<TurnState> OnTurnChanged;
-    public event Action<GameState> OnStateChanged;
+    public event Action<TurnState> OnTurnChange;
+    public event Action<GameState> OnStateChange;
 
     public TurnState CurrentTurn
     {
@@ -30,7 +30,7 @@ class GameStateManager : MonoBehaviour
         {
             if (currentTurn == value) return;
             currentTurn = value;
-            OnTurnChanged?.Invoke(currentTurn);
+            OnTurnChange?.Invoke(currentTurn);
         }
     }
 
@@ -41,7 +41,7 @@ class GameStateManager : MonoBehaviour
         {
             if (currentState == value) return;
             currentState = value;
-            OnStateChanged?.Invoke(currentState);
+            OnStateChange?.Invoke(currentState);
         }
     }
 
@@ -83,19 +83,18 @@ class GameStateManager : MonoBehaviour
         }
     }
 
-    public void UseSpecialAction()
+    public bool IsSpecialActionState()
     {
-        if (CurrentState == GameState.Idle)
-        {
-            CurrentState = GameState.SpecialAction;
-        }
+        return CurrentState == GameState.SpecialAction;
     }
 
-    public void ResetSpecialAction()
+    public void SetSpecialActionState()
     {
-        if (CurrentState == GameState.SpecialAction)
-        {
-            CurrentState = GameState.Idle;
-        }
+        CurrentState = GameState.SpecialAction;
+    }
+
+    public void ResetState()
+    {
+        CurrentState = GameState.Idle;
     }
 }

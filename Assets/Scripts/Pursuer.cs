@@ -76,13 +76,13 @@ class Pursuer : Enemy
 
     private Node FindNextStepTowards(Node targetNode)
     {
-        var route = Map.Instance.FindRoute(CurrentNode, targetNode);
+        var route = Map.Instance.FindPath(CurrentNode, targetNode);
         return (route != null && route.Count > 1) ? route[1] : null;
     }
 
     private Node FindNextPillar(int recognitionDistance = 4)
     {
-        var route = Map.Instance.FindRoute(CurrentNode, player.CurrentNode);
+        var route = Map.Instance.FindPath(CurrentNode, player.CurrentNode);
         if (route != null && route.Count > 1 && route.Count <= recognitionDistance + 1)
         {
             for (int i = 1; i < route.Count; i++)
