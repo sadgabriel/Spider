@@ -8,8 +8,6 @@ public class UnitSystem : MonoBehaviour
     [SerializeField] private int waveInterval = 5;
     [SerializeField] private int enemyCount = 1;
 
-    private static HashSet<SpecialAction.SpecialAction> specialActions = new HashSet<SpecialAction.SpecialAction>();
-
     private void Awake()
     {
         Instance = this;
@@ -21,12 +19,6 @@ public class UnitSystem : MonoBehaviour
         UnitManager.Instance.SpawnWave(enemyCount);
         GameStateManager.Instance.OnTurnChange += HandleTurnChange;
         InputManager.Instance.OnMouseButtonDown += HandleMouseButtonDown;
-        
-        specialActions.Add(new SpecialAction.Sprint());
-        foreach (var action in specialActions)
-        {
-            action.Activate();
-        }
     }
 
     private void HandleTurnChange(TurnState newTurn)

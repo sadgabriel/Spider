@@ -22,5 +22,6 @@ public class GameManager : MonoBehaviour
     {
         Map.Instance.GenerateMap();
         UnitSystem.Instance.Initialize();
+        SpecialActionManager.Instance.AddSpecialAction(new SpecialAction.Sprint()); // To Be Removed
     }
 }

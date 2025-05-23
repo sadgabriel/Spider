@@ -11,7 +11,7 @@ namespace SpecialAction
             {
                 Node targetNode = clickedGO.GetComponent<Node>();
                 
-                if (Player.Instance.TrySprintTo(targetNode, 2))
+                if (targetNode != null &&  Player.Instance.TrySprintTo(targetNode, 2))
                 {
                     GameStateManager.Instance.ResetState();
                     GameStateManager.Instance.EndPlayerTurn();
