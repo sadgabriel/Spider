@@ -8,12 +8,6 @@ class Pursuer : Enemy
     [SerializeField] private Material alertedMaterial;
 
     private Node currentTargetPillar;
-    
-    enum EnemyState
-{
-    Idle,
-    Alerted
-}
 
     private Renderer[] childrenRenderers;
 

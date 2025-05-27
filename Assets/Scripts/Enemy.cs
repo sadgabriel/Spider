@@ -2,7 +2,11 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-
+enum EnemyState
+{
+    Idle,
+    Alerted
+}
 
 public abstract class Enemy : Unit
 {

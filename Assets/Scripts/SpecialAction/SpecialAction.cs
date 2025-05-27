@@ -6,7 +6,7 @@ namespace SpecialAction
 {
     abstract class SpecialAction
     {
-        public bool IsActive { get; private set; }
+        public bool IsActive { get; private set; } = false;
         public void Activate()
         {
             if (IsActive) return;
