@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
         Map.Instance.GenerateMap();
         UnitSystem.Instance.Initialize();
         SpecialActionManager.Instance.AddSpecialAction(new SpecialAction.Sprint()); // To Be Removed
-        FacilityManager.Instance.InstallFacility(Map.Instance.StartPillar, FacilityType.Test); // To Be Removed
+        Facility testFacility = FacilityManager.Instance.InstallFacility(Map.Instance.StartPillar, FacilityType.Test); // To Be Removed
+        testFacility.UpgradeLevel = 3; // To Be Removed
     }
 }

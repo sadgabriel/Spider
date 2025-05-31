@@ -1,47 +1,96 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-class Facility : MonoBehaviour
+abstract class Facility : MonoBehaviour
 {
-    [SerializeField] private GameObject IconSurface;
-    [SerializeField] private Material IconMaterial;
+    [SerializeField] private GameObject iconSurface;
+    [SerializeField] private GameObject ringPrefab;
 
-    private void Start()
+    [SerializeField] private float firstRingOffset = -0.5f;
+    [SerializeField] private float ringGap = 0.1f;
+
+    private List<GameObject> rings = new List<GameObject>();
+
+    private Pillar currentPillar;
+
+    private int upgradeLevel = 0;
+    public int UpgradeLevel
     {
-        ApplyIcon();
+        get
+        {
+            return upgradeLevel;
+        }
+
+        set
+        {
+            while (rings.Count < value)
+            {
+                IncreaseRing();
+            }
+            
+            while (rings.Count > 0 && rings.Count > value)
+            {
+                DecreaseRing();
+            }
+        }
+    }
+
+    private void IncreaseRing()
+    {
+        Vector3 firstRingPosition = currentPillar.TopPosition + firstRingOffset * currentPillar.transform.up;
+        Vector3 ringPosition = firstRingPosition - rings.Count * ringGap * currentPillar.transform.up;
+
+        GameObject ring = Instantiate(ringPrefab, ringPosition, currentPillar.transform.rotation, transform);
+        float ringDiameter = currentPillar.Diameter + 0.01f;
+
+        float localScaleMultiplier = ringDiameter / ring.transform.lossyScale.x;
+
+        ring.transform.localScale = new Vector3(ring.transform.localScale.x * localScaleMultiplier, ring.transform.localScale.y, ring.transform.localScale.z * localScaleMultiplier);
+        
+        rings.Add(ring);
+    }
+
+    private void DecreaseRing()
+    {
+        if (rings.Count == 0) return;
+
+        GameObject ring = rings[rings.Count - 1];
+        rings.RemoveAt(rings.Count - 1);
+        Destroy(ring);
     }
 
     public void InstallOn(Pillar pillar)
     {
         if (pillar == null)
         {
+            Debug.LogError("Cannot install facility on a null pillar.");
+            return;
+        }
+        if (pillar.HasFacility)
+        {
+            Debug.LogError("Pillar already has a facility installed.");
+            return;
+        }
+        if (currentPillar != null)
+        {
+            Debug.LogError("Facility is already installed on a pillar.");
             return;
         }
 
         transform.position = pillar.TopPosition;
         transform.rotation = pillar.transform.rotation;
 
+        currentPillar = pillar;
+        pillar.HasFacility = true;
+
         ResizeToMatchPillar(pillar);
-    }
-
-    public void ApplyIcon()
-    {
-        if (IconSurface == null || IconMaterial == null)
-        {
-            return;
-        }
-
-        MeshRenderer meshRenderer = IconSurface.GetComponent<MeshRenderer>();
-        if (meshRenderer != null)
-        {
-            meshRenderer.material = IconMaterial;
-        }
     }
     
     private void ResizeToMatchPillar(Pillar pillar)
     {
         float diameter = pillar.Diameter;
 
-        float localScaleMultipler = diameter / (IconSurface.transform.lossyScale.x * 10);
-        IconSurface.transform.localScale = new Vector3(IconSurface.transform.localScale.x * localScaleMultipler, 1f, IconSurface.transform.localScale.z * localScaleMultipler);
+        float localScaleMultipler = diameter / (iconSurface.transform.lossyScale.x * 10);
+        iconSurface.transform.localScale = new Vector3(iconSurface.transform.localScale.x * localScaleMultipler, 1f, iconSurface.transform.localScale.z * localScaleMultipler);
     }
 }

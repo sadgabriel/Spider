@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 6a4249e9794a6be49864342fd6d29b3a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -118,9 +118,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3817306707055237524}
-  - component: {fileID: 4867504828160476826}
+  - component: {fileID: 7536843975956585619}
   m_Layer: 0
-  m_Name: Facility
+  m_Name: TestFacility
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -142,7 +142,7 @@ Transform:
   - {fileID: 6942083003066557421}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4867504828160476826
+--- !u!114 &7536843975956585619
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -151,8 +151,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 755801667524059289}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fcb8f6d3eccd434782123d053adfd6c, type: 3}
+  m_Script: {fileID: 11500000, guid: 12783102d3fe25b47b154427bef242f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IconSurface: {fileID: 130012191908741089}
-  IconMaterial: {fileID: 2100000, guid: 6a4249e9794a6be49864342fd6d29b3a, type: 2}
+  iconSurface: {fileID: 130012191908741089}
+  ringPrefab: {fileID: 482007586333451469, guid: b06cb374d1074a04fb1760dd86288915, type: 3}
+  firstRingOffset: -0.5
+  ringGap: 0.3
