@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-enum EnemyState
+public enum EnemyState
 {
     Idle,
     Alerted
@@ -13,7 +13,43 @@ public abstract class Enemy : Unit
     [SerializeField] protected int lifeTime = 5;
     [SerializeField] protected int attackDamage = 1;
 
+    [SerializeField] private Material defaultMaterial;
+    [SerializeField] private Material alertedMaterial;
+
+    private Renderer[] childrenRenderers;
+
+    private EnemyState state = EnemyState.Idle;
+    public EnemyState State
+    {
+        get => state;
+        protected set
+        {
+            if (state == value) return;
+            state = value;
+            UpdateMaterial();
+        }
+    }
+
     protected Player player;
+
+    protected int LifeTime
+    {
+        get => lifeTime;
+        set
+        {
+            lifeTime = value;
+            if (lifeTime <= 0)
+            {
+                Die();
+            }
+        }
+    }
+
+    protected virtual void Awake()
+    {
+        childrenRenderers = GetComponentsInChildren<Renderer>();
+        UpdateMaterial();
+    }
 
     public virtual void Initialize(Node startNode, Player player)
     {
@@ -34,7 +70,7 @@ public abstract class Enemy : Unit
             transform.rotation = CalcUnitRotation(CurrentNode);
             return;
         }
-        
+
         Vector3 surfaceNormal = CurrentNode.transform.up;
 
         Vector3 forward = Vector3.ProjectOnPlane(
@@ -54,11 +90,30 @@ public abstract class Enemy : Unit
     {
         player.TakeDamage(attackDamage);
     }
-    
+
     protected void Die()
     {
         Destroy(gameObject);
     }
 
-    public abstract void Act();
+    public virtual void Act()
+    {
+        LifeTime--;
+    }
+
+    private void UpdateMaterial()
+    {
+        foreach (Renderer childRenderer in childrenRenderers)
+        {
+            switch (State)
+            {
+                case EnemyState.Idle:
+                    childRenderer.material = defaultMaterial;
+                    break;
+                case EnemyState.Alerted:
+                    childRenderer.material = alertedMaterial;
+                    break;
+            }
+        }
+    }
 }

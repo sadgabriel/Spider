@@ -72,7 +72,7 @@ public class Player : Unit
 
     private bool CanMoveTo(Node targetNode, int maxPillarDistance)
     {
-        if (targetNode != null && targetNode is Pillar && !targetNode.IsOccupied && maxPillarDistance > 0)
+        if (targetNode != null && targetNode is Pillar && maxPillarDistance > 0 && (!targetNode.IsOccupied || targetNode.OccupyingUnit is Spawner))
         {
             int nodeDistance = Map.Instance.CalcPathDistance(CurrentNode, targetNode);
             if (nodeDistance != -1 && nodeDistance <= 2 * maxPillarDistance)
@@ -81,6 +81,16 @@ public class Player : Unit
             }
         }
         return false;
+    }
+
+    public override void MoveTo(Node targetNode)
+    {
+        if (targetNode.OccupyingUnit is Spawner spawner)
+        {
+            Destroy(spawner.gameObject);
+        }
+
+        base.MoveTo(targetNode);
     }
 
     public bool TrySprintTo(Node targetNode, int maxPillarDistance)

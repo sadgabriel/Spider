@@ -6,7 +6,8 @@ public class Node : MonoBehaviour
 {
     public List<Node> Neighbors { get; private set; } = new();
 
-    public bool IsOccupied { get; set; } = false;
+    public bool IsOccupied => OccupyingUnit != null;
+    public Unit OccupyingUnit { get; set; } = null;
 
     public Vector3 TopPosition
     {

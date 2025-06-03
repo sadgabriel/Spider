@@ -8,7 +8,7 @@ public abstract class Map : MonoBehaviour
     public List<Node> Nodes { get; private set; } = new();
     public List<Pillar> Pillars { get; private set; } = new();
     public List<Bridge> Bridges { get; private set; } = new();
-    public virtual List<Node> Spawners { get; private set; } = new();
+    public virtual List<Node> SpawnPoints { get; private set; } = new();
 
     [SerializeField] protected GameObject LargePillarPrefab;
     [SerializeField] protected GameObject SmallPillarPrefab;
@@ -67,7 +67,7 @@ public abstract class Map : MonoBehaviour
             }
         }
 
-        if (!cameFrom.ContainsKey(to)) 
+        if (!cameFrom.ContainsKey(to))
         {
             return null;
         }
@@ -147,9 +147,9 @@ public abstract class Map : MonoBehaviour
             Bridges.Remove(bridge);
         }
         
-        if (Spawners.Contains(node))
+        if (SpawnPoints.Contains(node))
         {
-            Spawners.Remove(node);
+            SpawnPoints.Remove(node);
         }
     }
 

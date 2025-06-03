@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8203803409684056503}
   - component: {fileID: 3127923648634269293}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Pursuer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   verticalOffset: 0.5
-  lifeTime: 15
+  lifeTime: 10
   attackDamage: 1
   defaultMaterial: {fileID: 2100000, guid: 08a28a72be3820d43a5920ac080e2814, type: 2}
   alertedMaterial: {fileID: 2100000, guid: 5d73bd7fa895e8441a927b8c04dd7ab2, type: 2}

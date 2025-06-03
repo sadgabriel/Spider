@@ -5,14 +5,14 @@ class SpecialActionManager : MonoBehaviour
 {
     public static SpecialActionManager Instance { get; private set; }
 
-    private static HashSet<SpecialAction.SpecialAction> specialActions = new HashSet<SpecialAction.SpecialAction>();
+    private static HashSet<SpecialAction> specialActions = new HashSet<SpecialAction>();
 
     private void Awake()
     {
         Instance = this;
     }
 
-    public void AddSpecialAction(SpecialAction.SpecialAction action)
+    public void AddSpecialAction(SpecialAction action)
     {
         if (action == null) return;
 
@@ -23,7 +23,7 @@ class SpecialActionManager : MonoBehaviour
         }
     }
 
-    public void RemoveSpecialAction(SpecialAction.SpecialAction action)
+    public void RemoveSpecialAction(SpecialAction action)
     {
         if (action == null) return;
 

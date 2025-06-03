@@ -4,39 +4,11 @@ using System.Linq;
 
 class Pursuer : Enemy
 {
-    [SerializeField] private Material defaultMaterial;
-    [SerializeField] private Material alertedMaterial;
-
     private Node currentTargetPillar;
-
-    private Renderer[] childrenRenderers;
-
-    private EnemyState state = EnemyState.Idle;
-    private EnemyState State
-    {
-        get => state;
-        set
-        {
-            if (state == value) return;
-            state = value;
-            UpdateMaterial();
-        }
-    }
-
-    private void Awake()
-    {
-        childrenRenderers = GetComponentsInChildren<Renderer>();
-    }
 
     public override void Act()
     {
-        lifeTime--;
-
-        if (lifeTime <= 0)
-        {
-            Die();
-            return;
-        }
+        base.Act();
 
         if (currentTargetPillar == null)
         {
@@ -66,7 +38,6 @@ class Pursuer : Enemy
             }
         }
     }
-
 
     private Node FindNextStepTowards(Node targetNode)
     {
@@ -123,21 +94,5 @@ class Pursuer : Enemy
                CurrentNode != null &&
                nextNode != null &&
                player.CurrentNode == nextNode;
-    }
-
-    private void UpdateMaterial()
-    {
-        foreach (Renderer childRenderer in childrenRenderers)
-        {
-            switch (State)
-            {
-                case EnemyState.Idle:
-                    childRenderer.material = defaultMaterial;
-                    break;
-                case EnemyState.Alerted:
-                    childRenderer.material = alertedMaterial;
-                    break;
-            }
-        }
-    }
+    }    
 }

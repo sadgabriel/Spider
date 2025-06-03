@@ -150,7 +150,7 @@ Player *-- Enemy
 Player *-- UnitManager
 Enemy *-- UnitManager
 
-Node *-- Unit
+Node *--* Unit
 Node *-- Player
 Node *-- Enemy
 Map *-- Player

@@ -892,7 +892,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: -5596155573772310588, guid: 43143db9b82036240a955db0e3157552, type: 3}
-  enemyPrefab: {fileID: 3127923648634269293, guid: 0ed1023a132726d4fa1ae3dbd92ec7b7, type: 3}
+  enemyEntries:
+  - type: 0
+    prefab: {fileID: 3127923648634269293, guid: 0ed1023a132726d4fa1ae3dbd92ec7b7, type: 3}
+  - type: 1
+    prefab: {fileID: 4043943983806633335, guid: d78ade8a5bd4c4246a1f2cf2dd4ed06e, type: 3}
 --- !u!4 &1083974151
 Transform:
   m_ObjectHideFlags: 0

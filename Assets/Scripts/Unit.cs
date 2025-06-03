@@ -29,29 +29,17 @@ public abstract class Unit : MonoBehaviour
                !targetNode.IsOccupied;
     }
 
-    public void MoveTo(Node targetNode)
+    public virtual void MoveTo(Node targetNode)
     {
-        if (targetNode == null)
-        {
-            Debug.LogError("Target node is null.");
-            return;
-        }
-
-        if (targetNode.IsOccupied)
-        {
-            Debug.LogError("Target node is occupied.");
-            return;
-        }
-        
         if (currentNode != null)
         {
-            CurrentNode.IsOccupied = false;
+            CurrentNode.OccupyingUnit = null;
         }
 
         CurrentNode = targetNode;
         transform.position = CalcUnitPosition(targetNode);
         transform.rotation = CalcUnitRotation(targetNode);
-        CurrentNode.IsOccupied = true;
+        CurrentNode.OccupyingUnit = this;
     }
 
     protected Vector3 CalcUnitPosition(Node node)
@@ -73,7 +61,7 @@ public abstract class Unit : MonoBehaviour
     {
         if (CurrentNode != null)
         {
-            CurrentNode.IsOccupied = false;
+            CurrentNode.OccupyingUnit = null;
         }
     }
 }

@@ -11,7 +11,7 @@ abstract class Facility : MonoBehaviour
 
     private List<GameObject> rings = new List<GameObject>();
 
-    private Pillar currentPillar;
+    public Pillar CurrentPillar { get; set; }
 
     private int upgradeLevel = 0;
     public int UpgradeLevel
@@ -37,11 +37,11 @@ abstract class Facility : MonoBehaviour
 
     private void IncreaseRing()
     {
-        Vector3 firstRingPosition = currentPillar.TopPosition + firstRingOffset * currentPillar.transform.up;
-        Vector3 ringPosition = firstRingPosition - rings.Count * ringGap * currentPillar.transform.up;
+        Vector3 firstRingPosition = CurrentPillar.TopPosition + firstRingOffset * CurrentPillar.transform.up;
+        Vector3 ringPosition = firstRingPosition - rings.Count * ringGap * CurrentPillar.transform.up;
 
-        GameObject ring = Instantiate(ringPrefab, ringPosition, currentPillar.transform.rotation, transform);
-        float ringDiameter = currentPillar.Diameter + 0.01f;
+        GameObject ring = Instantiate(ringPrefab, ringPosition, CurrentPillar.transform.rotation, transform);
+        float ringDiameter = CurrentPillar.Diameter + 0.01f;
 
         float localScaleMultiplier = ringDiameter / ring.transform.lossyScale.x;
 
@@ -71,7 +71,7 @@ abstract class Facility : MonoBehaviour
             Debug.LogError("Pillar already has a facility installed.");
             return;
         }
-        if (currentPillar != null)
+        if (CurrentPillar != null)
         {
             Debug.LogError("Facility is already installed on a pillar.");
             return;
@@ -80,7 +80,7 @@ abstract class Facility : MonoBehaviour
         transform.position = pillar.TopPosition;
         transform.rotation = pillar.transform.rotation;
 
-        currentPillar = pillar;
+        CurrentPillar = pillar;
         pillar.HasFacility = true;
 
         ResizeToMatchPillar(pillar);
