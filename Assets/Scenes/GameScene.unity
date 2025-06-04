@@ -897,6 +897,8 @@ MonoBehaviour:
     prefab: {fileID: 3127923648634269293, guid: 0ed1023a132726d4fa1ae3dbd92ec7b7, type: 3}
   - type: 1
     prefab: {fileID: 4043943983806633335, guid: d78ade8a5bd4c4246a1f2cf2dd4ed06e, type: 3}
+  - type: 2
+    prefab: {fileID: 3334576410073538310, guid: 101a5dce126190d438a93308a7d0f77c, type: 3}
 --- !u!4 &1083974151
 Transform:
   m_ObjectHideFlags: 0
@@ -1122,8 +1124,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da69f2cb38e31da498daa32a188a60fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveInterval: 5
-  enemyCount: 5
+  waveInterval: 15
+  enemyCount: 3
 --- !u!4 &1562469408
 Transform:
   m_ObjectHideFlags: 0

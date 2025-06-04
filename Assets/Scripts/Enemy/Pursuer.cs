@@ -2,17 +2,16 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-class Pursuer : Enemy
+class Pursuer : Mover
 {
-    private Node currentTargetPillar;
-
+    [SerializeField] private int recognitionDistance = 4;
     public override void Act()
     {
         base.Act();
 
         if (currentTargetPillar == null)
         {
-            currentTargetPillar = FindNextPillar();
+            SetNextPillar();
         }
 
         Node nextNode = FindNextStepTowards(currentTargetPillar);
@@ -38,53 +37,19 @@ class Pursuer : Enemy
             }
         }
     }
-
-    private Node FindNextStepTowards(Node targetNode)
+    
+    private void SetNextPillar()
     {
-        var route = Map.Instance.FindPath(CurrentNode, targetNode);
-        return (route != null && route.Count > 1) ? route[1] : null;
-    }
-
-    private Node FindNextPillar(int recognitionDistance = 4)
-    {
-        var route = Map.Instance.FindPath(CurrentNode, player.CurrentNode);
-        if (route != null && route.Count > 1 && route.Count <= recognitionDistance + 1)
+        Node nextPillar = FindNextPillarTowardsPlayerIfInRange(recognitionDistance);
+        if (nextPillar != null)
         {
-            for (int i = 1; i < route.Count; i++)
-            {
-                if (route[i] is Pillar)
-                {
-                    State = EnemyState.Alerted;
-                    return route[i];
-                }
-            }
+            State = EnemyState.Alerted;
+            currentTargetPillar = nextPillar;
+            return;
         }
+
         State = EnemyState.Idle;
-        return FindRandomAdjacentPillar();
-    }
-
-    private Node FindRandomAdjacentPillar()
-    {
-        List<Node> adjacentPillars;
-        if (CurrentNode is Pillar)
-        {
-            adjacentPillars = CurrentNode.Neighbors
-            .Where(n => !n.IsOccupied)
-            .SelectMany(n => n.Neighbors)
-            .Where(n => n is Pillar && !n.IsOccupied).ToList();
-        }
-        else
-        {
-            adjacentPillars = CurrentNode.Neighbors
-            .Where(n => n is Pillar && !n.IsOccupied).ToList();
-        }
-
-        if (adjacentPillars.Count > 0)
-        {
-            return adjacentPillars[Random.Range(0, adjacentPillars.Count)];
-        }
-
-        return null;
+        currentTargetPillar = FindRandomAdjacentPillar();
     }
 
     private bool IsAttackable()

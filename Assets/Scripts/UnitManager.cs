@@ -5,7 +5,8 @@ using System.Linq;
 public enum EnemyType
 {
     Pursuer,
-    Spawner
+    Spawner,
+    Runner
 }
 
 [System.Serializable]
@@ -71,7 +72,7 @@ public class UnitManager : MonoBehaviour
                     {
                         if (!spawnPoint.IsOccupied)
                         {
-                            SpawnEnemy(spawnPoint, EnemyType.Pursuer);
+                            SpawnEnemy(spawnPoint, Random.value > 0.2 ? EnemyType.Pursuer : EnemyType.Runner);
                         }
                     }
 
