@@ -25,7 +25,15 @@ class FacilityManager : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
         facilityPrefabs = facilityEntries.ToDictionary(entry => entry.type, entry => entry.prefab);
     }
 

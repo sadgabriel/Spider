@@ -69,7 +69,7 @@ public class UnitSystem : MonoBehaviour
                     targetNode = facility?.CurrentPillar;
                 }
 
-                if (GameStateManager.Instance.CurrentState == GameState.Idle)
+                if (targetNode != null && GameStateManager.Instance.CurrentState == GameState.Idle)
                 {
                     if (Player.Instance.TryMoveTo(targetNode))
                     {

@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class UIPlayerStatus : MonoBehaviour
+class StatusPanel : Panel
 {
     [SerializeField] private TextMeshProUGUI hpText;
     [SerializeField] private TextMeshProUGUI staminaText;

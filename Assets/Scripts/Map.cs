@@ -27,7 +27,15 @@ public abstract class Map : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     public List<Node> FindPath(Node from, Node to, bool ignoreOccupied = false)
