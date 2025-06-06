@@ -39,7 +39,6 @@ public class Player : Unit
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
