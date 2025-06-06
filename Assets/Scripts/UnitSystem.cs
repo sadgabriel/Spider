@@ -61,11 +61,11 @@ public class UnitSystem : MonoBehaviour
         {
             if (GameStateManager.Instance.IsPlayerTurn && GameStateManager.Instance.IsIdle)
             {
-                Node targetNode = clickedGO.GetComponent<Node>();
+                Node targetNode = clickedGO?.GetComponent<Node>();
 
                 if (targetNode == null)
                 {
-                    Facility facility = clickedGO.GetComponentInParent<Facility>();
+                    Facility facility = clickedGO?.GetComponentInParent<Facility>();
                     targetNode = facility?.CurrentPillar;
                 }
 

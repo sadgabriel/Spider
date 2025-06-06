@@ -36,7 +36,7 @@ class FacilityManager : MonoBehaviour
         facilityPrefabs = facilityEntries.ToDictionary(entry => entry.type, entry => entry.prefab);
     }
 
-    public Facility InstallFacility(Pillar pillar, FacilityType type)
+    public Facility BuildFacility(Pillar pillar, FacilityType type)
     {
         if (pillar == null || pillar.HasFacility) return null;
 
