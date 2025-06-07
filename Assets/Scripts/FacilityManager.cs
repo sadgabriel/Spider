@@ -4,7 +4,9 @@ using System.Linq;
 
 public enum FacilityType
 {
-    Test,
+    Test1,
+    Test2,
+    Test3,
 }
 
 [System.Serializable]
@@ -12,6 +14,7 @@ public class FacilityEntry
 {
     public FacilityType type;
     public GameObject prefab;
+    public FacilityData data;
 }
 
 class FacilityManager : MonoBehaviour
@@ -21,7 +24,8 @@ class FacilityManager : MonoBehaviour
 
     public List<Facility> Facilities { get; private set; } = new List<Facility>();
 
-    private Dictionary<FacilityType, GameObject> facilityPrefabs;
+    private Dictionary<FacilityType, GameObject> facilityPrefabMap;
+    private Dictionary<FacilityType, FacilityData> facilityDataMap;
 
     private void Awake()
     {
@@ -33,22 +37,28 @@ class FacilityManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        facilityPrefabs = facilityEntries.ToDictionary(entry => entry.type, entry => entry.prefab);
+        facilityPrefabMap = facilityEntries.ToDictionary(entry => entry.type, entry => entry.prefab);
+        facilityDataMap = facilityEntries.ToDictionary(entry => entry.type, entry => entry.data);
     }
 
     public Facility BuildFacility(Pillar pillar, FacilityType type)
     {
         if (pillar == null || pillar.HasFacility) return null;
 
-        GameObject facilityGO = Instantiate(facilityPrefabs[type], pillar.transform);
+        GameObject facilityGO = Instantiate(facilityPrefabMap[type], pillar.transform);
         Facility facility = facilityGO.GetComponent<Facility>();
 
-        facility.InstallOn(pillar);
+        facility.BuildOn(pillar);
 
         pillar.HasFacility = true;
 
         Facilities.Add(facility);
 
         return facility;
+    }
+
+    public List<FacilityData> GetAllFacilityData()
+    {
+        return facilityDataMap.Values.ToList();
     }
 }

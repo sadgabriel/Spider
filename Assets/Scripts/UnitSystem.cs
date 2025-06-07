@@ -59,7 +59,7 @@ public class UnitSystem : MonoBehaviour
     {
         if (button == 0)
         {
-            if (GameStateManager.Instance.IsPlayerTurn && GameStateManager.Instance.IsIdle)
+            if (GameStateManager.Instance.IsPlayerTurn && GameStateManager.Instance.IsIdleGameState && GameStateManager.Instance.IsIdleUIState)
             {
                 Node targetNode = clickedGO?.GetComponent<Node>();
 
@@ -69,7 +69,7 @@ public class UnitSystem : MonoBehaviour
                     targetNode = facility?.CurrentPillar;
                 }
 
-                if (targetNode != null && GameStateManager.Instance.CurrentState == GameState.Idle)
+                if (targetNode != null && GameStateManager.Instance.CurrentGameState == GameState.Idle)
                 {
                     if (Player.Instance.TryMoveTo(targetNode))
                     {

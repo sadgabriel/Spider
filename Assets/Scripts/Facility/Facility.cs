@@ -5,9 +5,24 @@ abstract class Facility : MonoBehaviour
 {
     [SerializeField] private GameObject iconSurface;
     [SerializeField] private GameObject ringPrefab;
-
+    [SerializeField] private FacilityData facilityData;
     [SerializeField] private float firstRingOffset = -0.5f;
-    [SerializeField] private float ringGap = 0.1f;
+    [SerializeField] private float ringGap = 0.3f;
+
+    public Texture2D IconTexture
+    {
+        get => facilityData?.iconTexture;
+    }
+    
+    public string FacilityName
+    {
+        get => facilityData?.facilityName;
+    }
+
+    public string FacilityDescription
+    {
+        get => facilityData?.facilityDescription;
+    }
 
     private List<GameObject> rings = new List<GameObject>();
 
@@ -27,7 +42,7 @@ abstract class Facility : MonoBehaviour
             {
                 IncreaseRing();
             }
-            
+
             while (rings.Count > 0 && rings.Count > value)
             {
                 DecreaseRing();
@@ -46,7 +61,7 @@ abstract class Facility : MonoBehaviour
         float localScaleMultiplier = ringDiameter / ring.transform.lossyScale.x;
 
         ring.transform.localScale = new Vector3(ring.transform.localScale.x * localScaleMultiplier, ring.transform.localScale.y, ring.transform.localScale.z * localScaleMultiplier);
-        
+
         rings.Add(ring);
     }
 
@@ -59,7 +74,7 @@ abstract class Facility : MonoBehaviour
         Destroy(ring);
     }
 
-    public void InstallOn(Pillar pillar)
+    public void BuildOn(Pillar pillar)
     {
         if (pillar == null)
         {
@@ -84,13 +99,34 @@ abstract class Facility : MonoBehaviour
         pillar.HasFacility = true;
 
         ResizeToMatchPillar(pillar);
+        ApplyIconTexture();
     }
-    
+
     private void ResizeToMatchPillar(Pillar pillar)
     {
         float diameter = pillar.Diameter;
 
         float localScaleMultipler = diameter / (iconSurface.transform.lossyScale.x * 10);
         iconSurface.transform.localScale = new Vector3(iconSurface.transform.localScale.x * localScaleMultipler, 1f, iconSurface.transform.localScale.z * localScaleMultipler);
+    }
+    
+    private void ApplyIconTexture()
+    {
+        if (iconSurface != null && IconTexture != null)
+        {
+            Renderer renderer = iconSurface.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.material.mainTexture = IconTexture;
+            }
+            else
+            {
+                Debug.LogError("Icon surface does not have a Renderer component.");
+            }
+        }
+        else
+        {
+            Debug.LogError("Icon surface or icon texture is not set.");
+        }
     }
 }

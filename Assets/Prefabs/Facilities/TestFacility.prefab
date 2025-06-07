@@ -156,5 +156,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   iconSurface: {fileID: 130012191908741089}
   ringPrefab: {fileID: 482007586333451469, guid: b06cb374d1074a04fb1760dd86288915, type: 3}
+  facilityData: {fileID: 11400000, guid: 1864b702eced88b479c57433b5512d56, type: 2}
   firstRingOffset: -0.5
   ringGap: 0.3

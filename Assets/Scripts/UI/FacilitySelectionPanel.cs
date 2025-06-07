@@ -1,45 +1,38 @@
+using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
+
 
 class FacilitySelectionPanel : Panel
 {
-    [SerializeField] private GameObject LeftChoiceIcon;
-    [SerializeField] private GameObject LeftChoiceNameText;
-    [SerializeField] private GameObject LeftChoiceDescriptionText;
-    [SerializeField] private GameObject MiddleChoiceIcon;
-    [SerializeField] private GameObject MiddleChoiceNameText;
-    [SerializeField] private GameObject MiddleChoiceDescriptionText;
-    [SerializeField] private GameObject RightChoiceIcon;
-    [SerializeField] private GameObject RightChoiceNameText;
-    [SerializeField] private GameObject RightChoiceDescriptionText;
+    [SerializeField] private UnityEngine.UI.Image leftChoiceIcon;
+    [SerializeField] private TMPro.TextMeshProUGUI leftChoiceNameText;
+    [SerializeField] private TMPro.TextMeshProUGUI leftChoiceDescriptionText;
+    [SerializeField] private UnityEngine.UI.Image middleChoiceIcon;
+    [SerializeField] private TMPro.TextMeshProUGUI middleChoiceNameText;
+    [SerializeField] private TMPro.TextMeshProUGUI middleChoiceDescriptionText;
+    [SerializeField] private UnityEngine.UI.Image rightChoiceIcon;
+    [SerializeField] private TMPro.TextMeshProUGUI rightChoiceNameText;
+    [SerializeField] private TMPro.TextMeshProUGUI rightChoiceDescriptionText;
 
-    public void SetLeftChoice(
-        Sprite icon,
-        string name,
-        string description)
+    public void SetLeftChoice(FacilityData facilityData)
     {
-        LeftChoiceIcon.GetComponent<SpriteRenderer>().sprite = icon;
-        LeftChoiceNameText.GetComponent<UnityEngine.UI.Text>().text = name;
-        LeftChoiceDescriptionText.GetComponent<UnityEngine.UI.Text>().text = description;
+        leftChoiceIcon.sprite = Sprite.Create(facilityData.iconTexture, new Rect(0, 0, facilityData.iconTexture.width, facilityData.iconTexture.height), new Vector2(0.5f, 0.5f));
+        leftChoiceNameText.text = facilityData.facilityName;
+        leftChoiceDescriptionText.text = facilityData.facilityDescription;
     }
 
-    public void SetMiddleChoice(
-        Sprite icon,
-        string name,
-        string description)
+    public void SetMiddleChoice(FacilityData facilityData)
     {
-        MiddleChoiceIcon.GetComponent<SpriteRenderer>().sprite = icon;
-        MiddleChoiceNameText.GetComponent<UnityEngine.UI.Text>().text = name;
-        MiddleChoiceDescriptionText.GetComponent<UnityEngine.UI.Text>().text = description;
+        middleChoiceIcon.sprite = Sprite.Create(facilityData.iconTexture, new Rect(0, 0, facilityData.iconTexture.width, facilityData.iconTexture.height), new Vector2(0.5f, 0.5f));
+        middleChoiceNameText.text = facilityData.facilityName;
+        middleChoiceDescriptionText.text = facilityData.facilityDescription;
     }
 
-    public void SetRightChoice(
-        Sprite icon,
-        string name,
-        string description)
+    public void SetRightChoice(FacilityData facilityData)
     {
-        RightChoiceIcon.GetComponent<SpriteRenderer>().sprite = icon;
-        RightChoiceNameText.GetComponent<UnityEngine.UI.Text>().text = name;
-        RightChoiceDescriptionText.GetComponent<UnityEngine.UI.Text>().text = description;
+        rightChoiceIcon.sprite = Sprite.Create(facilityData.iconTexture, new Rect(0, 0, facilityData.iconTexture.width, facilityData.iconTexture.height), new Vector2(0.5f, 0.5f));
+        rightChoiceNameText.text = facilityData.facilityName;
+        rightChoiceDescriptionText.text = facilityData.facilityDescription;
     }
 
     public void OnclickLeftChoice()

@@ -219,7 +219,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -1525,6 +1525,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statusPanel: {fileID: 1978475010}
+  facilitySelectionPanel: {fileID: 1337758529}
 --- !u!1 &251852568
 GameObject:
   m_ObjectHideFlags: 0
@@ -2882,7 +2883,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -3591,6 +3592,13 @@ MonoBehaviour:
   facilityEntries:
   - type: 0
     prefab: {fileID: 755801667524059289, guid: 5bfa4635233c7f14a8a86c7e2e20b131, type: 3}
+    data: {fileID: 11400000, guid: 1864b702eced88b479c57433b5512d56, type: 2}
+  - type: 1
+    prefab: {fileID: 755801667524059289, guid: 5bfa4635233c7f14a8a86c7e2e20b131, type: 3}
+    data: {fileID: 11400000, guid: 1864b702eced88b479c57433b5512d56, type: 2}
+  - type: 2
+    prefab: {fileID: 755801667524059289, guid: 5bfa4635233c7f14a8a86c7e2e20b131, type: 3}
+    data: {fileID: 11400000, guid: 1864b702eced88b479c57433b5512d56, type: 2}
 --- !u!4 &522028767
 Transform:
   m_ObjectHideFlags: 0
@@ -3902,7 +3910,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -5840,7 +5848,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -7198,15 +7206,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dde46aa387d1b3e41b0d7171b70f3f21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LeftChoiceIcon: {fileID: 1481811054}
-  LeftChoiceNameText: {fileID: 424917641}
-  LeftChoiceDescriptionText: {fileID: 1150474735}
-  MiddleChoiceIcon: {fileID: 400149580}
-  MiddleChoiceNameText: {fileID: 1462482106}
-  MiddleChoiceDescriptionText: {fileID: 1757515401}
-  RightChoiceIcon: {fileID: 1923529297}
-  RightChoiceNameText: {fileID: 677141661}
-  RightChoiceDescriptionText: {fileID: 3561803}
+  leftChoiceIcon: {fileID: 1481811056}
+  leftChoiceNameText: {fileID: 424917643}
+  leftChoiceDescriptionText: {fileID: 1150474737}
+  middleChoiceIcon: {fileID: 400149582}
+  middleChoiceNameText: {fileID: 1462482108}
+  middleChoiceDescriptionText: {fileID: 1757515403}
+  rightChoiceIcon: {fileID: 1923529299}
+  rightChoiceNameText: {fileID: 677141663}
+  rightChoiceDescriptionText: {fileID: 3561805}
 --- !u!1 &1373684490
 GameObject:
   m_ObjectHideFlags: 0
@@ -7837,7 +7845,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -8865,7 +8873,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}

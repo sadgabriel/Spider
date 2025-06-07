@@ -11,6 +11,11 @@ public class Player : Unit
     [SerializeField] private int stamina = 0;
     [SerializeField] private int maxStamina = 3;
     [SerializeField] private int staminaRegen = 1;
+
+    private int exp = 0;
+    private int level = 1;
+
+    public event System.Action<int> OnLevelUp;
     
     public int Life
     {
@@ -66,6 +71,17 @@ public class Player : Unit
         RegenerateStamina(staminaRegen);
     }
 
+    public void GainExperience(int amount)
+    {
+        exp += amount;
+        if (exp >= level * 100)
+        {
+            exp -= level * 100;
+            level++;
+            OnLevelUp?.Invoke(level);
+        }
+    }
+
     public override bool CanMoveTo(Node targetNode)
     {
         return CanMoveTo(targetNode, 1);
@@ -89,6 +105,7 @@ public class Player : Unit
         if (targetNode.OccupyingUnit is Spawner spawner)
         {
             Destroy(spawner.gameObject);
+            GainExperience(100);
         }
 
         base.MoveTo(targetNode);

@@ -10,18 +10,26 @@ public enum TurnState
 public enum GameState
 {
     Idle,
-    SpecialAction
+    SpecialAction,
+}
+
+public enum UIState
+{
+    Idle,
+    FacilitySelection,
 }
 
 class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance { get; private set; }
     private TurnState currentTurn = TurnState.PlayerTurn;
-    private GameState currentState = GameState.Idle;
+    private GameState currentGameState = GameState.Idle;
+    private UIState currentUIState = UIState.Idle;
     private int turnCount = 1;
 
     public event Action<TurnState> OnTurnChange;
-    public event Action<GameState> OnStateChange;
+    public event Action<GameState> OnGameStateChange;
+    public event Action<UIState> OnUIStateChange;
 
     public TurnState CurrentTurn
     {
@@ -34,14 +42,25 @@ class GameStateManager : MonoBehaviour
         }
     }
 
-    public GameState CurrentState
+    public GameState CurrentGameState
     {
-        get => currentState;
+        get => currentGameState;
         private set
         {
-            if (currentState == value) return;
-            currentState = value;
-            OnStateChange?.Invoke(currentState);
+            if (currentGameState == value) return;
+            currentGameState = value;
+            OnGameStateChange?.Invoke(currentGameState);
+        }
+    }
+
+    public UIState CurrentUIState
+    {
+        get => currentUIState;
+        private set
+        {
+            if (currentUIState == value) return;
+            currentUIState = value;
+            OnUIStateChange?.Invoke(currentUIState);
         }
     }
 
@@ -53,22 +72,32 @@ class GameStateManager : MonoBehaviour
 
     public bool IsPlayerTurn
     {
-        get => currentTurn == TurnState.PlayerTurn;
+        get => CurrentTurn == TurnState.PlayerTurn;
     }
 
     public bool IsEnemyTurn
     {
-        get => currentTurn == TurnState.EnemyTurn;
+        get => CurrentTurn == TurnState.EnemyTurn;
     }
 
-    public bool IsIdle
+    public bool IsIdleGameState
     {
-        get => currentState == GameState.Idle;
+        get => CurrentGameState == GameState.Idle;
     }
 
     public bool IsSpecialActionState
     {
-        get => currentState == GameState.SpecialAction;
+        get => CurrentGameState == GameState.SpecialAction;
+    }
+
+    public bool IsIdleUIState
+    {
+        get => currentUIState == UIState.Idle;
+    }
+
+    public bool IsFacilitySelectionState
+    {
+        get => currentUIState == UIState.FacilitySelection;
     }
 
     private void Awake()
@@ -100,13 +129,24 @@ class GameStateManager : MonoBehaviour
         }
     }
 
-    public void SetSpecialActionState()
+    public void SetSpecialActionGameState()
     {
-        CurrentState = GameState.SpecialAction;
+        CurrentGameState = GameState.SpecialAction;
     }
 
-    public void ResetState()
+    public void ResetGameState()
     {
-        CurrentState = GameState.Idle;
+        CurrentGameState = GameState.Idle;
     }
+
+    public void SetFacilitySelectionUIState()
+    {
+        CurrentUIState = UIState.FacilitySelection;
+    }
+
+    public void ResetUIState()
+    {
+        CurrentUIState = UIState.Idle;
+    }
+
 }

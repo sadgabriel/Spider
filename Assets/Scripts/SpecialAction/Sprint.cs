@@ -17,7 +17,7 @@ class Sprint : SpecialAction
             
             if (targetNode != null && Player.Instance.TrySprintTo(targetNode, 2))
             {
-                GameStateManager.Instance.ResetState();
+                GameStateManager.Instance.ResetGameState();
                 GameStateManager.Instance.EndPlayerTurn();
             }
         }
@@ -25,9 +25,10 @@ class Sprint : SpecialAction
 
     protected override void HandleKeyDown(HashSet<KeyCode> pressedKeys)
     {
-        if (pressedKeys.Contains(KeyCode.Space) && GameStateManager.Instance.IsPlayerTurn && GameStateManager.Instance.IsIdle)
+        var gameStateManager = GameStateManager.Instance;
+        if (pressedKeys.Contains(KeyCode.Space) && gameStateManager.IsPlayerTurn && gameStateManager.IsIdleGameState && gameStateManager.IsIdleUIState)
         {
-            GameStateManager.Instance.SetSpecialActionState();
+            GameStateManager.Instance.SetSpecialActionGameState();
         }
     }
 }
