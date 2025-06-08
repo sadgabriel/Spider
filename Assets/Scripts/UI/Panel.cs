@@ -1,21 +1,25 @@
 using UnityEngine;
 
-abstract class Panel : MonoBehaviour
+enum PanelType
+{
+    Status,
+    FacilitySelection,
+    FacilityBuilding
+}
+
+interface IPanel
+{
+    void Hide();
+}
+
+abstract class Panel<T> : MonoBehaviour, IPanel
 {
     public bool IsVisible => gameObject.activeSelf;
 
-    public void Show()
-    {
-        gameObject.SetActive(true);
-    }
+    public abstract void Show(T data = default);
 
-    public void Hide()
+    public virtual void Hide()
     {
         gameObject.SetActive(false);
-    }
-
-    public void Toggle()
-    {
-        gameObject.SetActive(!gameObject.activeSelf);
     }
 }

@@ -1,10 +1,15 @@
 using TMPro;
 using UnityEngine;
 
-class StatusPanel : Panel
+class StatusPanel : Panel<NoData>
 {
     [SerializeField] private TextMeshProUGUI hpText;
     [SerializeField] private TextMeshProUGUI staminaText;
+
+    public override void Show(NoData data = default)
+    {
+        gameObject.SetActive(true);
+    }
 
     private void Update()
     {

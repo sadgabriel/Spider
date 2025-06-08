@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 3817306707055237524}
   - component: {fileID: 7536843975956585619}
   m_Layer: 0
-  m_Name: TestFacility
+  m_Name: TestFacility 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -156,6 +156,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   iconSurface: {fileID: 130012191908741089}
   ringPrefab: {fileID: 482007586333451469, guid: b06cb374d1074a04fb1760dd86288915, type: 3}
-  facilityData: {fileID: 11400000, guid: 1864b702eced88b479c57433b5512d56, type: 2}
+  facilityData: {fileID: 11400000, guid: 61ea2ec8d50ca144fbd6f0506375111d, type: 2}
   firstRingOffset: -0.5
   ringGap: 0.3

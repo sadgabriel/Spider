@@ -1,9 +1,17 @@
+using System.Collections.Generic;
+using UnityEditor.Search;
 using UnityEngine;
 
-class FacilityBuildingPanel : Panel
+class FacilityBuildingPanel : Panel<FacilityData>
 {
-    public void OnClickReturnButton()
+    public override void Show(FacilityData data)
     {
-        Debug.Log("Return button clicked");
+        gameObject.SetActive(true);
+    }
+
+    public void ReturnToFacilitySelection()
+    {
+        UIManager.Instance.HideAllPanels();
+        UIManager.Instance.ShowPanel<List<FacilityData>>(PanelType.FacilitySelection, null);
     }
 }

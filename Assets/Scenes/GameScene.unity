@@ -1526,6 +1526,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statusPanel: {fileID: 1978475010}
   facilitySelectionPanel: {fileID: 1337758529}
+  facilityBuildingPanel: {fileID: 1286438605}
 --- !u!1 &251852568
 GameObject:
   m_ObjectHideFlags: 0
@@ -2268,7 +2269,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1337758529}
         m_TargetAssemblyTypeName: FacilitySelectionPanel, Assembly-CSharp
-        m_MethodName: OnclickMiddleChoice
+        m_MethodName: ChooseMiddle
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3228,7 +3229,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1286438605}
         m_TargetAssemblyTypeName: FacilityBuildingPanel, Assembly-CSharp
-        m_MethodName: OnClickReturnButton
+        m_MethodName: ReturnToFacilitySelection
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3592,10 +3593,10 @@ MonoBehaviour:
   facilityEntries:
   - type: 0
     prefab: {fileID: 755801667524059289, guid: 5bfa4635233c7f14a8a86c7e2e20b131, type: 3}
-    data: {fileID: 11400000, guid: 1864b702eced88b479c57433b5512d56, type: 2}
+    data: {fileID: 11400000, guid: 61ea2ec8d50ca144fbd6f0506375111d, type: 2}
   - type: 1
     prefab: {fileID: 755801667524059289, guid: 5bfa4635233c7f14a8a86c7e2e20b131, type: 3}
-    data: {fileID: 11400000, guid: 1864b702eced88b479c57433b5512d56, type: 2}
+    data: {fileID: 11400000, guid: 7a5c3f437f2bb6845a840abb22ca87e1, type: 2}
   - type: 2
     prefab: {fileID: 755801667524059289, guid: 5bfa4635233c7f14a8a86c7e2e20b131, type: 3}
     data: {fileID: 11400000, guid: 1864b702eced88b479c57433b5512d56, type: 2}
@@ -6295,7 +6296,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1337758529}
         m_TargetAssemblyTypeName: FacilitySelectionPanel, Assembly-CSharp
-        m_MethodName: OnclickRightChoice
+        m_MethodName: ChooseRight
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8593,7 +8594,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1337758529}
         m_TargetAssemblyTypeName: FacilitySelectionPanel, Assembly-CSharp
-        m_MethodName: OnclickLeftChoice
+        m_MethodName: ChooseLeft
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
