@@ -71,7 +71,6 @@ class FacilitySelectionPanel : Panel<List<FacilityData>>
 
     private void ProceedToBuildingPanel(FacilityData facilityData)
     {
-        UIManager.Instance.HideAllPanels();
-        UIManager.Instance.ShowPanel(PanelType.FacilityBuilding, facilityData);
+        GameStateManager.Instance.SetUIState(UIState.FacilityBuilding, facilityData);
     }
 }

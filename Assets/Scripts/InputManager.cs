@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 class InputManager : MonoBehaviour
@@ -34,18 +35,21 @@ class InputManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
         {
-            int button = Input.GetMouseButtonDown(0) ? 0 : 1;
-            Vector3 mousePosition = Input.mousePosition;
-
-            Ray ray = Camera.main.ScreenPointToRay(mousePosition);
-
-            GameObject clickedGO = null;
-            if (Physics.Raycast(ray, out RaycastHit hit))
+            if (!EventSystem.current.IsPointerOverGameObject())
             {
-                clickedGO = hit.collider.gameObject;
-            }
+                int button = Input.GetMouseButtonDown(0) ? 0 : 1;
+                Vector3 mousePosition = Input.mousePosition;
 
-            OnMouseButtonDown?.Invoke(button, mousePosition, clickedGO);
+                Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+
+                GameObject clickedGO = null;
+                if (Physics.Raycast(ray, out RaycastHit hit))
+                {
+                    clickedGO = hit.collider.gameObject;
+                }
+
+                OnMouseButtonDown?.Invoke(button, mousePosition, clickedGO);
+            }
         }
 
         if (Input.anyKeyDown)

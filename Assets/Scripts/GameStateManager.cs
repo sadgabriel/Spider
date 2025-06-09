@@ -17,6 +17,7 @@ public enum UIState
 {
     Idle,
     FacilitySelection,
+    FacilityBuilding,
 }
 
 class GameStateManager : MonoBehaviour
@@ -29,7 +30,7 @@ class GameStateManager : MonoBehaviour
 
     public event Action<TurnState> OnTurnChange;
     public event Action<GameState> OnGameStateChange;
-    public event Action<UIState> OnUIStateChange;
+    public event Action<UIState, object> OnUIStateChange;
 
     public TurnState CurrentTurn
     {
@@ -53,16 +54,7 @@ class GameStateManager : MonoBehaviour
         }
     }
 
-    public UIState CurrentUIState
-    {
-        get => currentUIState;
-        private set
-        {
-            if (currentUIState == value) return;
-            currentUIState = value;
-            OnUIStateChange?.Invoke(currentUIState);
-        }
-    }
+    public UIState CurrentUIState { get; private set; }
 
     public int TurnCount
     {
@@ -93,11 +85,6 @@ class GameStateManager : MonoBehaviour
     public bool IsIdleUIState
     {
         get => currentUIState == UIState.Idle;
-    }
-
-    public bool IsFacilitySelectionState
-    {
-        get => currentUIState == UIState.FacilitySelection;
     }
 
     private void Awake()
@@ -139,14 +126,14 @@ class GameStateManager : MonoBehaviour
         CurrentGameState = GameState.Idle;
     }
 
-    public void SetFacilitySelectionUIState()
+    public void SetUIState(UIState state, object data)
     {
-        CurrentUIState = UIState.FacilitySelection;
+        currentUIState = state;
+        OnUIStateChange?.Invoke(state, data);
     }
 
     public void ResetUIState()
     {
-        CurrentUIState = UIState.Idle;
+        SetUIState(UIState.Idle, null);
     }
-
 }

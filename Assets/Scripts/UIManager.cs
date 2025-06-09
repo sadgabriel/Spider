@@ -8,11 +8,11 @@ class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
 
-    [SerializeField] private StatusPanel statusPanel;
+    [SerializeField] private IdlePanel IdlePanel;
     [SerializeField] private FacilitySelectionPanel facilitySelectionPanel;
     [SerializeField] private FacilityBuildingPanel facilityBuildingPanel;
 
-    private Dictionary<PanelType, IPanel> panels = new();
+    private Dictionary<UIState, IPanel> UIStatePanelMap = new();
 
     private void Awake()
     {
@@ -25,67 +25,34 @@ class UIManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        panels[PanelType.Status] = statusPanel;
-        panels[PanelType.FacilitySelection] = facilitySelectionPanel;
-        panels[PanelType.FacilityBuilding] = facilityBuildingPanel;
+        UIStatePanelMap[UIState.Idle] = IdlePanel;
+        UIStatePanelMap[UIState.FacilitySelection] = facilitySelectionPanel;
+        UIStatePanelMap[UIState.FacilityBuilding] = facilityBuildingPanel;
     }
 
     public void Initialize()
     {
-        ShowPanel(PanelType.Status, default(NoData));
-
-        Player.Instance.OnLevelUp += HandleLevelUp;
-    }
-
-    public void ShowPanel<T>(PanelType panelType, T data)
-    {
-        panels.TryGetValue(panelType, out IPanel panel);
-        if (panel != null)
-        {
-            if (panel is Panel<T> typedPanel)
-            {
-                typedPanel.Show(data);
-            }
-            else
-            {
-                Debug.LogWarning($"Panel of type {panelType} does not match the expected type {typeof(T)}.");
-            }
-        }
-        else
-        {
-            Debug.LogError($"Panel of type {panelType} not found.");
-        }
-    }
-
-    public void HidePanel(PanelType panelType)
-    {
-        panels.TryGetValue(panelType, out IPanel panel);
-        if (panel != null)
-        {
-            panel.Hide();
-        }
-        else
-        {
-            Debug.LogError($"Panel of type {panelType} not found.");
-        }
+        GameStateManager.Instance.OnUIStateChange += HandleUIStateChange;
     }
 
     public void HideAllPanels()
     {
-        foreach (var panel in panels.Values)
+        foreach (var panel in UIStatePanelMap.Values)
         {
             panel.Hide();
         }
     }
-
-    private void HandleLevelUp(int newLevel)
+    private void HandleUIStateChange(UIState state, object data)
     {
-        GameStateManager.Instance.SetFacilitySelectionUIState();
         HideAllPanels();
-
-        List<FacilityData> facilityDataList = FacilityManager.Instance.GetAllFacilityData();
-
-        List<FacilityData> candidateFacilities = facilityDataList.OrderBy(data => UnityEngine.Random.value).Take(3).ToList();
-        ShowPanel(PanelType.FacilitySelection, candidateFacilities);
+        UIStatePanelMap.TryGetValue(state, out IPanel panel);
+        if (panel != null)
+        {
+            panel.Show(data);
+        }
+        else
+        {
+            Debug.LogError("There is no matching panel");
+        }
     }
 }

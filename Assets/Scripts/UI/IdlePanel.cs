@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-class StatusPanel : Panel<NoData>
+class IdlePanel : Panel<NoData>
 {
     [SerializeField] private TextMeshProUGUI hpText;
     [SerializeField] private TextMeshProUGUI staminaText;

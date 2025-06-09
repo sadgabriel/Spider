@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class UnitSystem : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class UnitSystem : MonoBehaviour
         UnitManager.Instance.SpawnWave(enemyCount);
         GameStateManager.Instance.OnTurnChange += HandleTurnChange;
         InputManager.Instance.OnMouseButtonDown += HandleMouseButtonDown;
+        Player.Instance.OnLevelUp += HandleLevelUp;
     }
 
     private void HandleTurnChange(TurnState newTurn)
@@ -78,5 +80,12 @@ public class UnitSystem : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void HandleLevelUp(int newLevel)
+    {
+        List<FacilityData> facilityDataList = FacilityManager.Instance.GetAllFacilityData();
+        List<FacilityData> candidateFacilities = facilityDataList.OrderBy(data => UnityEngine.Random.value).Take(3).ToList();
+        GameStateManager.Instance.SetUIState(UIState.FacilitySelection, candidateFacilities);
     }
 }

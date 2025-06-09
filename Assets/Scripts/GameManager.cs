@@ -31,7 +31,5 @@ public class GameManager : MonoBehaviour
         UnitSystem.Instance.Initialize();
         UIManager.Instance.Initialize();
         SpecialActionManager.Instance.AddSpecialAction(new Sprint()); // To Be Removed
-        Facility testFacility = FacilityManager.Instance.BuildFacility(Map.Instance.StartPillar, FacilityType.Test1); // To Be Removed
-        testFacility.UpgradeLevel = 3; // To Be Removed
     }
 }

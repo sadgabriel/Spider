@@ -54,6 +54,8 @@ class FacilityManager : MonoBehaviour
 
         Facilities.Add(facility);
 
+        facility.UpgradeLevel = 1;
+
         return facility;
     }
 
