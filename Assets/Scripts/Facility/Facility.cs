@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 abstract class Facility : MonoBehaviour
@@ -13,7 +14,7 @@ abstract class Facility : MonoBehaviour
     {
         get => facilityData?.iconTexture;
     }
-    
+
     public string FacilityName
     {
         get => facilityData?.facilityName;
@@ -28,50 +29,26 @@ abstract class Facility : MonoBehaviour
 
     public Pillar CurrentPillar { get; set; }
 
-    private int upgradeLevel = 0;
     public int UpgradeLevel
     {
         get
         {
-            return upgradeLevel;
+            if (CurrentPillar != null)
+            {
+                return CurrentPillar.FacilityUpgradeLevel;
+            }
+            else
+            {
+                Debug.LogError("Facility is Not On Pillar");
+                return -1;
+            }
+
         }
 
         set
         {
-            while (rings.Count < value)
-            {
-                IncreaseRing();
-            }
-
-            while (rings.Count > 0 && rings.Count > value)
-            {
-                DecreaseRing();
-            }
+            CurrentPillar.FacilityUpgradeLevel = value;
         }
-    }
-
-    private void IncreaseRing()
-    {
-        Vector3 firstRingPosition = CurrentPillar.TopPosition + firstRingOffset * CurrentPillar.transform.up;
-        Vector3 ringPosition = firstRingPosition - rings.Count * ringGap * CurrentPillar.transform.up;
-
-        GameObject ring = Instantiate(ringPrefab, ringPosition, CurrentPillar.transform.rotation, transform);
-        float ringDiameter = CurrentPillar.Diameter + 0.01f;
-
-        float localScaleMultiplier = ringDiameter / ring.transform.lossyScale.x;
-
-        ring.transform.localScale = new Vector3(ring.transform.localScale.x * localScaleMultiplier, ring.transform.localScale.y, ring.transform.localScale.z * localScaleMultiplier);
-
-        rings.Add(ring);
-    }
-
-    private void DecreaseRing()
-    {
-        if (rings.Count == 0) return;
-
-        GameObject ring = rings[rings.Count - 1];
-        rings.RemoveAt(rings.Count - 1);
-        Destroy(ring);
     }
 
     public void BuildOn(Pillar pillar)
@@ -100,6 +77,9 @@ abstract class Facility : MonoBehaviour
 
         ResizeToMatchPillar(pillar);
         ApplyIconTexture();
+        pillar.OnFacilityUpgradeLevelChange += HandleUpgradeLevelChange;
+
+        Initialize();
     }
 
     private void ResizeToMatchPillar(Pillar pillar)
@@ -109,7 +89,7 @@ abstract class Facility : MonoBehaviour
         float localScaleMultipler = diameter / (iconSurface.transform.lossyScale.x * 10);
         iconSurface.transform.localScale = new Vector3(iconSurface.transform.localScale.x * localScaleMultipler, 1f, iconSurface.transform.localScale.z * localScaleMultipler);
     }
-    
+
     private void ApplyIconTexture()
     {
         if (iconSurface != null && IconTexture != null)
@@ -128,5 +108,59 @@ abstract class Facility : MonoBehaviour
         {
             Debug.LogError("Icon surface or icon texture is not set.");
         }
+    }
+
+    private void HandleUpgradeLevelChange(int value)
+    {
+        while (rings.Count < value)
+        {
+            IncreaseRing();
+        }
+
+        while (rings.Count > 0 && rings.Count > value)
+        {
+            DecreaseRing();
+        }
+
+        ApplyUpgradeLevel(value);
+    }
+
+    private void IncreaseRing()
+    {
+        Vector3 firstRingPosition = CurrentPillar.TopPosition + firstRingOffset * CurrentPillar.transform.up;
+        Vector3 ringPosition = firstRingPosition - rings.Count * ringGap * CurrentPillar.transform.up;
+
+        GameObject ring = Instantiate(ringPrefab, ringPosition, CurrentPillar.transform.rotation, transform);
+        float ringDiameter = CurrentPillar.Diameter + 0.01f;
+
+        float localScaleMultiplier = ringDiameter / ring.transform.lossyScale.x;
+
+        ring.transform.localScale = new Vector3(ring.transform.localScale.x * localScaleMultiplier, ring.transform.localScale.y, ring.transform.localScale.z * localScaleMultiplier);
+
+        rings.Add(ring);
+    }
+
+    private void DecreaseRing()
+    {
+        if (rings.Count == 0) return;
+
+        GameObject ring = rings[rings.Count - 1];
+        rings.RemoveAt(rings.Count - 1);
+        Destroy(ring);
+    }
+
+    protected virtual void Initialize()
+    {
+        
+    }
+
+    protected virtual void ApplyUpgradeLevel(int value)
+    {
+
+    }
+
+    protected virtual void Act()
+    {
+
     }
 }

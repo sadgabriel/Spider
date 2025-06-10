@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -13,6 +14,26 @@ public class Pillar : Node
     [SerializeField] private PillarSize size;
 
     public bool HasFacility { get; set; } = false;
+
+    public Action<int> OnFacilityUpgradeLevelChange;
+
+    private int facilityUpgradeLevel = 0;
+    public int FacilityUpgradeLevel
+    {
+        get
+        {
+            return facilityUpgradeLevel;
+        }
+        set
+        {
+            if (facilityUpgradeLevel != value)
+            {
+                facilityUpgradeLevel = value;
+                OnFacilityUpgradeLevelChange?.Invoke(value);
+            }
+        }
+    }
+
     public PillarSize Size
     {
         get => size;
