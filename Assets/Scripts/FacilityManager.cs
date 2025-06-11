@@ -7,10 +7,13 @@ public enum FacilityType
     Test1,
     Test2,
     Test3,
+    MaxHP,
+    Sprint,
+    Upgrade
 }
 
 [System.Serializable]
-public class FacilityEntry
+class FacilityEntry
 {
     public FacilityType type;
     public GameObject prefab;

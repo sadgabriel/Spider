@@ -86,7 +86,7 @@ abstract class Facility : MonoBehaviour
     {
         float diameter = pillar.Diameter;
 
-        float localScaleMultipler = diameter / (iconSurface.transform.lossyScale.x * 10);
+        float localScaleMultipler = diameter / (iconSurface.transform.lossyScale.x * 10) * 0.7f;
         iconSurface.transform.localScale = new Vector3(iconSurface.transform.localScale.x * localScaleMultipler, 1f, iconSurface.transform.localScale.z * localScaleMultipler);
     }
 
@@ -151,7 +151,7 @@ abstract class Facility : MonoBehaviour
 
     protected virtual void Initialize()
     {
-        
+
     }
 
     protected virtual void ApplyUpgradeLevel(int value)

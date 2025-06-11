@@ -31,9 +31,13 @@ class FacilityBuildingPanel : Panel<FacilityData>
     {
         if (button == 0 && clickedGO != null && clickedGO.CompareTag("Pillar") && selectedFacilityData != null)
         {
-            FacilityManager.Instance.BuildFacility(clickedGO.GetComponent<Pillar>(), selectedFacilityData.facilityType);
+            Pillar pillar = clickedGO.GetComponent<Pillar>();
+            if (pillar.Size == selectedFacilityData.size)
+            {
+                FacilityManager.Instance.BuildFacility(pillar, selectedFacilityData.facilityType);
 
-            GameStateManager.Instance.ResetUIState();
+                GameStateManager.Instance.ResetUIState();
+            }
         }
     }
 }
