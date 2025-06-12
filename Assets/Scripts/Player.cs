@@ -6,8 +6,9 @@ using System.Collections.Generic;
 public class Player : Unit
 {
     public static Player Instance { get; private set; }
-    [SerializeField] private int life = 3;
-    [SerializeField] private int maxLife = 3;
+    [SerializeField] private int hp = 100;
+    [SerializeField] private int maxHP = 100;
+    [SerializeField] private int hpRegen = 0;
     [SerializeField] private int stamina = 0;
     [SerializeField] private int maxStamina = 3;
     [SerializeField] private int staminaRegen = 1;
@@ -17,27 +18,66 @@ public class Player : Unit
 
     public event System.Action<int> OnLevelUp;
     
-    public int Life
+    public int HP
     {
-        get => life;
-        private set
+        get => hp;
+        set
         {
-            life = Mathf.Clamp(value, 0, maxLife);
-            if (life <= 0)
+            hp = Mathf.Clamp(value, 0, maxHP);
+            if (hp <= 0)
             {
                 Debug.Log("Game Over");
             }
         }
     }
 
+    public int MaxHP
+    {
+        get => maxHP;
+        set
+        {
+            int diff = value - maxHP;
+            maxHP = value;
+
+            if (diff > 0)
+            {
+                HP += diff;
+            }
+
+            if (HP > maxHP)
+            {
+                HP = maxHP;
+            }
+        }
+    }
+
+    public int HPRegen
+    {
+        get => hpRegen;
+        set => hpRegen = value;
+    }
+
     public int Stamina
     {
         get => stamina;
-        private set
+        set
         {
             stamina = Mathf.Clamp(value, 0, maxStamina);
         }
     }
+
+    public int MaxStamina
+    {
+        get => maxStamina;
+        set => maxStamina = value;
+    }
+
+    public int StaminaRegen
+    {
+        get => staminaRegen;
+        set => staminaRegen = value;
+    }
+
 
     private void Awake()
     {
@@ -58,7 +98,17 @@ public class Player : Unit
 
     public void TakeDamage(int damage)
     {
-        Life -= damage;
+        HP -= damage;
+    }
+
+    public void RegenerateHP(int amount)
+    {
+        HP += amount;
+    }
+
+    public void RegenerateHP()
+    {
+        RegenerateHP(hpRegen);
     }
 
     public void RegenerateStamina(int amount)

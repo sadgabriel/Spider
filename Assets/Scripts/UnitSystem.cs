@@ -31,6 +31,7 @@ public class UnitSystem : MonoBehaviour
         }
         else if (newTurn == TurnState.PlayerTurn)
         {
+            Player.Instance.RegenerateHP();
             Player.Instance.RegenerateStamina();
         }
     }

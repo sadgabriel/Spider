@@ -16,7 +16,7 @@ class IdlePanel : Panel<NoData>
         Player player = Player.Instance;
         if (player != null && hpText != null)
         {
-            hpText.text = $"HP: {player.Life}";
+            hpText.text = $"HP: {player.HP}";
         }
         if (player != null && staminaText != null)
         {

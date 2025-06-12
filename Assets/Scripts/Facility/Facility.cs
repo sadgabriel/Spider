@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -27,7 +28,12 @@ abstract class Facility : MonoBehaviour
 
     private List<GameObject> rings = new List<GameObject>();
 
-    public Pillar CurrentPillar { get; set; }
+    public Pillar CurrentPillar { get; private set; }
+
+    protected Action<int> OnIncreaseUpgradeLevel;
+    protected Action<int> OnDecreaseUpgradeLevel;
+    private int lastUpgradeLevel = 0;
+    public abstract int MaxUpgradeLevel { get; }
 
     public int UpgradeLevel
     {
@@ -110,19 +116,23 @@ abstract class Facility : MonoBehaviour
         }
     }
 
-    private void HandleUpgradeLevelChange(int value)
+    private void HandleUpgradeLevelChange(int upgradeLevel)
     {
-        while (rings.Count < value)
+        AdjustRing(upgradeLevel);
+        ApplyUpgradeLevel(upgradeLevel);
+    }
+
+    private void AdjustRing(int upgradeLevel)
+    {
+        while (rings.Count < upgradeLevel)
         {
             IncreaseRing();
         }
 
-        while (rings.Count > 0 && rings.Count > value)
+        while (rings.Count > 0 && rings.Count > upgradeLevel)
         {
             DecreaseRing();
         }
-
-        ApplyUpgradeLevel(value);
     }
 
     private void IncreaseRing()
@@ -149,14 +159,33 @@ abstract class Facility : MonoBehaviour
         Destroy(ring);
     }
 
-    protected virtual void Initialize()
+    private void Initialize()
     {
+        int upgradeLevel = CurrentPillar.FacilityUpgradeLevel;
+        AdjustRing(upgradeLevel);
 
+        SetUpgradeHandlers();
+        ApplyUpgradeLevel(upgradeLevel);
     }
 
-    protected virtual void ApplyUpgradeLevel(int value)
+    private void ApplyUpgradeLevel(int newUpgradeLevel)
     {
+        while (lastUpgradeLevel < newUpgradeLevel && lastUpgradeLevel < MaxUpgradeLevel)
+        {
+            lastUpgradeLevel++;
+            OnIncreaseUpgradeLevel?.Invoke(lastUpgradeLevel);
+        }
 
+        while (lastUpgradeLevel > newUpgradeLevel && lastUpgradeLevel > 0)
+        {
+            OnDecreaseUpgradeLevel?.Invoke(lastUpgradeLevel);
+            lastUpgradeLevel--;
+        }
+    }
+
+    protected virtual void SetUpgradeHandlers()
+    {
+        
     }
 
     protected virtual void Act()

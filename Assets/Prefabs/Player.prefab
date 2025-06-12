@@ -122,4 +122,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   verticalOffset: 1
-  life: 3
+  hp: 100
+  maxHP: 100
+  hpRegen: 0
+  stamina: 0
+  maxStamina: 3
+  staminaRegen: 1

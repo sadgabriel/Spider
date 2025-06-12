@@ -17,7 +17,7 @@ public class Pillar : Node
 
     public Action<int> OnFacilityUpgradeLevelChange;
 
-    private int facilityUpgradeLevel = 0;
+    private int facilityUpgradeLevel =  1;
     public int FacilityUpgradeLevel
     {
         get
