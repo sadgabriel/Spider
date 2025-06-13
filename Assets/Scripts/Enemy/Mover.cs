@@ -38,7 +38,7 @@ abstract class Mover : Enemy
 
     protected Node FindNextPillarTowardsPlayerIfInRange(int recognitionDistance)
     {
-        int distance = Map.Instance.CalcPathDistance(CurrentNode, player.CurrentNode);
+        int distance = Map.Instance.CalcPathNodeDistance(CurrentNode, player.CurrentNode);
         if (distance > 0 && distance <= recognitionDistance)
         {
             Node nextPillar = FindNextPillarTowardsPlayer();

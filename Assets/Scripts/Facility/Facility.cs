@@ -26,12 +26,18 @@ abstract class Facility : MonoBehaviour
         get => facilityData?.facilityDescription;
     }
 
+    public FacilityData Data
+    {
+        get => facilityData;
+        private set => facilityData = value;
+    }
+
     private List<GameObject> rings = new List<GameObject>();
 
     public Pillar CurrentPillar { get; private set; }
 
-    protected Action<int> OnIncreaseUpgradeLevel;
-    protected Action<int> OnDecreaseUpgradeLevel;
+    protected Action<int> OnUpgradeLevelIncrease;
+    protected Action<int> OnUpgradeLevelDecrease;
     private int lastUpgradeLevel = 0;
     public abstract int MaxUpgradeLevel { get; }
 
@@ -173,12 +179,12 @@ abstract class Facility : MonoBehaviour
         while (lastUpgradeLevel < newUpgradeLevel && lastUpgradeLevel < MaxUpgradeLevel)
         {
             lastUpgradeLevel++;
-            OnIncreaseUpgradeLevel?.Invoke(lastUpgradeLevel);
+            OnUpgradeLevelIncrease?.Invoke(lastUpgradeLevel);
         }
 
         while (lastUpgradeLevel > newUpgradeLevel && lastUpgradeLevel > 0)
         {
-            OnDecreaseUpgradeLevel?.Invoke(lastUpgradeLevel);
+            OnUpgradeLevelDecrease?.Invoke(lastUpgradeLevel);
             lastUpgradeLevel--;
         }
     }

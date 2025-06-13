@@ -11,11 +11,13 @@ class MaxHPFacility : Facility
 
     protected override void SetUpgradeHandlers()
     {
-        OnIncreaseUpgradeLevel += IncreasePlayerMaxHPByUpgradeLevel;
-        OnIncreaseUpgradeLevel += IncreasePlayerHPRegenerationByUpgradeLevel;
+        base.SetUpgradeHandlers();
 
-        OnDecreaseUpgradeLevel += DecreasePlayerMaxHPByUpgradeLevel;
-        OnDecreaseUpgradeLevel += DecreasePlayerHPRegenerationByUpgradeLevel;
+        OnUpgradeLevelIncrease += IncreasePlayerMaxHPByUpgradeLevel;
+        OnUpgradeLevelIncrease += IncreasePlayerHPRegenerationByUpgradeLevel;
+
+        OnUpgradeLevelDecrease += DecreasePlayerMaxHPByUpgradeLevel;
+        OnUpgradeLevelDecrease += DecreasePlayerHPRegenerationByUpgradeLevel;
     }
 
     private void IncreasePlayerMaxHPByUpgradeLevel(int upgradeLevel)

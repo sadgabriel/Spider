@@ -85,8 +85,18 @@ public class UnitSystem : MonoBehaviour
 
     private void HandleLevelUp(int newLevel)
     {
-        List<FacilityData> facilityDataList = FacilityManager.Instance.GetAllFacilityData();
-        List<FacilityData> candidateFacilities = facilityDataList.OrderBy(data => UnityEngine.Random.value).Take(3).ToList();
+        List<FacilityData> facilityDataList = FacilityManager.Instance.GetAllAvailableFacilityData();
+        List<FacilityData> candidateFacilities = new();
+
+        if (facilityDataList.Count > 3)
+        {
+            candidateFacilities = facilityDataList.OrderBy(data => UnityEngine.Random.value).Take(3).ToList();
+        }
+        else
+        {
+            candidateFacilities = facilityDataList;
+        }
+
         GameStateManager.Instance.SetUIState(UIState.FacilitySelection, candidateFacilities);
     }
 }

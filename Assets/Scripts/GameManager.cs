@@ -30,6 +30,5 @@ public class GameManager : MonoBehaviour
         Map.Instance.GenerateMap();
         UnitSystem.Instance.Initialize();
         UIManager.Instance.Initialize();
-        SpecialActionManager.Instance.AddSpecialAction(new Sprint()); // To Be Removed
     }
 }

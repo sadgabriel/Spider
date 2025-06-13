@@ -3591,13 +3591,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   facilityEntries:
-  - type: 3
+  - type: 1
     prefab: {fileID: 2014426570928832369, guid: 5d0166f421a22a54fbea863b52fd8eb0, type: 3}
     data: {fileID: 11400000, guid: 293c3ff757fb9814aa031f7889ab3e88, type: 2}
-  - type: 4
+  - type: 2
     prefab: {fileID: 6394732049281824666, guid: d3adeae348042014e8aa9760cebed960, type: 3}
     data: {fileID: 11400000, guid: e77bb1cf1d845bb4186e907ac2b81fca, type: 2}
-  - type: 5
+  - type: 3
     prefab: {fileID: 4150933007906414076, guid: f4a4b8ba1e4753143bf2528555774c8f, type: 3}
     data: {fileID: 11400000, guid: 771732859b67fab439120c3eb23d1f64, type: 2}
 --- !u!4 &522028767
@@ -7307,6 +7307,7 @@ MonoBehaviour:
   rightChoiceIcon: {fileID: 1923529299}
   rightChoiceNameText: {fileID: 677141663}
   rightChoiceDescriptionText: {fileID: 3561805}
+  dummyFacilityData: {fileID: 11400000, guid: 950d89d169605314a9600cb81da1dc42, type: 2}
 --- !u!1 &1373684490
 GameObject:
   m_ObjectHideFlags: 0

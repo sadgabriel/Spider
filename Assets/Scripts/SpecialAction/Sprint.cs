@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 class Sprint : SpecialAction
 {
+    public int Reach = 2;
+    public int BaseStaminaConsume = 50;
+
     protected override void HandleMouseButtonDown(int button, Vector3 position, GameObject clickedGO)
     {
         if (button == 0 && GameStateManager.Instance.IsPlayerTurn && GameStateManager.Instance.IsSpecialActionState)
@@ -14,11 +17,14 @@ class Sprint : SpecialAction
                 Facility facility = clickedGO.GetComponentInParent<Facility>();
                 targetNode = facility?.CurrentPillar;
             }
-            
-            if (targetNode != null && Player.Instance.TrySprintTo(targetNode, 2))
+
+            if (targetNode != null)
             {
+                if (Player.Instance.TrySprintTo(targetNode, Reach, BaseStaminaConsume))
+                {
+                    GameStateManager.Instance.EndPlayerTurn();
+                }
                 GameStateManager.Instance.ResetGameState();
-                GameStateManager.Instance.EndPlayerTurn();
             }
         }
     }

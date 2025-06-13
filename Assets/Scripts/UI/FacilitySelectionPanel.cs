@@ -15,18 +15,25 @@ class FacilitySelectionPanel : Panel<List<FacilityData>>
     [SerializeField] private TMPro.TextMeshProUGUI rightChoiceNameText;
     [SerializeField] private TMPro.TextMeshProUGUI rightChoiceDescriptionText;
 
+    [SerializeField] private FacilityData dummyFacilityData;
+
     private FacilityData leftChoiceData;
     private FacilityData middleChoiceData;
     private FacilityData rightChoiceData;
 
     public override void Show(List<FacilityData> data = null)
     {
-        if (data != null && data.Count >= 3)
+        while (data.Count < 3)
         {
-            SetLeftChoice(data[0]);
-            SetMiddleChoice(data[1]);
-            SetRightChoice(data[2]);
+            data.Add(dummyFacilityData);
         }
+
+        if (data != null && data.Count >= 3)
+            {
+                SetLeftChoice(data[0]);
+                SetMiddleChoice(data[1]);
+                SetRightChoice(data[2]);
+            }
         gameObject.SetActive(true);
     }
 
@@ -71,6 +78,9 @@ class FacilitySelectionPanel : Panel<List<FacilityData>>
 
     private void ProceedToBuildingPanel(FacilityData facilityData)
     {
-        GameStateManager.Instance.SetUIState(UIState.FacilityBuilding, facilityData);
+        if (facilityData != dummyFacilityData)
+        {
+            GameStateManager.Instance.SetUIState(UIState.FacilityBuilding, facilityData);
+        }
     }
 }

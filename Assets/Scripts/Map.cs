@@ -93,17 +93,27 @@ public abstract class Map : MonoBehaviour
         return path;
     }
 
-    public int CalcTrueDistance(Node from, Node to)
+    public int CalcTruePillarDistance(Node from, Node to)
     {
-        return CalcDistance(from, to, true);
+        return CalcTrueNodeDistance(from, to) / 2;
     }
 
-    public int CalcPathDistance(Node from, Node to)
+    public int CalcPathPillarDistance(Node from, Node to)
     {
-        return CalcDistance(from, to, false);
+        return CalcPathNodeDistance(from, to) / 2;
     }
 
-    private int CalcDistance(Node from, Node to, bool ignoreOccupied)
+    public int CalcTrueNodeDistance(Node from, Node to)
+    {
+        return CalcNodeDistance(from, to, true);
+    }
+
+    public int CalcPathNodeDistance(Node from, Node to)
+    {
+        return CalcNodeDistance(from, to, false);
+    }
+
+    private int CalcNodeDistance(Node from, Node to, bool ignoreOccupied)
     {
         if (from == null || to == null) return -1;
 

@@ -4,9 +4,7 @@ using System.Linq;
 
 public enum FacilityType
 {
-    Test1,
-    Test2,
-    Test3,
+    Dummy,
     MaxHP,
     Sprint,
     Upgrade
@@ -48,22 +46,33 @@ class FacilityManager : MonoBehaviour
     {
         if (pillar == null || pillar.HasFacility) return null;
 
-        GameObject facilityGO = Instantiate(facilityPrefabMap[type], pillar.transform);
-        Facility facility = facilityGO.GetComponent<Facility>();
+        if (facilityPrefabMap.TryGetValue(type, out GameObject facilityPrefab))
+        {
+            GameObject facilityGO = Instantiate(facilityPrefabMap[type], pillar.transform);
+            Facility facility = facilityGO.GetComponent<Facility>();
 
-        facility.BuildOn(pillar);
+            facility.BuildOn(pillar);
 
-        pillar.HasFacility = true;
+            pillar.HasFacility = true;
 
-        Facilities.Add(facility);
+            Facilities.Add(facility);
 
-        facility.UpgradeLevel = 1;
-
-        return facility;
+            return facility;
+        }
+        else
+        {
+            Debug.LogError("No Such Facility in FacilityMananger.");
+            return null;
+        }
     }
 
-    public List<FacilityData> GetAllFacilityData()
+    public List<FacilityData> GetAllAvailableFacilityData()
     {
-        return facilityDataMap.Values.ToList();
+        List<FacilityData> allFacilityData = facilityDataMap.Values.ToList();
+        List<FacilityType> ExistingUniqueFacilityType = Facilities.Where(facility => facility.Data.IsUnique)
+                                                                  .Select(facility => facility.Data.facilityType)
+                                                                  .ToList();
+        
+        return allFacilityData.Where(facilityData => !ExistingUniqueFacilityType.Contains(facilityData.facilityType)).ToList(); 
     }
 }

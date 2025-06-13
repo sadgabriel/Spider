@@ -10,8 +10,8 @@ public class Player : Unit
     [SerializeField] private int maxHP = 100;
     [SerializeField] private int hpRegen = 0;
     [SerializeField] private int stamina = 0;
-    [SerializeField] private int maxStamina = 3;
-    [SerializeField] private int staminaRegen = 1;
+    [SerializeField] private int maxStamina = 100;
+    [SerializeField] private int staminaRegen = 5;
 
     private int exp = 0;
     private int level = 1;
@@ -41,12 +41,12 @@ public class Player : Unit
 
             if (diff > 0)
             {
-                HP += diff;
+                hp += diff;
             }
 
-            if (HP > maxHP)
+            if (hp > maxHP)
             {
-                HP = maxHP;
+                hp = maxHP;
             }
         }
     }
@@ -69,7 +69,21 @@ public class Player : Unit
     public int MaxStamina
     {
         get => maxStamina;
-        set => maxStamina = value;
+        set
+        {
+            int diff = value - maxStamina;
+            maxStamina = value;
+
+            if (diff > 0)
+            {
+                stamina += diff;
+            }
+
+            if (stamina > maxStamina)
+            {
+                stamina = maxStamina;
+            }
+        }
     }
 
     public int StaminaRegen
@@ -139,9 +153,9 @@ public class Player : Unit
 
     private bool CanMoveTo(Node targetNode, int maxPillarDistance)
     {
-        if (targetNode != null && targetNode is Pillar && maxPillarDistance > 0 && (!targetNode.IsOccupied || targetNode.OccupyingUnit is Spawner))
+        if (targetNode != null && targetNode is Pillar && maxPillarDistance > 0 && (!targetNode.IsOccupied || targetNode.OccupyingUnit is Spawner || targetNode.OccupyingUnit == this))
         {
-            int nodeDistance = Map.Instance.CalcPathDistance(CurrentNode, targetNode);
+            int nodeDistance = Map.Instance.CalcPathNodeDistance(CurrentNode, targetNode);
             if (nodeDistance != -1 && nodeDistance <= 2 * maxPillarDistance)
             {
                 return true;
@@ -161,12 +175,43 @@ public class Player : Unit
         base.MoveTo(targetNode);
     }
 
-    public bool TrySprintTo(Node targetNode, int maxPillarDistance)
+    public bool TrySprintTo(Node targetNode, int maxPillarDistance, int baseStaminaConsume)
     {
         if (CanMoveTo(targetNode, maxPillarDistance))
         {
-            MoveTo(targetNode);
-            return true;
+            int distance = Map.Instance.CalcPathPillarDistance(CurrentNode, targetNode);
+            int staminaConsume;
+
+            switch (distance)
+            {
+                case 2:
+                    staminaConsume = baseStaminaConsume;
+                    break;
+                case 3:
+                    staminaConsume = 2 * baseStaminaConsume;
+                    break;
+                case 4:
+                    staminaConsume = 4 * baseStaminaConsume;
+                    break;
+                default:
+                    staminaConsume = 0;
+                    break;
+            }
+
+            if (Stamina >= staminaConsume)
+            {
+                Stamina -= staminaConsume;
+                MoveTo(targetNode);
+                return true;
+            }
+            else
+            {
+                Debug.Log("Not enough stamina.");
+            }
+        }
+        else
+        {
+            Debug.Log("Target pillar is too far.");
         }
         return false;
     }
