@@ -1,6 +1,6 @@
 using UnityEngine;
 
-class UpgradeFacility : Facility
+public class UpgradeFacility : Facility
 {
     private int maxUpgradeLevel = 1;
     public override int MaxUpgradeLevel => maxUpgradeLevel;

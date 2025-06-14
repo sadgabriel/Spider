@@ -32,7 +32,7 @@ class Sprint : SpecialAction
     protected override void HandleKeyDown(HashSet<KeyCode> pressedKeys)
     {
         var gameStateManager = GameStateManager.Instance;
-        if (pressedKeys.Contains(KeyCode.Space) && gameStateManager.IsPlayerTurn && gameStateManager.IsIdleGameState && gameStateManager.IsIdleUIState)
+        if (pressedKeys.Contains(KeyCode.Space) && gameStateManager.IsPlayerTurn && gameStateManager.IsIdleGameState && gameStateManager.IsIdleUiState)
         {
             GameStateManager.Instance.SetSpecialActionGameState();
         }

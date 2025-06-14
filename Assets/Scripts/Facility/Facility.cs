@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-abstract class Facility : MonoBehaviour
+public abstract class Facility : MonoBehaviour
 {
     [SerializeField] private GameObject iconSurface;
     [SerializeField] private GameObject ringPrefab;

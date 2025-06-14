@@ -62,7 +62,7 @@ public class UnitSystem : MonoBehaviour
     {
         if (button == 0)
         {
-            if (GameStateManager.Instance.IsPlayerTurn && GameStateManager.Instance.IsIdleGameState && GameStateManager.Instance.IsIdleUIState)
+            if (GameStateManager.Instance.IsPlayerTurn && GameStateManager.Instance.IsIdleGameState && GameStateManager.Instance.IsIdleUiState)
             {
                 Node targetNode = clickedGO?.GetComponent<Node>();
 
@@ -97,6 +97,6 @@ public class UnitSystem : MonoBehaviour
             candidateFacilities = facilityDataList;
         }
 
-        GameStateManager.Instance.SetUIState(UIState.FacilitySelection, candidateFacilities);
+        GameStateManager.Instance.SetUiState(UiState.FacilitySelection, candidateFacilities);
     }
 }

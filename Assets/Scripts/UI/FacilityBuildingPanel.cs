@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using UnityEditor.Search;
 using UnityEngine;
 
-class FacilityBuildingPanel : Panel<FacilityData>
+public class FacilityBuildingPanel : Panel<FacilityData>
 {
-    private static FacilityData selectedFacilityData;
+    private FacilityData selectedFacilityData;
 
     private void OnEnable()
     {
@@ -24,20 +24,32 @@ class FacilityBuildingPanel : Panel<FacilityData>
 
     public void ReturnToFacilitySelection()
     {
-        GameStateManager.Instance.SetUIState(UIState.FacilitySelection, null);
+        GameStateManager.Instance.SetUiState(UiState.FacilitySelection, null);
     }
 
     private void HandleMouseButtonDown(int button, Vector3 position, GameObject clickedGO)
     {
-        if (button == 0 && clickedGO != null && clickedGO.CompareTag("Pillar") && selectedFacilityData != null)
-        {
-            Pillar pillar = clickedGO.GetComponent<Pillar>();
-            if (pillar.Size == selectedFacilityData.size)
-            {
-                FacilityManager.Instance.BuildFacility(pillar, selectedFacilityData.facilityType);
+        if (button != 0 || clickedGO == null || selectedFacilityData == null)
+            return;
 
-                GameStateManager.Instance.ResetUIState();
-            }
+        if (!clickedGO.CompareTag("Pillar"))
+            return;
+
+        Pillar pillar = clickedGO.GetComponent<Pillar>();
+        if (pillar == null)
+        {
+            Debug.LogWarning($"Clicked object tagged as Pillar but has no Pillar component.");
+            return;
+        }
+
+        if (pillar.Size == selectedFacilityData.size)
+        {
+            FacilityManager.Instance.BuildFacility(pillar, selectedFacilityData.facilityType);
+            GameStateManager.Instance.ResetUiState();
+        }
+        else
+        {
+            Debug.Log($"Pillar size mismatch: required {selectedFacilityData.size}, but found {pillar.Size}.");
         }
     }
 }

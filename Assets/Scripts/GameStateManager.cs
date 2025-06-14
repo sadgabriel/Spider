@@ -13,24 +13,25 @@ public enum GameState
     SpecialAction,
 }
 
-public enum UIState
+public enum UiState
 {
     Idle,
     FacilitySelection,
     FacilityBuilding,
 }
 
-class GameStateManager : MonoBehaviour
+public class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance { get; private set; }
+
     private TurnState currentTurn = TurnState.PlayerTurn;
     private GameState currentGameState = GameState.Idle;
-    private UIState currentUIState = UIState.Idle;
-    private int turnCount = 1;
+    private UiState currentUiState = UiState.Idle;
+    private object uiStateData;
 
     public event Action<TurnState> OnTurnChange;
     public event Action<GameState> OnGameStateChange;
-    public event Action<UIState, object> OnUIStateChange;
+    public event Action<UiState, object> OnUiStateChange;
 
     public TurnState CurrentTurn
     {
@@ -54,86 +55,58 @@ class GameStateManager : MonoBehaviour
         }
     }
 
-    public UIState CurrentUIState { get; private set; }
-
-    public int TurnCount
+    public UiState CurrentUiState
     {
-        get => turnCount;
-        private set => turnCount = value;
+        get => currentUiState;
+        private set
+        {
+            if (currentUiState == value) return;
+            currentUiState = value;
+            OnUiStateChange?.Invoke(currentUiState, uiStateData);
+        }
     }
 
-    public bool IsPlayerTurn
-    {
-        get => CurrentTurn == TurnState.PlayerTurn;
-    }
+    public int TurnCount { get; private set; } = 1;
 
-    public bool IsEnemyTurn
-    {
-        get => CurrentTurn == TurnState.EnemyTurn;
-    }
+    public bool IsPlayerTurn => CurrentTurn == TurnState.PlayerTurn;
+    public bool IsEnemyTurn => CurrentTurn == TurnState.EnemyTurn;
 
-    public bool IsIdleGameState
-    {
-        get => CurrentGameState == GameState.Idle;
-    }
+    public bool IsIdleGameState => CurrentGameState == GameState.Idle;
+    public bool IsSpecialActionState => CurrentGameState == GameState.SpecialAction;
 
-    public bool IsSpecialActionState
-    {
-        get => CurrentGameState == GameState.SpecialAction;
-    }
-
-    public bool IsIdleUIState
-    {
-        get => currentUIState == UIState.Idle;
-    }
+    public bool IsIdleUiState => CurrentUiState == UiState.Idle;
 
     private void Awake()
     {
         if (Instance == null)
-        {
             Instance = this;
-        }
         else
-        {
             Destroy(gameObject);
-        }
     }
 
     public void EndPlayerTurn()
     {
-        if (CurrentTurn == TurnState.PlayerTurn)
-        {
+        if (IsPlayerTurn)
             CurrentTurn = TurnState.EnemyTurn;
-        }
     }
 
     public void EndEnemyTurn()
     {
-        if (CurrentTurn == TurnState.EnemyTurn)
+        if (IsEnemyTurn)
         {
             CurrentTurn = TurnState.PlayerTurn;
-            turnCount++;
+            TurnCount++;
         }
     }
 
-    public void SetSpecialActionGameState()
+    public void SetSpecialActionGameState() => CurrentGameState = GameState.SpecialAction;
+    public void ResetGameState() => CurrentGameState = GameState.Idle;
+
+    public void SetUiState(UiState state, object data)
     {
-        CurrentGameState = GameState.SpecialAction;
+        uiStateData = data;
+        CurrentUiState = state;
     }
 
-    public void ResetGameState()
-    {
-        CurrentGameState = GameState.Idle;
-    }
-
-    public void SetUIState(UIState state, object data)
-    {
-        currentUIState = state;
-        OnUIStateChange?.Invoke(state, data);
-    }
-
-    public void ResetUIState()
-    {
-        SetUIState(UIState.Idle, null);
-    }
+    public void ResetUiState() => SetUiState(UiState.Idle, null);
 }

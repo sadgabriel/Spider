@@ -168,6 +168,6 @@ SpecialAction *-- SpecialActionManager
 
 Map *-- GameManager
 UnitSystem *-- GameManager
-SpecialActionManager *-- GameManager
+UIManager *-- GameManager
 @enduml
 

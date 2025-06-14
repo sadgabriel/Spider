@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-class MaxHPFacility : Facility
+public class MaxHPFacility : Facility
 {
     private int maxUpgradeLevel = 7;
     public override int MaxUpgradeLevel => maxUpgradeLevel;

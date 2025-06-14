@@ -1,12 +1,13 @@
 using UnityEngine;
 
-interface IPanel
+public interface IPanel
 {
     void Show(object data);
     void Hide();
+    bool IsVisible { get; }
 }
 
-abstract class Panel<T> : MonoBehaviour, IPanel
+public abstract class Panel<T> : MonoBehaviour, IPanel
 {
     public bool IsVisible => gameObject.activeSelf;
 
@@ -14,7 +15,7 @@ abstract class Panel<T> : MonoBehaviour, IPanel
     {
         if (data == null)
         {
-            Show(default(T));
+            Show(default);
         }
         else if (data is T typedData)
         {
@@ -22,7 +23,7 @@ abstract class Panel<T> : MonoBehaviour, IPanel
         }
         else
         {
-            Debug.LogWarning($"[Panel<{typeof(T)}>] 잘못된 타입 전달됨: {data.GetType()} → {typeof(T)}");
+            Debug.LogWarning($"[{name} / Panel<{typeof(T).Name}>] Invalid data type: received {data.GetType().Name}, expected {typeof(T).Name}.");
         }
     }
 

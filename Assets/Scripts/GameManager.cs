@@ -27,8 +27,12 @@ public class GameManager : MonoBehaviour
 
     private void InitializeGame()
     {
+        if (Map.Instance == null) Debug.LogError("Map is missing!");
+        if (UnitSystem.Instance == null) Debug.LogError("UnitSystem is missing!");
+        if (UiManager.Instance == null) Debug.LogError("UIManager is missing!");
+
         Map.Instance.GenerateMap();
         UnitSystem.Instance.Initialize();
-        UIManager.Instance.Initialize();
+        UiManager.Instance.Initialize();
     }
 }

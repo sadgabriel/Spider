@@ -1491,7 +1491,7 @@ GameObject:
   - component: {fileID: 249415899}
   - component: {fileID: 249415900}
   m_Layer: 0
-  m_Name: UIManager
+  m_Name: UiManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1524,9 +1524,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0502633d65a3f56479697bc66f6389b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IdlePanel: {fileID: 781122056}
-  facilitySelectionPanel: {fileID: 1337758529}
-  facilityBuildingPanel: {fileID: 1286438605}
+  panelEntries:
+  - uiState: 0
+    panel: {fileID: 781122056}
+  - uiState: 1
+    panel: {fileID: 1337758529}
+  - uiState: 2
+    panel: {fileID: 1286438605}
 --- !u!1 &251852568
 GameObject:
   m_ObjectHideFlags: 0

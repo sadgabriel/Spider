@@ -2,15 +2,18 @@ using System.Collections.Generic;
 using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
 
-
-class FacilitySelectionPanel : Panel<List<FacilityData>>
+public class FacilitySelectionPanel : Panel<List<FacilityData>>
 {
+    private const int NumChoices = 3;
+
     [SerializeField] private UnityEngine.UI.Image leftChoiceIcon;
     [SerializeField] private TMPro.TextMeshProUGUI leftChoiceNameText;
     [SerializeField] private TMPro.TextMeshProUGUI leftChoiceDescriptionText;
+
     [SerializeField] private UnityEngine.UI.Image middleChoiceIcon;
     [SerializeField] private TMPro.TextMeshProUGUI middleChoiceNameText;
     [SerializeField] private TMPro.TextMeshProUGUI middleChoiceDescriptionText;
+
     [SerializeField] private UnityEngine.UI.Image rightChoiceIcon;
     [SerializeField] private TMPro.TextMeshProUGUI rightChoiceNameText;
     [SerializeField] private TMPro.TextMeshProUGUI rightChoiceDescriptionText;
@@ -23,64 +26,42 @@ class FacilitySelectionPanel : Panel<List<FacilityData>>
 
     public override void Show(List<FacilityData> data = null)
     {
-        while (data.Count < 3)
+        if (data == null) data = new List<FacilityData>();
+
+        while (data.Count < NumChoices)
         {
             data.Add(dummyFacilityData);
         }
 
-        if (data != null && data.Count >= 3)
-            {
-                SetLeftChoice(data[0]);
-                SetMiddleChoice(data[1]);
-                SetRightChoice(data[2]);
-            }
+        SetChoice(data[0], out leftChoiceData, leftChoiceIcon, leftChoiceNameText, leftChoiceDescriptionText);
+        SetChoice(data[1], out middleChoiceData, middleChoiceIcon, middleChoiceNameText, middleChoiceDescriptionText);
+        SetChoice(data[2], out rightChoiceData, rightChoiceIcon, rightChoiceNameText, rightChoiceDescriptionText);
+
         gameObject.SetActive(true);
     }
 
-    private void SetLeftChoice(FacilityData facilityData)
+    private void SetChoice(
+        FacilityData data,
+        out FacilityData storage,
+        UnityEngine.UI.Image icon,
+        TMPro.TextMeshProUGUI nameText,
+        TMPro.TextMeshProUGUI descText)
     {
-        leftChoiceData = facilityData;
-        leftChoiceIcon.sprite = Sprite.Create(facilityData.iconTexture, new Rect(0, 0, facilityData.iconTexture.width, facilityData.iconTexture.height), new Vector2(0.5f, 0.5f));
-        leftChoiceNameText.text = facilityData.facilityName;
-        leftChoiceDescriptionText.text = facilityData.facilityDescription;
+        storage = data;
+        icon.sprite = Sprite.Create(data.iconTexture, new Rect(0, 0, data.iconTexture.width, data.iconTexture.height), new Vector2(0.5f, 0.5f));
+        nameText.text = data.facilityName;
+        descText.text = data.facilityDescription;
     }
 
-    private void SetMiddleChoice(FacilityData facilityData)
-    {
-        middleChoiceData = facilityData;
-        middleChoiceIcon.sprite = Sprite.Create(facilityData.iconTexture, new Rect(0, 0, facilityData.iconTexture.width, facilityData.iconTexture.height), new Vector2(0.5f, 0.5f));
-        middleChoiceNameText.text = facilityData.facilityName;
-        middleChoiceDescriptionText.text = facilityData.facilityDescription;
-    }
-
-    private void SetRightChoice(FacilityData facilityData)
-    {
-        rightChoiceData = facilityData;
-        rightChoiceIcon.sprite = Sprite.Create(facilityData.iconTexture, new Rect(0, 0, facilityData.iconTexture.width, facilityData.iconTexture.height), new Vector2(0.5f, 0.5f));
-        rightChoiceNameText.text = facilityData.facilityName;
-        rightChoiceDescriptionText.text = facilityData.facilityDescription;
-    }
-
-    public void ChooseLeft()
-    {
-        ProceedToBuildingPanel(leftChoiceData);
-    }
-
-    public void ChooseMiddle()
-    {
-        ProceedToBuildingPanel(middleChoiceData);
-    }
-
-    public void ChooseRight()
-    {
-        ProceedToBuildingPanel(rightChoiceData);
-    }
+    public void ChooseLeft() => ProceedToBuildingPanel(leftChoiceData);
+    public void ChooseMiddle() => ProceedToBuildingPanel(middleChoiceData);
+    public void ChooseRight() => ProceedToBuildingPanel(rightChoiceData);
 
     private void ProceedToBuildingPanel(FacilityData facilityData)
     {
         if (facilityData != dummyFacilityData)
         {
-            GameStateManager.Instance.SetUIState(UIState.FacilityBuilding, facilityData);
+            GameStateManager.Instance.SetUiState(UiState.FacilityBuilding, facilityData);
         }
     }
 }

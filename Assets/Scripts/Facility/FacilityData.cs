@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Facility/FacilityData")]
-class FacilityData : ScriptableObject
+public class FacilityData : ScriptableObject
 {
     public FacilityType facilityType;
     public PillarSize size;
