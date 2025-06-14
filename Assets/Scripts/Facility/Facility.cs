@@ -165,7 +165,7 @@ abstract class Facility : MonoBehaviour
         Destroy(ring);
     }
 
-    private void Initialize()
+    protected virtual void Initialize()
     {
         int upgradeLevel = CurrentPillar.FacilityUpgradeLevel;
         AdjustRing(upgradeLevel);
