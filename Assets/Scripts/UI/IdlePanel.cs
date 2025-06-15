@@ -13,7 +13,7 @@ public class IdlePanel : Panel<NoData>
 
         if (hpText != null)
         {
-            hpText.text = $"HP: {player.HP}";
+            hpText.text = $"HP: {player.Hp}";
         }
         if (staminaText != null)
         {

@@ -4,89 +4,56 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class MaxHPFacility : Facility
+public class MaxHpFacility : Facility
 {
-    private int maxUpgradeLevel = 7;
-    public override int MaxUpgradeLevel => maxUpgradeLevel;
+    private const int MaxUpgrade = 7;
+    private const int MinUpgrade = 0;
+    public override int MaxUpgradeLevel => MaxUpgrade;
+    public override int MinUpgradeLevel => MinUpgrade;
 
-    protected override void SetUpgradeHandlers()
+    private static readonly Dictionary<int, int> MaxHpBonusByUpgradeLevel = new()
     {
-        base.SetUpgradeHandlers();
+        { 1, 30 }, { 2, 30 }, { 3, 40 }, { 5, 50 }, { 6, 50 }
+    };
 
-        OnUpgradeLevelIncrease += IncreasePlayerMaxHPByUpgradeLevel;
-        OnUpgradeLevelIncrease += IncreasePlayerHPRegenerationByUpgradeLevel;
+    private static readonly Dictionary<int, int> HpRegenBonusByUpgradeLevel = new()
+    {
+        { 4, 10 }, { 7, 10 }
+    };
 
-        OnUpgradeLevelDecrease += DecreasePlayerMaxHPByUpgradeLevel;
-        OnUpgradeLevelDecrease += DecreasePlayerHPRegenerationByUpgradeLevel;
+    protected override void SetHandlersOnUpgradeLevel()
+    {
+        OnUpgradeLevelIncrease += ApplyMaxHpBonus;
+        OnUpgradeLevelIncrease += ApplyHpRegenBonus;
+        OnUpgradeLevelDecrease += RemoveMaxHpBonus;
+        OnUpgradeLevelDecrease += RemoveHpRegenBonus;
     }
 
-    private void IncreasePlayerMaxHPByUpgradeLevel(int upgradeLevel)
+    private void ApplyMaxHpBonus(int upgradeLevel)
     {
-        Player player = Player.Instance;
-
-        switch (upgradeLevel)
-        {
-            case 1:
-            case 2:
-                player.MaxHP += 30;
-                break;
-            case 3:
-                player.MaxHP += 40;
-                break;
-            case 5:
-            case 6:
-                player.MaxHP += 50;
-                break;
-        }
+        if (Player.Instance == null) return;
+        if (MaxHpBonusByUpgradeLevel.TryGetValue(upgradeLevel, out int bonus))
+            Player.Instance.MaxHp += bonus;
     }
 
-    private void DecreasePlayerMaxHPByUpgradeLevel(int upgradeLevel)
+    private void RemoveMaxHpBonus(int upgradeLevel)
     {
-        Player player = Player.Instance;
-
-        switch (upgradeLevel)
-        {
-            case 1:
-            case 2:
-                player.MaxHP -= 30;
-                break;
-            case 3:
-                player.MaxHP -= 40;
-                break;
-            case 5:
-            case 6:
-                player.MaxHP -= 50;
-                break;
-        }
+        if (Player.Instance == null) return;
+        if (MaxHpBonusByUpgradeLevel.TryGetValue(upgradeLevel, out int bonus))
+            Player.Instance.MaxHp -= bonus;
     }
 
-    private void IncreasePlayerHPRegenerationByUpgradeLevel(int upgradeLevel)
+    private void ApplyHpRegenBonus(int upgradeLevel)
     {
-        Player player = Player.Instance;
-
-        switch (upgradeLevel)
-        {
-            case 4:
-                player.HPRegen += 10;
-                break;
-            case 7:
-                player.HPRegen += 10;
-                break;
-        }
+        if (Player.Instance == null) return;
+        if (HpRegenBonusByUpgradeLevel.TryGetValue(upgradeLevel, out int bonus))
+            Player.Instance.HpRegen += bonus;
     }
 
-    private void DecreasePlayerHPRegenerationByUpgradeLevel(int upgradeLevel)
+    private void RemoveHpRegenBonus(int upgradeLevel)
     {
-        Player player = Player.Instance;
-
-        switch (upgradeLevel)
-        {
-            case 4:
-                player.HPRegen -= 10;
-                break;
-            case 7:
-                player.HPRegen -= 10;
-                break;
-        }
+        if (Player.Instance == null) return;
+        if (HpRegenBonusByUpgradeLevel.TryGetValue(upgradeLevel, out int bonus))
+            Player.Instance.HpRegen -= bonus;
     }
 }

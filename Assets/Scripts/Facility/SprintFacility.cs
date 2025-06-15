@@ -1,70 +1,52 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class SprintFacility : Facility
 {
-    private int maxUpgradeLevel = 7;
-    public override int MaxUpgradeLevel => maxUpgradeLevel;
+    private const int MaxUpgrade = 7;
+    private const int MinUpgrade = 0;
+    public override int MaxUpgradeLevel => MaxUpgrade;
+    public override int MinUpgradeLevel => MinUpgrade;
+    
 
-    private Sprint sprint = new Sprint();
+    private readonly Sprint sprint = new Sprint();
 
-    protected override void SetUpgradeHandlers()
+    private static readonly HashSet<int> StaminaReductionLevels = new() { 2, 3, 5, 6 };
+    private static readonly HashSet<int> ReachIncreaseLevels = new() { 4, 7 };
+
+    protected override void SetHandlersOnUpgradeLevel()
     {
-        base.SetUpgradeHandlers();
-
         OnUpgradeLevelIncrease += AddSprintToSpecialAction;
         OnUpgradeLevelIncrease += UpgradeSprint;
-
         OnUpgradeLevelDecrease += RemoveSprintFromSpecialAction;
         OnUpgradeLevelDecrease += DowngradeSprint;
     }
 
-    private void AddSprintToSpecialAction(int upgradeLevel)
+    private void AddSprintToSpecialAction(int level)
     {
-        if (upgradeLevel == 1)
+        if (level == 1)
         {
             SpecialActionManager.Instance.AddSpecialAction(sprint);
         }
     }
 
-    private void RemoveSprintFromSpecialAction(int upgradeLevel)
+    private void RemoveSprintFromSpecialAction(int level)
     {
-        if (upgradeLevel == 1)
+        if (level == 1)
         {
             SpecialActionManager.Instance.RemoveSpecialAction(sprint);
         }
     }
 
-    private void UpgradeSprint(int upgradeLevel)
+    private void UpgradeSprint(int level)
     {
-        switch (upgradeLevel)
-        {
-            case 2:
-            case 3:
-            case 5:
-            case 6:
-                sprint.BaseStaminaConsume -= 10;
-                break;
-            case 4:
-            case 7:
-                sprint.Reach += 1;
-                break;
-        }
+        if (StaminaReductionLevels.Contains(level)) sprint.BaseStaminaConsume -= 10;
+        if (ReachIncreaseLevels.Contains(level)) sprint.Reach += 1;
     }
 
-    private void DowngradeSprint(int upgradeLevel)
+    private void DowngradeSprint(int level)
     {
-        switch (upgradeLevel)
-        {
-            case 2:
-            case 3:
-            case 5:
-            case 6:
-                sprint.BaseStaminaConsume += 10;
-                break;
-            case 4:
-            case 7:
-                sprint.Reach -= 1;
-                break;
-        }
+        if (StaminaReductionLevels.Contains(level)) sprint.BaseStaminaConsume += 10;
+        if (ReachIncreaseLevels.Contains(level)) sprint.Reach -= 1;
     }
 }

@@ -3,10 +3,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Facility/FacilityData")]
 public class FacilityData : ScriptableObject
 {
-    public FacilityType facilityType;
-    public PillarSize size;
+    public FacilityType FacilityType;
+    public PillarSize Size;
     public bool IsUnique;
-    public Texture2D iconTexture;
-    public string facilityName;
-    [TextArea] public string facilityDescription;
+    public Texture2D IconTexture;
+    public string Name;
+    [TextArea] public string Description;
 }

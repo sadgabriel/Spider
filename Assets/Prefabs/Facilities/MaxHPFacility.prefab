@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7722539353803499468}
   - component: {fileID: 6725804008280481392}
   m_Layer: 0
-  m_Name: MaxHPFacility
+  m_Name: MaxHpFacility
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

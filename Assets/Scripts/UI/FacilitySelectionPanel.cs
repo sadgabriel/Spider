@@ -48,9 +48,9 @@ public class FacilitySelectionPanel : Panel<List<FacilityData>>
         TMPro.TextMeshProUGUI descText)
     {
         storage = data;
-        icon.sprite = Sprite.Create(data.iconTexture, new Rect(0, 0, data.iconTexture.width, data.iconTexture.height), new Vector2(0.5f, 0.5f));
-        nameText.text = data.facilityName;
-        descText.text = data.facilityDescription;
+        icon.sprite = Sprite.Create(data.IconTexture, new Rect(0, 0, data.IconTexture.width, data.IconTexture.height), new Vector2(0.5f, 0.5f));
+        nameText.text = data.Name;
+        descText.text = data.Description;
     }
 
     public void ChooseLeft() => ProceedToBuildingPanel(leftChoiceData);

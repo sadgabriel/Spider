@@ -42,14 +42,14 @@ public class FacilityBuildingPanel : Panel<FacilityData>
             return;
         }
 
-        if (pillar.Size == selectedFacilityData.size)
+        if (pillar.Size == selectedFacilityData.Size)
         {
-            FacilityManager.Instance.BuildFacility(pillar, selectedFacilityData.facilityType);
+            FacilityManager.Instance.BuildFacility(pillar, selectedFacilityData.FacilityType);
             GameStateManager.Instance.ResetUiState();
         }
         else
         {
-            Debug.Log($"Pillar size mismatch: required {selectedFacilityData.size}, but found {pillar.Size}.");
+            Debug.Log($"Pillar size mismatch: required {selectedFacilityData.Size}, but found {pillar.Size}.");
         }
     }
 }

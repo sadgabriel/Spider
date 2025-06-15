@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ab49e4cc714dc4da997a4c00eefad0, type: 3}
   m_Name: Dummy
   m_EditorClassIdentifier: 
-  facilityType: 0
-  size: 0
+  FacilityType: 0
+  Size: 0
   IsUnique: 0
-  iconTexture: {fileID: 2800000, guid: 684c4b4002aa7e243853bd3d8a64077d, type: 3}
-  facilityName: Empty
-  facilityDescription: There are no more available facilities.
+  IconTexture: {fileID: 2800000, guid: 684c4b4002aa7e243853bd3d8a64077d, type: 3}
+  Name: 
+  Description: 

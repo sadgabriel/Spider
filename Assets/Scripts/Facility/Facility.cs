@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -11,57 +12,32 @@ public abstract class Facility : MonoBehaviour
     [SerializeField] private float firstRingOffset = -0.5f;
     [SerializeField] private float ringGap = 0.3f;
 
-    public Texture2D IconTexture
-    {
-        get => facilityData?.iconTexture;
-    }
-
-    public string FacilityName
-    {
-        get => facilityData?.facilityName;
-    }
-
-    public string FacilityDescription
-    {
-        get => facilityData?.facilityDescription;
-    }
-
-    public FacilityData Data
-    {
-        get => facilityData;
-        private set => facilityData = value;
-    }
-
-    private List<GameObject> rings = new List<GameObject>();
+    public FacilityData Data => facilityData;
 
     public Pillar CurrentPillar { get; private set; }
 
-    protected Action<int> OnUpgradeLevelIncrease;
-    protected Action<int> OnUpgradeLevelDecrease;
-    private int lastUpgradeLevel = 0;
     public abstract int MaxUpgradeLevel { get; }
-
+    public abstract int MinUpgradeLevel { get; }
     public int UpgradeLevel
     {
         get
         {
-            if (CurrentPillar != null)
+            if (CurrentPillar == null)
             {
-                return CurrentPillar.FacilityUpgradeLevel;
-            }
-            else
-            {
-                Debug.LogError("Facility is Not On Pillar");
+                Debug.LogError("Facility is Not Built");
                 return -1;
             }
 
-        }
-
-        set
-        {
-            CurrentPillar.FacilityUpgradeLevel = value;
+            int pillarUpgradeLevel = CurrentPillar.FacilityUpgradeLevel;
+            return Mathf.Clamp(pillarUpgradeLevel, MinUpgradeLevel, MaxUpgradeLevel);
         }
     }
+    private int lastUpgradeLevel = 0;
+
+    private readonly List<GameObject> rings = new();
+
+    protected Action<int> OnUpgradeLevelIncrease;
+    protected Action<int> OnUpgradeLevelDecrease;
 
     public void BuildOn(Pillar pillar)
     {
@@ -81,17 +57,30 @@ public abstract class Facility : MonoBehaviour
             return;
         }
 
-        transform.position = pillar.TopPosition;
-        transform.rotation = pillar.transform.rotation;
-
-        CurrentPillar = pillar;
-        pillar.HasFacility = true;
+        MoveToPillar(pillar);
+        ConnectToPillar(pillar);
 
         ResizeToMatchPillar(pillar);
         ApplyIconTexture();
-        pillar.OnFacilityUpgradeLevelChange += HandleUpgradeLevelChange;
+
+        SetHandlersOnUpgradeLevel(); // Must be called BEFORE ApplyUpgradeLevel() to set upgrade delegates
+        ApplyUpgradeLevel(UpgradeLevel);
 
         Initialize();
+    }
+
+    private void MoveToPillar(Pillar pillar)
+    {
+        transform.position = pillar.TopPosition;
+        transform.rotation = pillar.transform.rotation;
+    }
+
+    private void ConnectToPillar(Pillar pillar)
+    {
+        CurrentPillar = pillar;
+        pillar.HasFacility = true;
+
+        pillar.OnFacilityUpgradeLevelChange += HandleUpgradeLevelChange;
     }
 
     private void ResizeToMatchPillar(Pillar pillar)
@@ -104,12 +93,13 @@ public abstract class Facility : MonoBehaviour
 
     private void ApplyIconTexture()
     {
-        if (iconSurface != null && IconTexture != null)
+        var iconTexture = Data.IconTexture;
+        if (iconSurface != null && iconTexture != null)
         {
             Renderer renderer = iconSurface.GetComponent<Renderer>();
             if (renderer != null)
             {
-                renderer.material.mainTexture = IconTexture;
+                renderer.material.mainTexture = iconTexture;
             }
             else
             {
@@ -124,7 +114,6 @@ public abstract class Facility : MonoBehaviour
 
     private void HandleUpgradeLevelChange(int upgradeLevel)
     {
-        AdjustRing(upgradeLevel);
         ApplyUpgradeLevel(upgradeLevel);
     }
 
@@ -165,17 +154,10 @@ public abstract class Facility : MonoBehaviour
         Destroy(ring);
     }
 
-    protected virtual void Initialize()
-    {
-        int upgradeLevel = CurrentPillar.FacilityUpgradeLevel;
-        AdjustRing(upgradeLevel);
-
-        SetUpgradeHandlers();
-        ApplyUpgradeLevel(upgradeLevel);
-    }
-
     private void ApplyUpgradeLevel(int newUpgradeLevel)
     {
+        AdjustRing(newUpgradeLevel);
+
         while (lastUpgradeLevel < newUpgradeLevel && lastUpgradeLevel < MaxUpgradeLevel)
         {
             lastUpgradeLevel++;
@@ -189,7 +171,12 @@ public abstract class Facility : MonoBehaviour
         }
     }
 
-    protected virtual void SetUpgradeHandlers()
+    protected virtual void SetHandlersOnUpgradeLevel()
+    {
+
+    }
+
+    protected virtual void Initialize()
     {
         
     }

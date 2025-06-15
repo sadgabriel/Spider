@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 49ab49e4cc714dc4da997a4c00eefad0, type: 3}
-  m_Name: MaxHP
+  m_Name: MaxHp
   m_EditorClassIdentifier: 
-  facilityType: 1
-  size: 1
+  FacilityType: 1
+  Size: 1
   IsUnique: 1
-  iconTexture: {fileID: 2800000, guid: 4584598b3b8cd474488445e2a4166f53, type: 3}
-  facilityName: Increaing Max HP
-  facilityDescription: 
+  IconTexture: {fileID: 2800000, guid: 4584598b3b8cd474488445e2a4166f53, type: 3}
+  Name: Max HP
+  Description: Increase Max HP

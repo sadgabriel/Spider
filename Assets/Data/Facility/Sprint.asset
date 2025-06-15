@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ab49e4cc714dc4da997a4c00eefad0, type: 3}
   m_Name: Sprint
   m_EditorClassIdentifier: 
-  facilityType: 2
-  size: 1
+  FacilityType: 2
+  Size: 1
   IsUnique: 1
-  iconTexture: {fileID: 2800000, guid: 6de69620b99a6b54095461fbf7b11ebe, type: 3}
-  facilityName: Unlock Sprint
-  facilityDescription: 
+  IconTexture: {fileID: 2800000, guid: 6de69620b99a6b54095461fbf7b11ebe, type: 3}
+  Name: Sprint
+  Description: Unlock Sprint

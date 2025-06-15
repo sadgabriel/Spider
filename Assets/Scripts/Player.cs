@@ -7,7 +7,7 @@ public class Player : Unit
 {
     public static Player Instance { get; private set; }
     [SerializeField] private int hp = 100;
-    [SerializeField] private int maxHP = 100;
+    [SerializeField] private int maxHp = 100;
     [SerializeField] private int hpRegen = 0;
     [SerializeField] private int stamina = 0;
     [SerializeField] private int maxStamina = 100;
@@ -18,12 +18,12 @@ public class Player : Unit
 
     public event System.Action<int> OnLevelUp;
     
-    public int HP
+    public int Hp
     {
         get => hp;
         set
         {
-            hp = Mathf.Clamp(value, 0, maxHP);
+            hp = Mathf.Clamp(value, 0, maxHp);
             if (hp <= 0)
             {
                 Debug.Log("Game Over");
@@ -31,27 +31,27 @@ public class Player : Unit
         }
     }
 
-    public int MaxHP
+    public int MaxHp
     {
-        get => maxHP;
+        get => maxHp;
         set
         {
-            int diff = value - maxHP;
-            maxHP = value;
+            int diff = value - maxHp;
+            maxHp = value;
 
             if (diff > 0)
             {
                 hp += diff;
             }
 
-            if (hp > maxHP)
+            if (hp > maxHp)
             {
-                hp = maxHP;
+                hp = maxHp;
             }
         }
     }
 
-    public int HPRegen
+    public int HpRegen
     {
         get => hpRegen;
         set => hpRegen = value;
@@ -112,17 +112,17 @@ public class Player : Unit
 
     public void TakeDamage(int damage)
     {
-        HP -= damage;
+        Hp -= damage;
     }
 
-    public void RegenerateHP(int amount)
+    public void RegenerateHp(int amount)
     {
-        HP += amount;
+        Hp += amount;
     }
 
-    public void RegenerateHP()
+    public void RegenerateHp()
     {
-        RegenerateHP(hpRegen);
+        RegenerateHp(hpRegen);
     }
 
     public void RegenerateStamina(int amount)
