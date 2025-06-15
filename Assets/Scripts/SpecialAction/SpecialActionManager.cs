@@ -5,7 +5,7 @@ class SpecialActionManager : MonoBehaviour
 {
     public static SpecialActionManager Instance { get; private set; }
 
-    private static HashSet<SpecialAction> specialActions = new HashSet<SpecialAction>();
+    private HashSet<SpecialAction> specialActions = new HashSet<SpecialAction>();
 
     private void Awake()
     {

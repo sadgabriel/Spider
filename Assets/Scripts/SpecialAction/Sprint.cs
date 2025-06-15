@@ -1,14 +1,19 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 class Sprint : SpecialAction
 {
-    public int Reach = 2;
-    public int BaseStaminaConsume = 50;
+    public static readonly Sprint Instance = new();
+    private Sprint() { }
+
+    public int Reach { get; set; } = 2;
+    public int BaseStaminaConsume { get; set; } = 50;
 
     protected override void HandleMouseButtonDown(int button, Vector3 position, GameObject clickedGO)
     {
-        if (button == 0 && GameStateManager.Instance.IsPlayerTurn && GameStateManager.Instance.IsSpecialActionState)
+        var gameStateManager = GameStateManager.Instance;
+        if (button == 0 && gameStateManager.IsPlayerTurn && gameStateManager.IsSpecialActionState)
         {
             Node targetNode = clickedGO.GetComponent<Node>();
 
@@ -22,9 +27,9 @@ class Sprint : SpecialAction
             {
                 if (Player.Instance.TrySprintTo(targetNode, Reach, BaseStaminaConsume))
                 {
-                    GameStateManager.Instance.EndPlayerTurn();
+                    gameStateManager.EndPlayerTurn();
                 }
-                GameStateManager.Instance.ResetGameState();
+                gameStateManager.ResetGameState();
             }
         }
     }
@@ -34,7 +39,7 @@ class Sprint : SpecialAction
         var gameStateManager = GameStateManager.Instance;
         if (pressedKeys.Contains(KeyCode.Space) && gameStateManager.IsPlayerTurn && gameStateManager.IsIdleGameState && gameStateManager.IsIdleUiState)
         {
-            GameStateManager.Instance.SetSpecialActionGameState();
+            gameStateManager.SetSpecialActionGameState();
         }
     }
 }

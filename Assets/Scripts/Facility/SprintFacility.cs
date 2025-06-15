@@ -9,7 +9,7 @@ public class SprintFacility : Facility
     public override int MinUpgradeLevel => MinUpgrade;
     
 
-    private readonly Sprint sprint = new Sprint();
+    private readonly Sprint sprint = Sprint.Instance;
 
     private static readonly HashSet<int> StaminaReductionLevels = new() { 2, 3, 5, 6 };
     private static readonly HashSet<int> ReachIncreaseLevels = new() { 4, 7 };

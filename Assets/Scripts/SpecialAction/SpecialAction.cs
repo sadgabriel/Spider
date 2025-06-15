@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-abstract class SpecialAction
+public abstract class SpecialAction
 {
     public bool IsActive { get; private set; } = false;
     public void Activate()
