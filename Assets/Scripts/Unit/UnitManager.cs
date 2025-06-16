@@ -65,7 +65,7 @@ public class UnitManager : MonoBehaviour
         {
             foreach (Spawner spawner in spawners)
             {
-                if (spawner.IsReadyToSpawn())
+                if (spawner.IsReadyToSpawn)
                 {
                     List<Node> spawnPoints = spawner.SpawnPoints;
                     foreach (Node spawnPoint in spawnPoints)
