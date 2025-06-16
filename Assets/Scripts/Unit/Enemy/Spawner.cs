@@ -5,10 +5,10 @@ using UnityEngine;
 public class Spawner : Enemy
 {
     [SerializeField] private int spawnInterval = 5;
+    [SerializeField] private int enemyCount = 3;
 
     private int spawnTimer;
 
-    [SerializeField] private int enemyCount = 3;
     public List<Node> SpawnPoints
     {
         get
@@ -26,6 +26,8 @@ public class Spawner : Enemy
         }
     }
 
+    public bool IsReadyToSpawn => spawnTimer >= spawnInterval;
+
     protected override void Awake()
     {
         base.Awake();
@@ -40,11 +42,6 @@ public class Spawner : Enemy
         {
             State = EnemyState.Alerted;
         }
-    }
-
-    public bool IsReadyToSpawn()
-    {
-        return spawnTimer >= spawnInterval;
     }
 
     public void ResetSpawnTimer()

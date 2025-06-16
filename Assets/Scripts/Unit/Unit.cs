@@ -2,6 +2,8 @@ using UnityEngine;
 
 public abstract class Unit : MonoBehaviour
 {
+    [SerializeField] protected float verticalOffset = 0.5f;
+
     private Node currentNode;
 
     public Node CurrentNode
@@ -9,8 +11,6 @@ public abstract class Unit : MonoBehaviour
         get => currentNode;
         protected set => currentNode = value;
     }
-
-    [SerializeField] protected float verticalOffset = 0.5f;
 
     public bool TryMoveTo(Node targetNode)
     {

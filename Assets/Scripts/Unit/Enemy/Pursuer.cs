@@ -5,6 +5,7 @@ using System.Linq;
 class Pursuer : Mover
 {
     [SerializeField] private int recognitionDistance = 4;
+    
     public override void Act()
     {
         base.Act();
@@ -14,27 +15,26 @@ class Pursuer : Mover
             SetNextPillar();
         }
 
-        Node nextNode = FindNextStepTowards(currentTargetPillar);
+        Node nextNode = FindNextNodeTowards(currentTargetPillar);
 
         if (IsAttackable())
         {
             Attack();
             Die();
+            return;
+        }
+
+        TryMoveTo(nextNode);
+
+        if (CurrentNode == currentTargetPillar)
+        {
+            currentTargetPillar = null;
+            LookAt(null);
         }
         else
         {
-            TryMoveTo(nextNode);
-
-            if (CurrentNode == currentTargetPillar)
-            {
-                currentTargetPillar = null;
-                LookAt(null);
-            }
-            else
-            {
-                nextNode = FindNextStepTowards(currentTargetPillar);
-                LookAt(nextNode);
-            }
+            nextNode = FindNextNodeTowards(currentTargetPillar);
+            LookAt(nextNode);
         }
     }
     
@@ -54,7 +54,7 @@ class Pursuer : Mover
 
     private bool IsAttackable()
     {
-        Node nextNode = FindNextStepTowards(currentTargetPillar);
+        Node nextNode = FindNextNodeTowards(currentTargetPillar);
         return player != null &&
                CurrentNode != null &&
                nextNode != null &&

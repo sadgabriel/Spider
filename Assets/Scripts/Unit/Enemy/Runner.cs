@@ -18,7 +18,7 @@ class Runner : Mover
                 SetNextPillar();
             }
 
-            Node nextNode = FindNextStepTowards(currentTargetPillar);
+            Node nextNode = FindNextNodeTowards(currentTargetPillar);
 
             if (IsAttackable())
             {
@@ -36,7 +36,7 @@ class Runner : Mover
                 }
                 else
                 {
-                    nextNode = FindNextStepTowards(currentTargetPillar);
+                    nextNode = FindNextNodeTowards(currentTargetPillar);
                     LookAt(nextNode);
                 }
             }
@@ -60,7 +60,7 @@ class Runner : Mover
 
     private bool IsAttackable()
     {
-        Node nextNode = FindNextStepTowards(currentTargetPillar);
+        Node nextNode = FindNextNodeTowards(currentTargetPillar);
         return player != null &&
                CurrentNode != null &&
                nextNode != null &&

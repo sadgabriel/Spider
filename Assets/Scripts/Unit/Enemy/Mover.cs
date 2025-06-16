@@ -30,16 +30,16 @@ abstract class Mover : Enemy
         return null;
     }
 
-    protected Node FindNextStepTowards(Node targetNode)
+    protected Node FindNextNodeTowards(Node targetNode)
     {
         var route = Map.Instance.FindPath(CurrentNode, targetNode);
         return (route != null && route.Count > 1) ? route[1] : null;
     }
 
-    protected Node FindNextPillarTowardsPlayerIfInRange(int recognitionDistance)
+    protected Node FindNextPillarTowardsPlayerIfInRange(int recognitionNodeDistance)
     {
         int distance = Map.Instance.CalcPathNodeDistance(CurrentNode, player.CurrentNode);
-        if (distance > 0 && distance <= recognitionDistance)
+        if (distance > 0 && distance <= recognitionNodeDistance)
         {
             Node nextPillar = FindNextPillarTowardsPlayer();
             if (nextPillar != null)
@@ -51,10 +51,7 @@ abstract class Mover : Enemy
         return null;
     }
 
-    protected Node FindNextPillarTowardsPlayer()
-    {
-        return FindNextPillarTowards(player.CurrentNode);
-    }
+    protected Node FindNextPillarTowardsPlayer() => FindNextPillarTowards(player.CurrentNode);
 
     protected Node FindNextPillarTowards(Node targetNode)
     {

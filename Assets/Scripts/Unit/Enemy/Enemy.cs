@@ -16,8 +16,6 @@ public abstract class Enemy : Unit
     [SerializeField] private Material defaultMaterial;
     [SerializeField] private Material alertedMaterial;
 
-    private Renderer[] childrenRenderers;
-
     private EnemyState state = EnemyState.Idle;
     public EnemyState State
     {
@@ -45,6 +43,8 @@ public abstract class Enemy : Unit
         }
     }
 
+    private Renderer[] childrenRenderers;
+
     protected virtual void Awake()
     {
         childrenRenderers = GetComponentsInChildren<Renderer>();
@@ -53,7 +53,17 @@ public abstract class Enemy : Unit
 
     public virtual void Initialize(Node startNode, Player player)
     {
-        MoveTo(startNode);
+        SetStartNode(startNode);
+        AssignTargetPlayer(player);
+    }
+
+    private void SetStartNode(Node node)
+    {
+        MoveTo(node);
+    }
+
+    private void AssignTargetPlayer(Player player)
+    {
         this.player = player;
     }
 
@@ -83,6 +93,11 @@ public abstract class Enemy : Unit
             forward = Vector3.Cross(surfaceNormal, Vector3.right);
         }
 
+        if (forward == Vector3.zero)
+        {
+            forward = Vector3.forward;
+        }
+
         transform.rotation = Quaternion.LookRotation(forward, surfaceNormal);
     }
 
@@ -103,6 +118,12 @@ public abstract class Enemy : Unit
 
     private void UpdateMaterial()
     {
+        if (childrenRenderers == null || childrenRenderers.Length == 0)
+        {
+            Debug.LogWarning("No renderers found for enemy material update.");
+            return;
+        }
+
         foreach (Renderer childRenderer in childrenRenderers)
         {
             switch (State)
