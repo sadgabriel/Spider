@@ -1,173 +1,553 @@
-@startuml ClassDiagram
-class Node {
-    +List<Node> Neighbors
-    +bool IsOccupied
-    +Vector3 TopPosition
-    +Vector3 DirectionFromOrigin
-    +void ConnectTo(Node other)
-    +void DisconnectFrom(Node other)
+@startuml Spider
+
+' Enums
+enum GameState {
+    Idle
+    FacilityBuilding
+    SpecialAction
 }
 
-class Pillar {
-    +PillarSize Size
+enum TurnState {
+    PlayerTurn
+    EnemyTurn
 }
 
-class Bridge{
-    +void Initialize(Vector3 from, Vector3 to, Vector3 upwards = default)
+enum UiState {
+    Idle
+    FacilitySelection
+    FacilityBuilding
 }
 
-class Map {
-    +static Map Instance
-    +List<Node> Nodes
-    +List<Pillar> Pillars
-    +List<Bridge> Bridges
-    +List<Node> Spawners
-    +Vector3 Origin
-    +abstarct Pillar StartPillar
-    +virtual List<Node> FindPath(Node from, Node to, bool ignoreOccupied = false)
-    +int CalcTrueDistance(Node from, Node to)
-    +int CalcPathDistance(Node from, Node to)
-    +void ConnectPillars(Pillar pillar1, Pillar pillar2)
-    +abstract void GenerateMap()
+enum FacilityType {
+    Dummy
+    MaxHp
+    Sprint
+    Upgrade
 }
 
-class RandomSphereMap {
-
+enum PillarSize {
+    Small
+    Large
 }
 
-class PoissonSampler {
-    +static List<Vector2> GeneratePoissonPoints(int count, float radius, (float, float) xRange, (float, float) yRange, int maxAttempts, List<Vector2> existingPoints)
+enum EnemyType {
+    Pursuer
+    Spawner
+    Runner
 }
 
-class GeometryUtils {
-    +static Vector2 ProjectOntoPlane2D(Vector3 point, Vector3 origin, Vector3 xAxis, Vector3 yAxis)
-    +static bool DoIntersect(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
+enum EnemyState {
+    Idle
+    Alerted
 }
 
-class Unit {
-    +Node CurrentNode
-    +bool TryMoveTo(Node targetNode)
-    +bool CanMoveTo(Node targetNode)
-    +void MoveTo(Node targetNode)
-}
-
-class Player {
-    +int Life
-    +int Stamina
-    +void Initialize(Node startNode)
-    +void TakeDamage(int damage)
-    +void RegenerateStamina(int amount)
-    +void RegenerateStamina()
-    +bool TrySprintTo(Node targetNode, int maxPillarDistance)
-}
-
-class Enemy {
-    +void Initialize(Node startNode, Player player)
-    +void Act()
-}
-
-class Pursuer {
-
-}
-
-class UnitManager {
-    +static UnitManager Instance
-    +Player Player
-    +List<Enemy> Enemies
-    +void InitializePlayer()
-    +void SpawnWave(int count)
-    +void SpawnEnemyAtRandomSpawner()
-    +void SpawnEnemy(Node node)
-    +void RemoveDestroyedEnemies()
-}
-
-class UnitSystem {
-    +static UnitSystem Instance
-    +Initialize()
-}
-
+' Core Systems
 class GameStateManager {
-    +static GameStateManager Instance
-    +event Action<TurnState> OnTurnChange
-    +event Action<GameState> OnStateChange
-    +TurnState CurrentTurn
-    +GameState CurrentState
-    +int TurnCount
-    +bool IsPlayerTurn
-    +bool IsEnemyTurn
-    +bool IsIdle
-    +bool IsSpecialActionState
-    +void EndPlayerTurn()
-    +void EndEnemyTurn()
-    +void SetSpecialActionState()
-    +void ResetState()
-}
-
-class InputManager {
-    +static InputManager Instance
-    +event System.Action<int, Vector3, GameObject> OnMouseButtonDown
-    +event System.Action<HashSet<KeyCode>> OnKeyDown;
-    +event System.Action<HashSet<KeyCode>> OnKey;
-}
-
-class SpecialAction {
-    +bool IsActive
-    +void Activate()
-    +void Deactivate()
-}
-
-class Sprint {
-
-}
-
-class SpecialActionManager {
-    +static SpecialActionManager Instance
-    +void AddSpecialAction(SpecialAction action)
-    +void RemoveSpecialAction(SpecialAction action)
+    + {static} GameStateManager Instance
+    + GameState CurrentGameState
+    + TurnState CurrentTurnState
+    + UiState CurrentUiState
+    + int TurnCount
+    + bool IsPlayerTurn
+    + bool IsEnemyTurn
+    + bool IsIdleGameState
+    + bool IsSpecialActionState
+    + bool IsIdleUiState
+    + event Action<GameState> OnGameStateChange
+    + event Action<TurnState> OnTurnChange
+    + event Action<UiState, object> OnUiStateChange
+    + void SetGameState(GameState newState)
+    + void SetTurnState(TurnState newState)
+    + void SetUiState(UiState newState, object uiData)
+    + void ResetGameState()
+    + void ResetUiState()
+    + void EndPlayerTurn()
+    + void EndEnemyTurn()
 }
 
 class GameManager {
-    +static GameManager Instance
+    + {static} GameManager Instance
+    + void Initialize()
+    - void SetHandlers()
 }
 
-Node <|-- Pillar
-Node <|-- Bridge
-Map <|-- RandomSphereMap
+class InputManager {
+    + {static} InputManager Instance
+    + event Action<int, Vector3, GameObject> OnMouseButtonDown
+    + event Action<HashSet<KeyCode>> OnKeyDown
+}
 
-Node *-- Map
-Pillar *-- Map
-Bridge *-- Map
-Pillar *-- RandomSphereMap
-Bridge *-- RandomSphereMap
-PoissonSampler *-- RandomSphereMap
-GeometryUtils *-- RandomSphereMap
+class RotateWithKeyboard {
+    + float rotationSpeed
+    + void Update()
+}
 
-Unit <|-- Player
-Unit <|-- Enemy
-Enemy <|-- Pursuer
+' Map System
+class Node {
+    + List<Node> Neighbors
+    + bool IsOccupied
+    + Unit OccupyingUnit
+    + Vector3 TopPosition
+    + Vector3 DirectionFromOrigin
+    + void ConnectTo(Node other)
+    + void DisconnectFrom(Node other)
+}
 
-Player *-- Enemy
-Player *-- UnitManager
-Enemy *-- UnitManager
+class Pillar {
+    - PillarSize size
+    + bool HasFacility
+    + int FacilityUpgradeLevel
+    + Action<int> OnFacilityUpgradeLevelChange
+    + PillarSize Size
+    + float Height
+    + float Diameter
+    + List<Pillar> NeighborPillars
+}
 
-Node *--* Unit
-Node *-- Player
-Node *-- Enemy
-Map *-- Player
-Map *-- UnitManager
+class Bridge {
+    + void Initialize(Vector3 from, Vector3 to, Vector3 upwards)
+}
 
-UnitManager *-- UnitSystem
-GameStateManager *-- UnitSystem
-InputManager *-- UnitSystem
+abstract class Map {
+    + {static} Map Instance
+    + List<Node> Nodes
+    + List<Pillar> Pillars
+    + List<Bridge> Bridges
+    + List<Node> SpawnPoints
+    + Vector3 Origin
+    + {abstract} Pillar StartPillar
+    + List<Node> FindPath(Node from, Node to, bool ignoreOccupied)
+    + int CalcTruePillarDistance(Node from, Node to)
+    + int CalcPathPillarDistance(Node from, Node to)
+    + int CalcTrueNodeDistance(Node from, Node to)
+    + int CalcPathNodeDistance(Node from, Node to)
+    + Bridge ConnectPillars(Pillar pillar1, Pillar pillar2)
+    # Pillar InstantiatePillar(GameObject prefab, Vector3 position, Quaternion rotation, string name)
+    # void RemoveNode(Node node)
+    # Vector3 CalcBridgeJointPosition(Pillar pillar)
+    + {abstract} void GenerateMap()
+}
 
-SpecialAction <|-- Sprint
+class RandomSphereMap {
+    - int largePillarCount
+    - int totalPillarCount
+    - float largePillarAngle
+    - float smallPillarAngle
+    - float radius
+    - int maxAttempts
+    - float bridgeMinHeight
+    + List<Node> SpawnPoints
+    + Pillar StartPillar
+    + void GenerateMap()
+    + Bridge ConnectPillars(Pillar pillar1, Pillar pillar2)
+    - void GeneratePillars()
+    - void GenerateBridges()
+    - List<(Pillar, Pillar)> RemoveCrossingBridges(List<(Pillar, Pillar)> possibleBridges)
+    - bool SegmentsCross(Pillar a1, Pillar a2, Pillar b1, Pillar b2, Vector3 origin)
+    - void RemoveIsolatedPillars()
+}
 
-InputManager *-- SpecialAction
-GameStateManager *-- Sprint
-SpecialAction *-- SpecialActionManager
+' Unit System
+class EnemyEntry {
+    + EnemyType type
+    + Enemy prefab
+}
 
-Map *-- GameManager
-UnitSystem *-- GameManager
-UIManager *-- GameManager
+abstract class Unit {
+    # float verticalOffset
+    - Node currentNode
+    + Node CurrentNode
+    + bool TryMoveTo(Node targetNode)
+    + virtual bool CanMoveTo(Node targetNode)
+    + virtual void MoveTo(Node targetNode)
+    # Vector3 CalcUnitPosition(Node node)
+    # Quaternion CalcUnitRotation(Node node)
+    # virtual void OnDestroy()
+}
+
+class Player {
+    + {static} Player Instance
+    - int hp
+    - int maxHp
+    - int hpRegen
+    - int stamina
+    - int maxStamina
+    - int staminaRegen
+    - int exp
+    - int level
+    + event Action<int> OnLevelUp
+    + int Hp
+    + int MaxHp
+    + int HpRegen
+    + int Stamina
+    + int MaxStamina
+    + int StaminaRegen
+    + void Initialize(Node startNode)
+    + void TakeDamage(int damage)
+    + void RegenerateHp(int amount)
+    + void RegenerateHp()
+    + void RegenerateStamina(int amount)
+    + void RegenerateStamina()
+    + void GainExperience(int amount)
+    + bool TrySprintTo(Node targetNode, int maxPillarDistance, int baseStaminaConsume)
+}
+
+class UnitSystem {
+    + {static} UnitSystem Instance
+    - int waveInterval
+    - int enemyCount
+    + void Initialize()
+    - void HandleTurnChange(TurnState newTurn)
+    - void StartEnemyTurn()
+    - void HandleMouseButtonDown(int button, Vector3 position, GameObject clickedGO)
+    - void HandleLevelUp(int newLevel)
+}
+
+class UnitManager {
+    + {static} UnitManager Instance
+    - List<Enemy> enemies
+    - Player playerPrefab
+    - List<EnemyEntry> enemyEntries
+    - Dictionary<EnemyType, Enemy> enemyPrefabs
+    + Player Player
+    + List<Enemy> Enemies
+    + void InitializePlayer()
+    + void SpawnEnemyWithSpawner()
+    + void SpawnWave(int count)
+    + void SpawnEnemyAtRandomSpawnPoint(EnemyType type)
+    + void SpawnEnemy(Node node, EnemyType type)
+    + void RemoveDestroyedEnemies()
+}
+
+abstract class Enemy {
+    # int lifeTime
+    # int attackDamage
+    - Material defaultMaterial
+    - Material alertedMaterial
+    - EnemyState state
+    # Player player
+    - Renderer[] childrenRenderers
+    + EnemyState State
+    # int LifeTime
+    # virtual void Awake()
+    + virtual void Initialize(Node startNode, Player player)
+    # void LookAt(Node targetNode)
+    # void Attack()
+    # void Die()
+    + virtual void Act()
+    - void UpdateMaterial()
+}
+
+abstract class Mover {
+    # Node currentTargetPillar
+    # Node FindRandomAdjacentPillar()
+    # Node FindNextNodeTowards(Node targetNode)
+    # Node FindNextPillarTowardsPlayerIfInRange(int recognitionNodeDistance)
+    # Node FindNextPillarTowardsPlayer()
+    # Node FindNextPillarTowards(Node targetNode)
+}
+
+class Pursuer {
+    - int recognitionDistance
+    + void Act()
+    - void SetNextPillar()
+    - bool IsAttackable()
+}
+
+class Runner {
+    - int recognitionDistance
+    - int runningSpeed
+    - int runningLifeTime
+    + void Act()
+    - void SetNextPillar()
+    - bool IsAttackable()
+}
+
+class Spawner {
+    - int spawnInterval
+    - int enemyCount
+    - int spawnTimer
+    + List<Node> SpawnPoints
+    + bool IsReadyToSpawn
+    + void Act()
+    + void ResetSpawnTimer()
+}
+
+' Facility System
+class FacilityEntry {
+    + FacilityType type
+    + GameObject prefab
+    + FacilityData data
+}
+
+class FacilityData {
+    + FacilityType FacilityType
+    + PillarSize Size
+    + bool IsUnique
+    + Texture2D IconTexture
+    + string Name
+    + string Description
+}
+
+abstract class Facility {
+    - GameObject iconSurface
+    - GameObject ringPrefab
+    - FacilityData facilityData
+    - float firstRingOffset
+    - float ringGap
+    + FacilityData Data
+    + Pillar CurrentPillar
+    + {abstract} int MaxUpgradeLevel
+    + {abstract} int MinUpgradeLevel
+    + int UpgradeLevel
+    - int lastUpgradeLevel
+    - List<GameObject> rings
+    # Action<int> OnUpgradeLevelIncrease
+    # Action<int> OnUpgradeLevelDecrease
+    + void BuildOn(Pillar pillar)
+    - void MoveToPillar(Pillar pillar)
+    - void ConnectToPillar(Pillar pillar)
+    - void ResizeToMatchPillar(Pillar pillar)
+    - void ApplyIconTexture()
+    - void HandleUpgradeLevelChange(int upgradeLevel)
+    - void AdjustRing(int upgradeLevel)
+    - void IncreaseRing()
+    - void DecreaseRing()
+    - void ApplyUpgradeLevel(int newUpgradeLevel)
+    # virtual void SetHandlersOnUpgradeLevel()
+    # virtual void Initialize()
+    # virtual void Act()
+}
+
+class MaxHpFacility {
+    - const int MaxUpgrade
+    - const int MinUpgrade
+    - Dictionary<int, int> MaxHpBonusByUpgradeLevel
+    - Dictionary<int, int> HpRegenBonusByUpgradeLevel
+    + int MaxUpgradeLevel
+    + int MinUpgradeLevel
+    # void SetHandlersOnUpgradeLevel()
+    - void ApplyMaxHpBonus(int upgradeLevel)
+    - void RemoveMaxHpBonus(int upgradeLevel)
+    - void ApplyHpRegenBonus(int upgradeLevel)
+    - void RemoveHpRegenBonus(int upgradeLevel)
+}
+
+class SprintFacility {
+    - const int MaxUpgrade
+    - const int MinUpgrade
+    - Sprint sprint
+    - HashSet<int> StaminaReductionLevels
+    - HashSet<int> ReachIncreaseLevels
+    + int MaxUpgradeLevel
+    + int MinUpgradeLevel
+    # void SetHandlersOnUpgradeLevel()
+    - void AddSprintToSpecialAction(int level)
+    - void RemoveSprintFromSpecialAction(int level)
+    - void UpgradeSprint(int level)
+    - void DowngradeSprint(int level)
+}
+
+class UpgradeFacility {
+    - const int MaxUpgrade
+    - const int MinUpgrade
+    + int MaxUpgradeLevel
+    + int MinUpgradeLevel
+    # void Initialize()
+}
+
+class FacilityManager {
+    + {static} FacilityManager Instance
+    - List<FacilityEntry> facilityEntries
+    + List<Facility> Facilities
+    - Dictionary<FacilityType, GameObject> facilityPrefabMap
+    - Dictionary<FacilityType, FacilityData> facilityDataMap
+    + Facility BuildFacility(Pillar pillar, FacilityType type)
+    + List<FacilityData> GetAllAvailableFacilityData()
+}
+
+' SpecialAction System
+abstract class SpecialAction {
+    + bool IsActive
+    + void Activate()
+    + void Deactivate()
+    # {abstract} void HandleMouseButtonDown(int button, Vector3 position, GameObject clickedGO)
+    # {abstract} void HandleKeyDown(HashSet<KeyCode> pressedKeys)
+}
+
+class Sprint {
+    + {static} Sprint Instance
+    + int Reach
+    + int BaseStaminaConsume
+    # void HandleMouseButtonDown(int button, Vector3 position, GameObject clickedGO)
+    # void HandleKeyDown(HashSet<KeyCode> pressedKeys)
+}
+
+class SpecialActionManager {
+    + {static} SpecialActionManager Instance
+    - HashSet<SpecialAction> specialActions
+    + void AddSpecialAction(SpecialAction action)
+    + void RemoveSpecialAction(SpecialAction action)
+}
+
+' UI System
+interface IPanel {
+    + void Show(object data)
+    + void Hide()
+    + bool IsVisible
+}
+
+abstract class Panel {
+    + bool IsVisible
+    + void Show(object data)
+    + {abstract} void Show(object data)
+    + virtual void Hide()
+}
+
+class PanelEntry {
+    + UiState uiState
+    + MonoBehaviour panel
+    + IPanel GetPanel()
+}
+
+class UiManager {
+    + {static} UiManager Instance
+    - List<PanelEntry> panelEntries
+    - Dictionary<UiState, IPanel> uiStatePanelMap
+    + void Initialize()
+    - void SetHandlers()
+    + void HideAllPanels()
+    - void HandleUiStateChange(UiState currentState, object uiData)
+}
+
+class FacilitySelectionPanel {
+    - const int NumChoices
+    - Image leftChoiceIcon
+    - TextMeshProUGUI leftChoiceNameText
+    - TextMeshProUGUI leftChoiceDescriptionText
+    - Image middleChoiceIcon
+    - TextMeshProUGUI middleChoiceNameText
+    - TextMeshProUGUI middleChoiceDescriptionText
+    - Image rightChoiceIcon
+    - TextMeshProUGUI rightChoiceNameText
+    - TextMeshProUGUI rightChoiceDescriptionText
+    - FacilityData dummyFacilityData
+    - FacilityData leftChoiceData
+    - FacilityData middleChoiceData
+    - FacilityData rightChoiceData
+    + void Show(List<FacilityData> data)
+    - void SetChoice(FacilityData data, out FacilityData storage, Image icon, TextMeshProUGUI nameText, TextMeshProUGUI descText)
+    + void ChooseLeft()
+    + void ChooseMiddle()
+    + void ChooseRight()
+    - void ProceedToBuildingPanel(FacilityData facilityData)
+}
+
+class FacilityBuildingPanel {
+    - FacilityData selectedFacilityData
+    + void Show(FacilityData data)
+    + void ReturnToFacilitySelection()
+    - void HandleMouseButtonDown(int button, Vector3 position, GameObject clickedGO)
+}
+
+class IdlePanel {
+    - TextMeshProUGUI hpText
+    - TextMeshProUGUI staminaText
+    + void Show(NoData data)
+}
+
+' Utility Classes
+struct NoData {
+    + {static} NoData Default
+}
+
+class GeometryUtils {
+    + {static} Vector2 ProjectOntoPlane2D(Vector3 point, Vector3 origin, Vector3 xAxis, Vector3 yAxis)
+    + {static} bool DoIntersect(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
+}
+
+class PoissonSampler {
+    + {static} List<Vector2> GeneratePoissonPoints(int targetCount, float radius, (float, float) xRange, (float, float) yRange, int maxAttempts, List<Vector2> existingPoints)
+    + {static} List<Vector3> GeneratePoissonSpherePoints(int targetCount, float minAngleDegrees, int maxAttempts, List<Vector3> existingPoints)
+}
+
+' Relationships
+GameStateManager --> InputManager
+GameStateManager --> UnitSystem
+GameStateManager --> UiManager
+
+InputManager --> RotateWithKeyboard
+
+Pillar --|> Node
+Bridge --|> Node
+RandomSphereMap --|> Map
+
+Map --> Node
+Map --> Pillar
+Map --> Bridge
+RandomSphereMap --> PoissonSampler
+RandomSphereMap --> GeometryUtils
+
+Player --|> Unit
+Enemy --|> Unit
+UnitSystem --> UnitManager
+UnitSystem --> GameStateManager
+UnitSystem --> InputManager
+UnitSystem --> Player
+UnitManager --> Player
+UnitManager --> Enemy
+UnitManager --> Map
+
+Mover --|> Enemy
+Pursuer --|> Mover
+Runner --|> Mover
+Spawner --|> Enemy
+
+Enemy --> Player
+Enemy --> Node
+Mover --> Map
+
+MaxHpFacility --|> Facility
+SprintFacility --|> Facility
+UpgradeFacility --|> Facility
+
+Facility --> Pillar
+Facility --> FacilityData
+FacilityManager --> Facility
+FacilityManager --> FacilityData
+FacilityManager --> FacilityEntry
+FacilityManager --> FacilityType
+
+MaxHpFacility --> Player
+SprintFacility --> Sprint
+SprintFacility --> SpecialActionManager
+
+Sprint --|> SpecialAction
+
+SpecialAction --> InputManager
+SpecialAction --> GameStateManager
+Sprint --> Player
+Sprint --> Node
+Sprint --> Facility
+SpecialActionManager --> SpecialAction
+
+Panel ..|> IPanel
+FacilitySelectionPanel --|> Panel
+FacilityBuildingPanel --|> Panel
+IdlePanel --|> Panel
+
+UiManager --> PanelEntry
+UiManager --> IPanel
+UiManager --> GameStateManager
+
+FacilitySelectionPanel --> FacilityData
+FacilitySelectionPanel --> GameStateManager
+FacilityBuildingPanel --> FacilityData
+FacilityBuildingPanel --> InputManager
+FacilityBuildingPanel --> FacilityManager
+FacilityBuildingPanel --> GameStateManager
+IdlePanel --> Player
+IdlePanel --> NoData
+
 @enduml
 
