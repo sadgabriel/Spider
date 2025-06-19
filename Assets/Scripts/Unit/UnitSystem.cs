@@ -9,6 +9,9 @@ public class UnitSystem : MonoBehaviour
     [SerializeField] private int waveInterval = 5;
     [SerializeField] private int enemyCount = 1;
 
+    private bool isHandlingLevelUp = false;
+    private Queue<int> pendingLevelUps = new();
+
     private void Awake()
     {
         Instance = this;
@@ -21,6 +24,12 @@ public class UnitSystem : MonoBehaviour
         GameStateManager.Instance.OnTurnChange += HandleTurnChange;
         InputManager.Instance.OnMouseButtonDown += HandleMouseButtonDown;
         Player.Instance.OnLevelUp += HandleLevelUp;
+    }
+
+    public void NotifyFacilityBuilt()
+    {
+        isHandlingLevelUp = false;
+        TryProcessNextLevelUp();
     }
 
     private void HandleTurnChange(TurnState newTurn)
@@ -85,12 +94,23 @@ public class UnitSystem : MonoBehaviour
 
     private void HandleLevelUp(int newLevel)
     {
+        pendingLevelUps.Enqueue(newLevel);
+        TryProcessNextLevelUp();
+    }
+
+    private void TryProcessNextLevelUp()
+    {
+        if (isHandlingLevelUp || pendingLevelUps.Count == 0) return;
+
+        isHandlingLevelUp = true;
+        int levelToHandle = pendingLevelUps.Dequeue();
+
         List<FacilityData> facilityDataList = FacilityManager.Instance.GetAllAvailableFacilityData();
-        List<FacilityData> candidateFacilities = new();
+        List<FacilityData> candidateFacilities;
 
         if (facilityDataList.Count > 3)
         {
-            candidateFacilities = facilityDataList.OrderBy(data => UnityEngine.Random.value).Take(3).ToList();
+            candidateFacilities = facilityDataList.OrderBy(_ => UnityEngine.Random.value).Take(3).ToList();
         }
         else
         {

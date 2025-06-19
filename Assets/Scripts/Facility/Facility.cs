@@ -18,7 +18,7 @@ public abstract class Facility : MonoBehaviour
 
     public abstract int MaxUpgradeLevel { get; }
     public abstract int MinUpgradeLevel { get; }
-    public int UpgradeLevel
+    public int ClampedUpgradeLevel
     {
         get
         {
@@ -64,7 +64,7 @@ public abstract class Facility : MonoBehaviour
         ApplyIconTexture();
 
         SetHandlersOnUpgradeLevel(); // Must be called BEFORE ApplyUpgradeLevel() to set upgrade delegates
-        ApplyUpgradeLevel(UpgradeLevel);
+        ApplyUpgradeLevel(ClampedUpgradeLevel);
 
         Initialize();
     }
@@ -117,6 +117,24 @@ public abstract class Facility : MonoBehaviour
         ApplyUpgradeLevel(upgradeLevel);
     }
 
+    private void ApplyUpgradeLevel(int pillarUpgradeLevel)
+    {
+        int clampedUpgradeLevel = Mathf.Clamp(pillarUpgradeLevel, MinUpgradeLevel, MaxUpgradeLevel);
+        AdjustRing(clampedUpgradeLevel);
+
+        while (lastUpgradeLevel < clampedUpgradeLevel && lastUpgradeLevel < MaxUpgradeLevel)
+        {
+            lastUpgradeLevel++;
+            OnUpgradeLevelIncrease?.Invoke(lastUpgradeLevel);
+        }
+
+        while (lastUpgradeLevel > clampedUpgradeLevel && lastUpgradeLevel > 0)
+        {
+            OnUpgradeLevelDecrease?.Invoke(lastUpgradeLevel);
+            lastUpgradeLevel--;
+        }
+    }
+
     private void AdjustRing(int upgradeLevel)
     {
         while (rings.Count < upgradeLevel)
@@ -152,23 +170,6 @@ public abstract class Facility : MonoBehaviour
         GameObject ring = rings[rings.Count - 1];
         rings.RemoveAt(rings.Count - 1);
         Destroy(ring);
-    }
-
-    private void ApplyUpgradeLevel(int newUpgradeLevel)
-    {
-        AdjustRing(newUpgradeLevel);
-
-        while (lastUpgradeLevel < newUpgradeLevel && lastUpgradeLevel < MaxUpgradeLevel)
-        {
-            lastUpgradeLevel++;
-            OnUpgradeLevelIncrease?.Invoke(lastUpgradeLevel);
-        }
-
-        while (lastUpgradeLevel > newUpgradeLevel && lastUpgradeLevel > 0)
-        {
-            OnUpgradeLevelDecrease?.Invoke(lastUpgradeLevel);
-            lastUpgradeLevel--;
-        }
     }
 
     protected virtual void SetHandlersOnUpgradeLevel()

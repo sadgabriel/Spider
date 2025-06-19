@@ -490,6 +490,7 @@ MonoBehaviour:
   alertedMaterial: {fileID: 2100000, guid: 5d73bd7fa895e8441a927b8c04dd7ab2, type: 2}
   spawnInterval: 5
   enemyCount: 3
+  expGain: 400
 --- !u!1 &8813337128336562766
 GameObject:
   m_ObjectHideFlags: 0

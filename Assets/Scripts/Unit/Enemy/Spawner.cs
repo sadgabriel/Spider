@@ -6,8 +6,11 @@ public class Spawner : Enemy
 {
     [SerializeField] private int spawnInterval = 5;
     [SerializeField] private int enemyCount = 3;
+    [SerializeField] private int expGain = 100;
 
     private int spawnTimer;
+
+    public int ExpGain => expGain;
 
     public List<Node> SpawnPoints
     {

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEditor.Search;
 using UnityEngine;
 
@@ -44,12 +46,21 @@ public class FacilityBuildingPanel : Panel<FacilityData>
 
         if (pillar.Size == selectedFacilityData.Size)
         {
-            FacilityManager.Instance.BuildFacility(pillar, selectedFacilityData.FacilityType);
-            GameStateManager.Instance.ResetUiState();
+            Facility builtFacility = FacilityManager.Instance.BuildFacility(pillar, selectedFacilityData.FacilityType);
+            if (builtFacility != null)
+            {
+                FinishFacilityBuilding();
+            }
         }
         else
         {
             Debug.Log($"Pillar size mismatch: required {selectedFacilityData.Size}, but found {pillar.Size}.");
         }
+    }
+
+    private void FinishFacilityBuilding()
+    {
+        GameStateManager.Instance.ResetUiState();
+        UnitSystem.Instance.NotifyFacilityBuilt();
     }
 }

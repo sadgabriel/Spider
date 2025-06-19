@@ -138,7 +138,7 @@ public class Player : Unit
     public void GainExperience(int amount)
     {
         exp += amount;
-        if (exp >= level * 100)
+        while (exp >= level * 100)
         {
             exp -= level * 100;
             level++;
@@ -169,7 +169,7 @@ public class Player : Unit
         if (targetNode.OccupyingUnit is Spawner spawner)
         {
             Destroy(spawner.gameObject);
-            GainExperience(100);
+            GainExperience(spawner.ExpGain);
         }
 
         base.MoveTo(targetNode);
