@@ -81,13 +81,19 @@ public class UnitSystem : MonoBehaviour
                     targetNode = facility?.CurrentPillar;
                 }
 
-                if (targetNode != null && GameStateManager.Instance.CurrentGameState == GameState.Idle)
+                if (targetNode == null)
                 {
-                    if (Player.Instance.TryMoveTo(targetNode))
-                    {
-                        GameStateManager.Instance.EndPlayerTurn();
-                    }
+                    Unit unit = clickedGO?.GetComponentInParent<Unit>();
+                    targetNode = unit?.CurrentNode;
                 }
+
+                if (targetNode != null && GameStateManager.Instance.CurrentGameState == GameState.Idle)
+                    {
+                        if (Player.Instance.TryMoveTo(targetNode))
+                        {
+                            GameStateManager.Instance.EndPlayerTurn();
+                        }
+                    }
             }
         }
     }
