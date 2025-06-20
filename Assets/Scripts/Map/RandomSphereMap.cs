@@ -31,7 +31,12 @@ class RandomSphereMap : Map
         get
         {
             if (Nodes.Count == 0) return null;
-            return Pillars[Random.Range(0, Pillars.Count)];
+            Camera mainCamera = Camera.main;
+            if (mainCamera == null) return null;
+            Vector3 camPos = mainCamera.transform.position;
+            return Pillars
+                .OrderBy(p => Vector3.Distance(p.transform.position, camPos))
+                .FirstOrDefault();
         }
     }
 
