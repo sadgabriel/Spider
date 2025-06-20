@@ -47,10 +47,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   verticalOffset: 0.5
-  lifeTime: 10
+  lifeTime: 20
   attackDamage: 1
   defaultMaterial: {fileID: 2100000, guid: 08a28a72be3820d43a5920ac080e2814, type: 2}
   alertedMaterial: {fileID: 2100000, guid: 5d73bd7fa895e8441a927b8c04dd7ab2, type: 2}
+  recognitionDistance: 4
 --- !u!1 &4927736733181094329
 GameObject:
   m_ObjectHideFlags: 0

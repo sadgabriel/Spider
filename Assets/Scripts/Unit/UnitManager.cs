@@ -110,6 +110,6 @@ public class UnitManager : MonoBehaviour
 
     public void RemoveDestroyedEnemies()
     {
-        enemies.RemoveAll(enemy => enemy == null || enemy.gameObject == null);
+        enemies.RemoveAll(enemy => enemy == null || enemy.gameObject == null || enemy.IsDestroyed);
     }
 }

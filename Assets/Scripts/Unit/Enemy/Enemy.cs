@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
 
 public enum EnemyState
 {
@@ -15,6 +16,8 @@ public abstract class Enemy : Unit
 
     [SerializeField] private Material defaultMaterial;
     [SerializeField] private Material alertedMaterial;
+
+    public bool IsDestroyed { get; private set; } = false;
 
     private EnemyState state = EnemyState.Idle;
     public EnemyState State
@@ -55,6 +58,12 @@ public abstract class Enemy : Unit
     {
         SetStartNode(startNode);
         AssignTargetPlayer(player);
+    }
+
+    public void Die()
+    {
+        IsDestroyed = true;
+        Destroy(gameObject);
     }
 
     private void SetStartNode(Node node)
@@ -104,11 +113,6 @@ public abstract class Enemy : Unit
     protected void Attack()
     {
         player.TakeDamage(attackDamage);
-    }
-
-    protected void Die()
-    {
-        Destroy(gameObject);
     }
 
     public virtual void Act()

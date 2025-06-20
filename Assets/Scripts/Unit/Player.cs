@@ -168,7 +168,7 @@ public class Player : Unit
     {
         if (targetNode.OccupyingUnit is Spawner spawner)
         {
-            Destroy(spawner.gameObject);
+            spawner.Die();
             GainExperience(spawner.ExpGain);
         }
 
