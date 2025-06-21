@@ -14,7 +14,8 @@ public class Pillar : Node
 {
     [SerializeField] private PillarSize size;
 
-    public bool HasFacility { get; set; } = false;
+    public Facility BuiltFacility { get; set; } = null;
+    public bool HasFacility => BuiltFacility != null;
 
     public Action<int> OnFacilityUpgradeLevelChange;
 

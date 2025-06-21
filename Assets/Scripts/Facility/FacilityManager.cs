@@ -7,7 +7,8 @@ public enum FacilityType
     Dummy,
     MaxHp,
     Sprint,
-    Upgrade
+    Upgrade,
+    Teleport,
 }
 
 [System.Serializable]
@@ -58,7 +59,6 @@ public class FacilityManager : MonoBehaviour
         Facility facility = facilityGO.GetComponent<Facility>();
         facility.BuildOn(pillar);
 
-        pillar.HasFacility = true;
         Facilities.Add(facility);
 
         return facility;

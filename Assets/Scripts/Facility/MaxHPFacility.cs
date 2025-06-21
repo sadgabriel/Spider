@@ -21,12 +21,18 @@ public class MaxHpFacility : Facility
         { 4, 10 }, { 7, 10 }
     };
 
-    protected override void SetHandlersOnUpgradeLevel()
+    protected override void HandleUpgradeLevelIncrease(int level)
     {
-        OnUpgradeLevelIncrease += ApplyMaxHpBonus;
-        OnUpgradeLevelIncrease += ApplyHpRegenBonus;
-        OnUpgradeLevelDecrease += RemoveMaxHpBonus;
-        OnUpgradeLevelDecrease += RemoveHpRegenBonus;
+        base.HandleUpgradeLevelIncrease(level);
+        ApplyMaxHpBonus(level);
+        ApplyHpRegenBonus(level);
+    }
+
+    protected override void HandleUpgradeLevelDecrease(int level)
+    {
+        base.HandleUpgradeLevelDecrease(level);
+        RemoveMaxHpBonus(level);
+        RemoveHpRegenBonus(level);
     }
 
     private void ApplyMaxHpBonus(int upgradeLevel)

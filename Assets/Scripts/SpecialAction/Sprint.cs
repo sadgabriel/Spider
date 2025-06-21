@@ -13,15 +13,9 @@ class Sprint : SpecialAction
     protected override void HandleMouseButtonDown(int button, Vector3 position, GameObject clickedGO)
     {
         var gameStateManager = GameStateManager.Instance;
-        if (button == 0 && gameStateManager.IsPlayerTurn && gameStateManager.IsSpecialActionState)
+        if (button == 0 && gameStateManager.IsPlayerTurn && gameStateManager.CurrentGameState == GameState.Sprint && gameStateManager.IsIdleUiState)
         {
-            Node targetNode = clickedGO.GetComponent<Node>();
-
-            if (targetNode == null)
-            {
-                Facility facility = clickedGO.GetComponentInParent<Facility>();
-                targetNode = facility?.CurrentPillar;
-            }
+            Node targetNode = Utils.GetNodeFromGameObject(clickedGO);
 
             if (targetNode != null)
             {
@@ -39,7 +33,7 @@ class Sprint : SpecialAction
         var gameStateManager = GameStateManager.Instance;
         if (pressedKeys.Contains(KeyCode.Space) && gameStateManager.IsPlayerTurn && gameStateManager.IsIdleGameState && gameStateManager.IsIdleUiState)
         {
-            gameStateManager.SetSpecialActionGameState();
+            gameStateManager.SetGameState(GameState.Sprint);
         }
     }
 }

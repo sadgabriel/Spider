@@ -10,7 +10,8 @@ public enum TurnState
 public enum GameState
 {
     Idle,
-    SpecialAction,
+    Sprint,
+    Teleport,
 }
 
 public enum UiState
@@ -72,7 +73,6 @@ public class GameStateManager : MonoBehaviour
     public bool IsEnemyTurn => CurrentTurn == TurnState.EnemyTurn;
 
     public bool IsIdleGameState => CurrentGameState == GameState.Idle;
-    public bool IsSpecialActionState => CurrentGameState == GameState.SpecialAction;
 
     public bool IsIdleUiState => CurrentUiState == UiState.Idle;
 
@@ -99,7 +99,11 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
-    public void SetSpecialActionGameState() => CurrentGameState = GameState.SpecialAction;
+    public void SetGameState(GameState state)
+    {
+        CurrentGameState = state;
+    }
+    
     public void ResetGameState() => CurrentGameState = GameState.Idle;
 
     public void SetUiState(UiState state, object data)

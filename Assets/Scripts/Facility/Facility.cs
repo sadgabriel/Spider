@@ -39,6 +39,16 @@ public abstract class Facility : MonoBehaviour
     protected Action<int> OnUpgradeLevelIncrease;
     protected Action<int> OnUpgradeLevelDecrease;
 
+    private void OnDestroy()
+    {
+        if (CurrentPillar != null)
+        {
+            CurrentPillar.OnFacilityUpgradeLevelChange -= HandleUpgradeLevelChange;
+            CurrentPillar.BuiltFacility = null;
+            CurrentPillar = null;
+        }
+    }
+
     public void BuildOn(Pillar pillar)
     {
         if (pillar == null)
@@ -78,7 +88,7 @@ public abstract class Facility : MonoBehaviour
     private void ConnectToPillar(Pillar pillar)
     {
         CurrentPillar = pillar;
-        pillar.HasFacility = true;
+        pillar.BuiltFacility = this;
 
         pillar.OnFacilityUpgradeLevelChange += HandleUpgradeLevelChange;
     }
@@ -172,14 +182,25 @@ public abstract class Facility : MonoBehaviour
         Destroy(ring);
     }
 
-    protected virtual void SetHandlersOnUpgradeLevel()
+    private void SetHandlersOnUpgradeLevel()
+    {
+        OnUpgradeLevelIncrease += HandleUpgradeLevelIncrease;
+        OnUpgradeLevelDecrease += HandleUpgradeLevelDecrease;
+    }
+    
+    protected virtual void HandleUpgradeLevelIncrease(int level)
+    {
+
+    }
+
+    protected virtual void HandleUpgradeLevelDecrease(int level)
     {
 
     }
 
     protected virtual void Initialize()
     {
-        
+
     }
 
     protected virtual void Act()

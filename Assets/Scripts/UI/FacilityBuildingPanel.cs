@@ -52,10 +52,6 @@ public class FacilityBuildingPanel : Panel<FacilityData>
                 FinishFacilityBuilding();
             }
         }
-        else
-        {
-            Debug.Log($"Pillar size mismatch: required {selectedFacilityData.Size}, but found {pillar.Size}.");
-        }
     }
 
     private void FinishFacilityBuilding()

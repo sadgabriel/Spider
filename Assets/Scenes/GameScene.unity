@@ -3620,6 +3620,9 @@ MonoBehaviour:
   - type: 3
     prefab: {fileID: 4150933007906414076, guid: f4a4b8ba1e4753143bf2528555774c8f, type: 3}
     data: {fileID: 11400000, guid: 771732859b67fab439120c3eb23d1f64, type: 2}
+  - type: 4
+    prefab: {fileID: 4150933007906414076, guid: bc16a00f08ad9f344933e79b990579d2, type: 3}
+    data: {fileID: 11400000, guid: 0c7dd1711a53f72408f7e401e4be7086, type: 2}
 --- !u!4 &522028767
 Transform:
   m_ObjectHideFlags: 0

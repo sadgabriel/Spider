@@ -14,12 +14,18 @@ public class SprintFacility : Facility
     private static readonly HashSet<int> StaminaReductionLevels = new() { 2, 3, 5, 6 };
     private static readonly HashSet<int> ReachIncreaseLevels = new() { 4, 7 };
 
-    protected override void SetHandlersOnUpgradeLevel()
+    protected override void HandleUpgradeLevelIncrease(int level)
     {
-        OnUpgradeLevelIncrease += AddSprintToSpecialAction;
-        OnUpgradeLevelIncrease += UpgradeSprint;
-        OnUpgradeLevelDecrease += RemoveSprintFromSpecialAction;
-        OnUpgradeLevelDecrease += DowngradeSprint;
+        base.HandleUpgradeLevelIncrease(level);
+        AddSprintToSpecialAction(level);
+        UpgradeSprint(level);
+    }
+
+    protected override void HandleUpgradeLevelDecrease(int level)
+    {
+        base.HandleUpgradeLevelDecrease(level);
+        RemoveSprintFromSpecialAction(level);
+        DowngradeSprint(level);
     }
 
     private void AddSprintToSpecialAction(int level)
