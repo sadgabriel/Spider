@@ -10,7 +10,7 @@ public enum TurnState
 public enum GameState
 {
     Idle,
-    Sprint,
+    SpecialAction,
     Teleport,
 }
 
@@ -30,7 +30,7 @@ public class GameStateManager : MonoBehaviour
     private UiState currentUiState = UiState.Idle;
     private object uiStateData;
 
-    public event Action<TurnState> OnTurnChange;
+    public event Action<TurnState, int> OnTurnChange;
     public event Action<GameState> OnGameStateChange;
     public event Action<UiState, object> OnUiStateChange;
 
@@ -41,7 +41,7 @@ public class GameStateManager : MonoBehaviour
         {
             if (currentTurn == value) return;
             currentTurn = value;
-            OnTurnChange?.Invoke(currentTurn);
+            OnTurnChange?.Invoke(currentTurn, TurnCount);
         }
     }
 

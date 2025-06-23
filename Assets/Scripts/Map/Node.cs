@@ -1,13 +1,24 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class Node : MonoBehaviour
 {
-    public List<Node> Neighbors { get; private set; } = new();
+    public List<Node> Neighbors
+    {
+        get => neighbors.Where(n => n.isActiveAndEnabled).ToList();
+    }
+
+    public List<Node> AllNeighbors
+    {
+        get => neighbors;
+    }
 
     public bool IsOccupied => OccupyingUnit != null;
     public Unit OccupyingUnit { get; set; } = null;
+
+    private List<Node> neighbors = new();
 
     public Vector3 TopPosition
     {
@@ -30,19 +41,19 @@ public class Node : MonoBehaviour
 
     public void ConnectTo(Node other)
     {
-        if (!Neighbors.Contains(other))
+        if (!neighbors.Contains(other))
         {
-            Neighbors.Add(other);
-            other.Neighbors.Add(this);
+            neighbors.Add(other);
+            other.neighbors.Add(this);
         }
     }
 
     public void DisconnectFrom(Node other)
     {
-        if (Neighbors.Contains(other))
+        if (neighbors.Contains(other))
         {
-            Neighbors.Remove(other);
-            other.Neighbors.Remove(this);
+            neighbors.Remove(other);
+            other.neighbors.Remove(this);
         }
     }
 }

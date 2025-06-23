@@ -20,7 +20,48 @@ public abstract class SpecialAction
         InputManager.Instance.OnKeyDown -= HandleKeyDown;
     }
 
-    protected abstract void HandleMouseButtonDown(int button, Vector3 position, GameObject clickedGO);
-    protected abstract void HandleKeyDown(HashSet<KeyCode> pressedKeys);
+    protected void FinishSpecialActionWithTurnEnd()
+    {
+        GameStateManager.Instance.EndPlayerTurn();
+        FinishSpecialAction();
+    }
+
+    protected void FinishSpecialActionWithoutTurnEnd()
+    {
+        FinishSpecialAction();
+    }
+
+    private void FinishSpecialAction()
+    {
+        GameStateManager.Instance.ResetGameState();
+    }
+
+    private void HandleMouseButtonDown(int button, Vector3 position, GameObject clickedGO)
+    {
+        var gameStateManager = GameStateManager.Instance;
+        if (gameStateManager.IsPlayerTurn && gameStateManager.CurrentGameState == GameState.SpecialAction && gameStateManager.IsIdleUiState)
+        {
+            HandleMouseButtonDownWhileSpecialAction(button, position, clickedGO);
+        }
+    }
+    
+    private void HandleKeyDown(HashSet<KeyCode> pressedKeys)
+    {
+        var gameStateManager = GameStateManager.Instance;
+        if (gameStateManager.IsPlayerTurn && gameStateManager.IsIdleGameState && gameStateManager.IsIdleUiState && pressedKeys.Contains(KeyCode.Space))
+        {
+            StartSpecialAction();
+        }
+    }
+
+    protected virtual void HandleMouseButtonDownWhileSpecialAction(int button, Vector3 position, GameObject clickedGO)
+    {
+
+    }
+
+    protected virtual void StartSpecialAction()
+    {
+        GameStateManager.Instance.SetGameState(GameState.SpecialAction);
+    }
 }
 

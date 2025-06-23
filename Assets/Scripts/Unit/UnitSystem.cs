@@ -32,7 +32,7 @@ public class UnitSystem : MonoBehaviour
         TryProcessNextLevelUp();
     }
 
-    private void HandleTurnChange(TurnState newTurn)
+    private void HandleTurnChange(TurnState newTurn, int turnCount)
     {
         if (newTurn == TurnState.EnemyTurn)
         {

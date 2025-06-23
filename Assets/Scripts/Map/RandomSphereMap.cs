@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using System.Diagnostics;
 
 class RandomSphereMap : Map
 {
@@ -18,9 +17,10 @@ class RandomSphereMap : Map
         get
         {
             return Pillars
+                .Where(p => p.isActiveAndEnabled)
                 .Where(p => p.Size == PillarSize.Small)
                 .Where(p => !p.HasFacility)
-                .Where(p => !p.IsOccupied) 
+                .Where(p => !p.IsOccupied)
                 .Select(p => p as Node)
                 .ToList();
         }
@@ -34,9 +34,12 @@ class RandomSphereMap : Map
             Camera mainCamera = Camera.main;
             if (mainCamera == null) return null;
             Vector3 camPos = mainCamera.transform.position;
-            return Pillars
+
+            Pillar startPillar = Pillars
                 .OrderBy(p => Vector3.Distance(p.transform.position, camPos))
                 .FirstOrDefault();
+
+            return startPillar;
         }
     }
 
@@ -62,8 +65,8 @@ class RandomSphereMap : Map
         
         pillar1.ConnectTo(bridge);
         pillar2.ConnectTo(bridge);
-        Nodes.Add(bridge);
-        Bridges.Add(bridge);
+        nodes.Add(bridge);
+        bridges.Add(bridge);
         
         return bridge;
     }

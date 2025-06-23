@@ -42,6 +42,8 @@ public abstract class Unit : MonoBehaviour
         CurrentNode.OccupyingUnit = this;
     }
 
+    public abstract void Die();
+    
     protected Vector3 CalcUnitPosition(Node node)
     {
         return node.TopPosition + node.transform.up * verticalOffset;

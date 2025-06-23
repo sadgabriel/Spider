@@ -31,8 +31,10 @@ public class GameManager : MonoBehaviour
         if (UnitSystem.Instance == null) Debug.LogError("UnitSystem is missing!");
         if (UiManager.Instance == null) Debug.LogError("UIManager is missing!");
 
-        Map.Instance.GenerateMap();
+        Map.Instance.Initialize();
         UnitSystem.Instance.Initialize();
         UiManager.Instance.Initialize();
+
+        SpecialActionManager.Instance.AddSpecialAction(Demolition.Instance);
     }
 }

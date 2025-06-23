@@ -10,10 +10,10 @@ class Sprint : SpecialAction
     public int Reach { get; set; } = 2;
     public int BaseStaminaConsume { get; set; } = 50;
 
-    protected override void HandleMouseButtonDown(int button, Vector3 position, GameObject clickedGO)
+    protected override void HandleMouseButtonDownWhileSpecialAction(int button, Vector3 position, GameObject clickedGO)
     {
-        var gameStateManager = GameStateManager.Instance;
-        if (button == 0 && gameStateManager.IsPlayerTurn && gameStateManager.CurrentGameState == GameState.Sprint && gameStateManager.IsIdleUiState)
+        base.HandleMouseButtonDownWhileSpecialAction(button, position, clickedGO);
+        if (button == 0)
         {
             Node targetNode = Utils.GetNodeFromGameObject(clickedGO);
 
@@ -21,19 +21,11 @@ class Sprint : SpecialAction
             {
                 if (Player.Instance.TrySprintTo(targetNode, Reach, BaseStaminaConsume))
                 {
-                    gameStateManager.EndPlayerTurn();
+                    FinishSpecialActionWithTurnEnd();
+                    return;
                 }
-                gameStateManager.ResetGameState();
+                FinishSpecialActionWithoutTurnEnd();
             }
-        }
-    }
-
-    protected override void HandleKeyDown(HashSet<KeyCode> pressedKeys)
-    {
-        var gameStateManager = GameStateManager.Instance;
-        if (pressedKeys.Contains(KeyCode.Space) && gameStateManager.IsPlayerTurn && gameStateManager.IsIdleGameState && gameStateManager.IsIdleUiState)
-        {
-            gameStateManager.SetGameState(GameState.Sprint);
         }
     }
 }

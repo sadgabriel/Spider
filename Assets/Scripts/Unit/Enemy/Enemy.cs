@@ -60,7 +60,7 @@ public abstract class Enemy : Unit
         AssignTargetPlayer(player);
     }
 
-    public void Die()
+    public override void Die()
     {
         IsDestroyed = true;
         Destroy(gameObject);

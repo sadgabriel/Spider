@@ -79,6 +79,12 @@ public abstract class Facility : MonoBehaviour
         Initialize();
     }
 
+    public virtual void Demolish()
+    {
+        ApplyUpgradeLevel(0);
+        Destroy(gameObject);
+    }
+
     private void MoveToPillar(Pillar pillar)
     {
         transform.position = pillar.TopPosition;
@@ -187,7 +193,7 @@ public abstract class Facility : MonoBehaviour
         OnUpgradeLevelIncrease += HandleUpgradeLevelIncrease;
         OnUpgradeLevelDecrease += HandleUpgradeLevelDecrease;
     }
-    
+
     protected virtual void HandleUpgradeLevelIncrease(int level)
     {
 

@@ -26,7 +26,7 @@ public class Player : Unit
             hp = Mathf.Clamp(value, 0, maxHp);
             if (hp <= 0)
             {
-                Debug.Log("Game Over");
+                Die();
             }
         }
     }
@@ -110,6 +110,11 @@ public class Player : Unit
         MoveTo(startNode);
     }
 
+    public override void Die()
+    {
+        Debug.Log("Player has died.");
+    }
+
     public void TakeDamage(int damage)
     {
         Hp -= damage;
@@ -123,6 +128,11 @@ public class Player : Unit
     public void RegenerateHp()
     {
         RegenerateHp(hpRegen);
+    }
+
+    public void UseStamina(int amount)
+    {
+        Stamina -= amount;
     }
 
     public void RegenerateStamina(int amount)
@@ -166,6 +176,12 @@ public class Player : Unit
 
     public override void MoveTo(Node targetNode)
     {
+        if (targetNode == null)
+        {
+            Debug.LogError("Target node is null.");
+            return;
+        }
+        
         if (targetNode.OccupyingUnit is Spawner spawner)
         {
             spawner.Die();

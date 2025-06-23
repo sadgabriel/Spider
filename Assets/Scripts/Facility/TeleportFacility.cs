@@ -28,6 +28,17 @@ public class TeleportFacility : Facility
         coolDown = 0;
     }
 
+    public override void Demolish()
+    {
+        base.Demolish();
+        if (handlerIsRegistered)
+        {
+            InputManager.Instance.OnMouseButtonDown -= HandleMouseButtonDown;
+            handlerIsRegistered = false;
+        }
+        GameStateManager.Instance.OnTurnChange -= HandleTurnChange;
+    }
+
     protected override void HandleUpgradeLevelIncrease(int level)
     {
         base.HandleUpgradeLevelIncrease(level);
@@ -97,7 +108,7 @@ public class TeleportFacility : Facility
         }
     }
 
-    private void HandleTurnChange(TurnState turnState)
+    private void HandleTurnChange(TurnState turnState, int turnCount)
     {
         if (turnState == TurnState.PlayerTurn)
         {

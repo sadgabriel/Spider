@@ -1,19 +1,37 @@
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class Map : MonoBehaviour
 {
     public static Map Instance { get; private set; }
 
-    public List<Node> Nodes { get; private set; } = new();
-    public List<Pillar> Pillars { get; private set; } = new();
-    public List<Bridge> Bridges { get; private set; } = new();
-    public virtual List<Node> SpawnPoints { get; private set; } = new();
-
     [SerializeField] protected GameObject LargePillarPrefab;
     [SerializeField] protected GameObject SmallPillarPrefab;
     [SerializeField] protected GameObject bridgePrefab;
     [SerializeField] protected float bridgeOffset = -0.5f;
+    [SerializeField] protected int regenerationDelay = 10;
+
+    public List<Node> Nodes
+    {
+        get => nodes.Where(n => n.isActiveAndEnabled).ToList();
+    }
+
+    public List<Pillar> Pillars
+    {
+        get => pillars.Where(p => p.isActiveAndEnabled).ToList();
+    }
+
+    public List<Bridge> Bridges
+    {
+        get => bridges.Where(b => b.isActiveAndEnabled).ToList();
+    }
+
+    public virtual List<Node> SpawnPoints
+    {
+        get => spawnPoints.Where(sp => sp.isActiveAndEnabled).ToList();
+    }
 
     public Vector3 Origin
     {
@@ -23,7 +41,20 @@ public abstract class Map : MonoBehaviour
         }
     }
 
-    public abstract Pillar StartPillar { get; }
+    public virtual Pillar StartPillar
+    {
+        get
+        {
+            return Pillars.FirstOrDefault();
+        }
+    }
+
+    protected List<Node> nodes = new();
+    protected List<Pillar> pillars = new();
+    protected List<Bridge> bridges = new();
+    protected List<Node> spawnPoints = new();
+
+    private Queue<(Node, int)> regenerationQueue = new();
 
     private void Awake()
     {
@@ -35,6 +66,12 @@ public abstract class Map : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void Initialize()
+    {
+        GameStateManager.Instance.OnTurnChange += OnTurnChange;
+        GenerateMap();
     }
 
     public List<Node> FindPath(Node from, Node to, bool ignoreOccupied = false)
@@ -133,10 +170,27 @@ public abstract class Map : MonoBehaviour
 
         pillar1.ConnectTo(bridge);
         pillar2.ConnectTo(bridge);
-        Nodes.Add(bridge);
-        Bridges.Add(bridge);
+        nodes.Add(bridge);
+        bridges.Add(bridge);
 
         return bridge;
+    }
+
+    public virtual void DisconnectPillars(Pillar pillar1, Pillar pillar2)
+    {
+        if (pillar1 == null || pillar2 == null) return;
+
+        Bridge bridge = pillar1.GetBridgeTo(pillar2);
+        if (bridge == null) return;
+
+        RemoveNode(bridge);
+    }
+
+    public void DemolishBridge(Bridge bridge)
+    {
+        if (bridge == null) return;
+
+        TemporarilyRemoveNode(bridge);
     }
 
     protected Pillar InstantiatePillar(GameObject prefab, Vector3 position, Quaternion rotation, string name)
@@ -144,10 +198,42 @@ public abstract class Map : MonoBehaviour
         GameObject pillarGO = Instantiate(prefab, position, rotation, transform);
         pillarGO.name = name;
         Pillar pillar = pillarGO.GetComponent<Pillar>();
-        Nodes.Add(pillar);
-        Pillars.Add(pillar);
-        
+        nodes.Add(pillar);
+        pillars.Add(pillar);
+
         return pillar;
+    }
+
+    protected void TemporarilyRemoveNode(Node node)
+    {
+        if (node == null) return;
+
+        if (node is Pillar pillar)
+        {
+            foreach (Node neighbor in pillar.AllNeighbors.ToList())
+            {
+                if (neighbor is Bridge bridge)
+                {
+                    TemporarilyRemoveNode(neighbor);
+                }
+            }
+
+            if (pillar.HasFacility)
+            {
+                pillar.BuiltFacility.Demolish();
+                pillar.BuiltFacility = null;
+            }
+        }
+
+        if (node.IsOccupied)
+        {
+            node.OccupyingUnit.Die();
+        }
+
+        node.gameObject.SetActive(false);
+
+        int currentTurnCount = GameStateManager.Instance.TurnCount;
+        regenerationQueue.Enqueue((node, currentTurnCount + regenerationDelay));
     }
 
     protected void RemoveNode(Node node)
@@ -157,17 +243,57 @@ public abstract class Map : MonoBehaviour
         Nodes.Remove(node);
         if (node is Pillar pillar)
         {
-            Pillars.Remove(pillar);
+            RemovePillar(pillar);
+
         }
         else if (node is Bridge bridge)
         {
-            Bridges.Remove(bridge);
+            RemoveBridge(bridge);
         }
-        
+
+        if (node.IsOccupied)
+        {
+            node.OccupyingUnit.Die();
+        }
+
         if (SpawnPoints.Contains(node))
         {
             SpawnPoints.Remove(node);
         }
+    }
+
+    private void RemovePillar(Pillar pillar)
+    {
+        if (pillar == null) return;
+
+        Pillars.Remove(pillar);
+        foreach (Node neighbor in pillar.Neighbors)
+        {
+            if (neighbor is Bridge bridge)
+            {
+                RemoveNode(bridge);
+            }
+        }
+
+        if (pillar.HasFacility)
+        {
+            pillar.BuiltFacility.Demolish();
+            pillar.BuiltFacility = null;
+        }
+
+        Destroy(pillar.gameObject);
+    }
+
+    private void RemoveBridge(Bridge bridge)
+    {
+        if (bridge == null) return;
+
+        Bridges.Remove(bridge);
+        foreach (Node neighbor in bridge.Neighbors.ToList())
+        {
+            bridge.DisconnectFrom(neighbor);
+        }
+        Destroy(bridge.gameObject);
     }
 
     protected Vector3 CalcBridgeJointPosition(Pillar pillar)
@@ -176,4 +302,16 @@ public abstract class Map : MonoBehaviour
     }
 
     public abstract void GenerateMap();
+
+    private void OnTurnChange(TurnState state, int turnCount)
+    {
+        if (state == TurnState.PlayerTurn)
+        {
+            while (regenerationQueue.Count > 0 && regenerationQueue.Peek().Item2 <= turnCount)
+            {
+                var (node, _) = regenerationQueue.Dequeue();
+                node.gameObject.SetActive(true);
+            }
+        }
+    }
 }

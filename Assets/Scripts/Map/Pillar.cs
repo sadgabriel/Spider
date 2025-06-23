@@ -70,4 +70,25 @@ public class Pillar : Node
                             .ToList();
         }
     }
+
+    public List<Pillar> AllNeighborPillars
+    {
+        get
+        {
+            return AllNeighbors.SelectMany(node => node.AllNeighbors)
+                            .Where(node => node != this)
+                            .Select(node => (Pillar)node)
+                            .ToList();
+        }
+    }
+
+    public Bridge GetBridgeTo(Pillar other)
+    {
+        if (other == null) return null;
+
+        return Neighbors
+            .Where(n => n is Bridge)
+            .Select(n => (Bridge)n)
+            .FirstOrDefault(b => b.Neighbors.Contains(other));
+    }
 }
