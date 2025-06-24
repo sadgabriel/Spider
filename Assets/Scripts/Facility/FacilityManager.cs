@@ -9,6 +9,7 @@ public enum FacilityType
     Sprint,
     Upgrade,
     Teleport,
+    Demolition,
 }
 
 [System.Serializable]

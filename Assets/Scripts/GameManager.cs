@@ -34,7 +34,5 @@ public class GameManager : MonoBehaviour
         Map.Instance.Initialize();
         UnitSystem.Instance.Initialize();
         UiManager.Instance.Initialize();
-
-        SpecialActionManager.Instance.AddSpecialAction(Demolition.Instance);
     }
 }
