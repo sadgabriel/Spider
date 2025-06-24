@@ -185,7 +185,6 @@ public class Player : Unit
         if (targetNode.OccupyingUnit is Spawner spawner)
         {
             spawner.Die();
-            GainExperience(spawner.ExpGain);
         }
 
         base.MoveTo(targetNode);

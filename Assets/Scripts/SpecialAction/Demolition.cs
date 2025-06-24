@@ -19,6 +19,13 @@ public class Demolition : SpecialAction
 
             if (targetNode != null && targetNode is Bridge bridge)
             {
+                if (StaminaConsume > Player.Instance.Stamina)
+                {
+                    Debug.Log("Not enough stamina.");
+                    FinishSpecialActionWithoutTurnEnd();
+                    return;
+                }
+
                 Player.Instance.UseStamina(StaminaConsume);
 
                 if (bridge.IsOccupied && bridge.OccupyingUnit is Enemy)
