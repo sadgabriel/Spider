@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ab49e4cc714dc4da997a4c00eefad0, type: 3}
   m_Name: Demolition
   m_EditorClassIdentifier: 
-  FacilityType: 0
-  Size: 0
-  IsUnique: 0
-  IconTexture: {fileID: 0}
-  Name: 
-  Description: 
+  FacilityType: 5
+  Size: 1
+  IsUnique: 1
+  IconTexture: {fileID: 2800000, guid: d54b4dd822b22fa4f8f07e32a45a433a, type: 3}
+  Name: Demolition
+  Description: Unlock Demolition

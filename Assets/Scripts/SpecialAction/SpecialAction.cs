@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class SpecialAction
 {
+    public Texture2D Icon { get; set; }
     public bool IsActive { get; private set; } = false;
     public void Activate()
     {

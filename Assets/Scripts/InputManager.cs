@@ -16,6 +16,8 @@ class InputManager : MonoBehaviour
         KeyCode.A,
         KeyCode.S,
         KeyCode.D,
+        KeyCode.E,
+        KeyCode.Q,
         KeyCode.Space,
     };
 

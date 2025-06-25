@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
 
         Map.Instance.Initialize();
         UnitSystem.Instance.Initialize();
+        SpecialActionManager.Instance.Initialize();
         UiManager.Instance.Initialize();
     }
 }
