@@ -5,6 +5,7 @@ using System.Linq;
 class Pursuer : Mover
 {
     [SerializeField] private int recognitionDistance = 4;
+    [SerializeField] private int alertedLifeTime = 5;
     
     public override void Act()
     {
@@ -44,6 +45,7 @@ class Pursuer : Mover
         if (nextPillar != null)
         {
             State = EnemyState.Alerted;
+            LifeTime = System.Math.Min(LifeTime, alertedLifeTime);
             currentTargetPillar = nextPillar;
             return;
         }

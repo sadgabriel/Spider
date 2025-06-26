@@ -17,7 +17,7 @@ public abstract class Enemy : Unit
     [SerializeField] private Material defaultMaterial;
     [SerializeField] private Material alertedMaterial;
 
-    public bool IsDestroyed { get; private set; } = false;
+    public bool IsDestroyed { get; protected set; } = false;
 
     private EnemyState state = EnemyState.Idle;
     public EnemyState State

@@ -510,6 +510,7 @@ MonoBehaviour:
   LargePillarPrefab: {fileID: 8514450172584871814, guid: cad8fcb4cf03c9f429a4321d7618455e, type: 3}
   SmallPillarPrefab: {fileID: 8514450172584871814, guid: fb4783176770afe499093f2c77e28bdb, type: 3}
   bridgePrefab: {fileID: 8745796165396008747, guid: 3de796aaf518d1846bed7e30eedcb1f0, type: 3}
+  ExpOrbPrefab: {fileID: 2614679773138246118, guid: 13ee1447e42b800498c78f3be62d3f9b, type: 3}
   bridgeOffset: -0.2
   regenerationDelay: 10
   largePillarCount: 1000

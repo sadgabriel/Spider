@@ -52,9 +52,11 @@ MonoBehaviour:
   attackDamage: 1
   defaultMaterial: {fileID: 2100000, guid: 08a28a72be3820d43a5920ac080e2814, type: 2}
   alertedMaterial: {fileID: 2100000, guid: 5d73bd7fa895e8441a927b8c04dd7ab2, type: 2}
+  expOrbPrefab: {fileID: 2614679773138246118, guid: 13ee1447e42b800498c78f3be62d3f9b, type: 3}
+  expOnDeath: 20
   recognitionDistance: 6
   runningSpeed: 2
-  runningLifeTime: 3
+  alertedLifeTime: 5
 --- !u!1 &6450614979757329896
 GameObject:
   m_ObjectHideFlags: 0

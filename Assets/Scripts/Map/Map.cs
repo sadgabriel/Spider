@@ -10,6 +10,7 @@ public abstract class Map : MonoBehaviour
     [SerializeField] protected GameObject LargePillarPrefab;
     [SerializeField] protected GameObject SmallPillarPrefab;
     [SerializeField] protected GameObject bridgePrefab;
+    [SerializeField] protected GameObject ExpOrbPrefab;
     [SerializeField] protected float bridgeOffset = -0.5f;
     [SerializeField] protected int regenerationDelay = 10;
 
@@ -72,6 +73,20 @@ public abstract class Map : MonoBehaviour
     {
         GameStateManager.Instance.OnTurnChange += OnTurnChange;
         GenerateMap();
+    }
+
+    public void AddExpOn(Node node, int amount)
+    {
+        if (node.HasExpOrb)
+        {
+            node.ExpOrb.ExpAmount += amount;
+        }
+        else
+        {
+            ExpOrb expOrb = Instantiate(ExpOrbPrefab, transform).GetComponent<ExpOrb>();
+            expOrb.Initialize(node, amount);
+            node.ExpOrb = expOrb;
+        }
     }
 
     public List<Node> FindPath(Node from, Node to, bool ignoreOccupied = false)

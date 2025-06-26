@@ -52,10 +52,4 @@ public class Spawner : Enemy
         spawnTimer = 0;
         State = EnemyState.Idle;
     }
-
-    public override void Die()
-    {
-        base.Die();
-        player.GainExperience(expGain);
-    }
 }

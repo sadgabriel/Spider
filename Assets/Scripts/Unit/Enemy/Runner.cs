@@ -5,7 +5,7 @@ class Runner : Mover
 {
     [SerializeField] private int recognitionDistance = 6;
     [SerializeField] private int runningSpeed = 2;
-    [SerializeField] private int runningLifeTime = 3;
+    [SerializeField] private int alertedLifeTime = 5;
 
     public override void Act()
     {
@@ -49,7 +49,7 @@ class Runner : Mover
         if (nextPillar != null)
         {
             State = EnemyState.Alerted;
-            LifeTime = Math.Min(LifeTime, runningLifeTime);
+            LifeTime = Math.Min(LifeTime, alertedLifeTime);
             currentTargetPillar = nextPillar;
             return;
         }

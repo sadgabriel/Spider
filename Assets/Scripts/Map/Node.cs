@@ -18,7 +18,10 @@ public class Node : MonoBehaviour
     public bool IsOccupied => OccupyingUnit != null;
     public Unit OccupyingUnit { get; set; } = null;
 
-    private List<Node> neighbors = new();
+    public bool HasExpOrb => ExpOrb != null;
+    public ExpOrb ExpOrb { get; set; } = null;
+
+    private readonly List<Node> neighbors = new();
 
     public Vector3 TopPosition
     {
