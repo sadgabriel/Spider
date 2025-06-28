@@ -191,17 +191,14 @@ public abstract class Map : MonoBehaviour
         return bridge;
     }
 
-    public virtual void DisconnectPillars(Pillar pillar1, Pillar pillar2)
+    public void DemolishBridge(Bridge bridge)
     {
-        if (pillar1 == null || pillar2 == null) return;
-
-        Bridge bridge = pillar1.GetBridgeTo(pillar2);
         if (bridge == null) return;
 
-        RemoveNode(bridge);
+        TemporarilyRemoveNode(bridge);
     }
 
-    public void DemolishBridge(Bridge bridge)
+    public void CorrodeBridge(Bridge bridge)
     {
         if (bridge == null) return;
 
@@ -238,6 +235,11 @@ public abstract class Map : MonoBehaviour
                 pillar.BuiltFacility.Demolish();
                 pillar.BuiltFacility = null;
             }
+
+            if (pillar.HasExpOrb)
+            {
+                Destroy(pillar.ExpOrb.gameObject);
+            }
         }
 
         if (node.IsOccupied)
@@ -249,66 +251,6 @@ public abstract class Map : MonoBehaviour
 
         int currentTurnCount = GameStateManager.Instance.TurnCount;
         regenerationQueue.Enqueue((node, currentTurnCount + regenerationDelay));
-    }
-
-    protected void RemoveNode(Node node)
-    {
-        if (node == null) return;
-
-        Nodes.Remove(node);
-        if (node is Pillar pillar)
-        {
-            RemovePillar(pillar);
-
-        }
-        else if (node is Bridge bridge)
-        {
-            RemoveBridge(bridge);
-        }
-
-        if (node.IsOccupied)
-        {
-            node.OccupyingUnit.Die();
-        }
-
-        if (SpawnPoints.Contains(node))
-        {
-            SpawnPoints.Remove(node);
-        }
-    }
-
-    private void RemovePillar(Pillar pillar)
-    {
-        if (pillar == null) return;
-
-        Pillars.Remove(pillar);
-        foreach (Node neighbor in pillar.Neighbors)
-        {
-            if (neighbor is Bridge bridge)
-            {
-                RemoveNode(bridge);
-            }
-        }
-
-        if (pillar.HasFacility)
-        {
-            pillar.BuiltFacility.Demolish();
-            pillar.BuiltFacility = null;
-        }
-
-        Destroy(pillar.gameObject);
-    }
-
-    private void RemoveBridge(Bridge bridge)
-    {
-        if (bridge == null) return;
-
-        Bridges.Remove(bridge);
-        foreach (Node neighbor in bridge.Neighbors.ToList())
-        {
-            bridge.DisconnectFrom(neighbor);
-        }
-        Destroy(bridge.gameObject);
     }
 
     protected Vector3 CalcBridgeJointPosition(Pillar pillar)

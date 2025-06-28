@@ -26,11 +26,14 @@ public class ExpOrb : MonoBehaviour
     public void Collect()
     {
         Player.Instance.GainExperience(ExpAmount);
+        Destroy(gameObject);
+    }
 
+    private void OnDestroy()
+    {
         if (CurrentNode != null)
         {
             CurrentNode.ExpOrb = null;
-            Destroy(gameObject);
         }
     }
 }

@@ -47,7 +47,6 @@ class RandomSphereMap : Map
     {
         GeneratePillars();
         GenerateBridges();
-        RemoveIsolatedPillars();
     }
 
     public override Bridge ConnectPillars(Pillar pillar1, Pillar pillar2)
@@ -194,14 +193,5 @@ class RandomSphereMap : Map
         Vector2 q2 = GeometryUtils.ProjectOntoPlane2D(posB2, origin, xAxis, yAxis);
 
         return GeometryUtils.DoIntersect(p1, p2, q1, q2);
-    }
-
-    private void RemoveIsolatedPillars()
-    {
-        var isolatedPillars = Pillars.Where(p => p.Neighbors.Count == 0).ToList();
-        foreach (var pillar in isolatedPillars)
-        {
-            RemoveNode(pillar);
-        }
     }
 }

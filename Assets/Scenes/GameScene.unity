@@ -5525,6 +5525,8 @@ MonoBehaviour:
     prefab: {fileID: 4043943983806633335, guid: d78ade8a5bd4c4246a1f2cf2dd4ed06e, type: 3}
   - type: 2
     prefab: {fileID: 3334576410073538310, guid: 101a5dce126190d438a93308a7d0f77c, type: 3}
+  - type: 3
+    prefab: {fileID: 3306295663622658551, guid: 9a744d94d8121ca4ea286c83e29f318f, type: 3}
 --- !u!4 &1083974151
 Transform:
   m_ObjectHideFlags: 0

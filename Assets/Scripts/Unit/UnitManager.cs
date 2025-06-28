@@ -6,7 +6,8 @@ public enum EnemyType
 {
     Pursuer,
     Spawner,
-    Runner
+    Runner,
+    Corroder
 }
 
 [System.Serializable]
@@ -72,7 +73,7 @@ public class UnitManager : MonoBehaviour
                     {
                         if (!spawnPoint.IsOccupied)
                         {
-                            SpawnEnemy(spawnPoint, Random.value > 0.2 ? EnemyType.Pursuer : EnemyType.Runner);
+                            SpawnEnemy(spawnPoint, Random.value > 0.2 ? EnemyType.Pursuer : EnemyType.Corroder);
                         }
                     }
 
