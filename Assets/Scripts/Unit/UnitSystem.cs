@@ -7,10 +7,11 @@ public class UnitSystem : MonoBehaviour
     public static UnitSystem Instance { get; private set; }
 
     [SerializeField] private int waveInterval = 5;
-    [SerializeField] private int enemyCount = 1;
+
+    public int WaveIndex => GameStateManager.Instance.TurnCount / waveInterval;
 
     private bool isHandlingLevelUp = false;
-    private Queue<int> pendingLevelUps = new();
+    private readonly Queue<int> pendingLevelUps = new();
 
     private void Awake()
     {
@@ -20,7 +21,7 @@ public class UnitSystem : MonoBehaviour
     public void Initialize()
     {
         UnitManager.Instance.InitializePlayer();
-        UnitManager.Instance.SpawnWave(enemyCount);
+        UnitManager.Instance.SpawnSpawners(EnemyWaveManager.Instance.GetMaxSpawners(0));
         GameStateManager.Instance.OnTurnChange += HandleTurnChange;
         InputManager.Instance.OnMouseButtonDown += HandleMouseButtonDown;
         Player.Instance.OnLevelUp += HandleLevelUp;
@@ -47,6 +48,12 @@ public class UnitSystem : MonoBehaviour
 
     private void StartEnemyTurn()
     {
+        if (GameStateManager.Instance.CurrentGameState == GameState.GameCleared || 
+            GameStateManager.Instance.CurrentGameState == GameState.GameOver)
+        {
+            return;
+        }
+
         UnitManager.Instance.RemoveDestroyedEnemies();
         foreach (var enemy in UnitManager.Instance.Enemies)
         {
@@ -59,10 +66,19 @@ public class UnitSystem : MonoBehaviour
 
         if (GameStateManager.Instance.TurnCount % waveInterval == 0)
         {
-            UnitManager.Instance.SpawnWave(enemyCount);
+            if (WaveIndex >= EnemyWaveManager.Instance.MaxWaves)
+            {
+                Debug.Log("Game Completed! No more waves.");
+                GameStateManager.Instance.SetGameState(GameState.GameCleared);
+                return;
+            }
+
+            int maxSpawners = EnemyWaveManager.Instance.GetMaxSpawners(WaveIndex);
+            int currentSpawners = UnitManager.Instance.Enemies.Count(e => e is Spawner);
+            UnitManager.Instance.SpawnSpawners(Mathf.Max(0, maxSpawners - currentSpawners));
         }
 
-        UnitManager.Instance.SpawnEnemyWithSpawner();
+        UnitManager.Instance.SpawnEnemyWithSpawner(EnemyWaveManager.Instance.GetEnemyProportions(WaveIndex));
 
         GameStateManager.Instance.EndEnemyTurn();
     }

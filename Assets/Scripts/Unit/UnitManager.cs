@@ -57,7 +57,7 @@ public class UnitManager : MonoBehaviour
         }
     }
 
-    public void SpawnEnemyWithSpawner()
+    public void SpawnEnemyWithSpawner(Dictionary<EnemyType, float> enemyProportions)
     {
         List<Spawner> spawners = Enemies.Where(enemy => enemy is Spawner)
                                          .Cast<Spawner>()
@@ -73,7 +73,19 @@ public class UnitManager : MonoBehaviour
                     {
                         if (!spawnPoint.IsOccupied)
                         {
-                            SpawnEnemy(spawnPoint, Random.value > 0.2 ? EnemyType.Pursuer : EnemyType.Corroder);
+                            float randomValue = Random.value;
+                            EnemyType enemyType = enemyProportions.Keys.FirstOrDefault();
+                            float cumulativeProbability = 0f;
+                            foreach (var entry in enemyProportions)
+                            {
+                                cumulativeProbability += entry.Value;
+                                if (randomValue <= cumulativeProbability)
+                                {
+                                    enemyType = entry.Key;
+                                    break;
+                                }
+                            }
+                            SpawnEnemy(spawnPoint, enemyType);
                         }
                     }
 
@@ -83,7 +95,7 @@ public class UnitManager : MonoBehaviour
         }
     }
 
-    public void SpawnWave(int count)
+    public void SpawnSpawners(int count)
     {
         for (int i = 0; i < count; i++)
         {

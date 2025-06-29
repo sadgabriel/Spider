@@ -12,6 +12,8 @@ public enum GameState
     Idle,
     SpecialAction,
     Teleport,
+    GameCleared,
+    GameOver,
 }
 
 public enum UiState

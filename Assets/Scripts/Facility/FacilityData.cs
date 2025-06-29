@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Facility/FacilityData")]
+[CreateAssetMenu(menuName = "FacilityData")]
 public class FacilityData : ScriptableObject
 {
     public FacilityType FacilityType;
