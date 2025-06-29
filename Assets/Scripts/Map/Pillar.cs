@@ -91,4 +91,15 @@ public class Pillar : Node
             .Select(n => (Bridge)n)
             .FirstOrDefault(b => b.Neighbors.Contains(other));
     }
+
+    public override void Clear()
+    {
+        base.Clear();
+        
+        if (HasFacility)
+        {
+            BuiltFacility.Demolish();
+            BuiltFacility = null;
+        }
+    }
 }

@@ -59,4 +59,19 @@ public class Node : MonoBehaviour
             other.neighbors.Remove(this);
         }
     }
+
+    public virtual void Clear()
+    {
+        if (IsOccupied)
+        {
+            OccupyingUnit.Die();
+            OccupyingUnit = null;
+        }
+
+        if (HasExpOrb)
+        {
+            Destroy(ExpOrb.gameObject);
+            ExpOrb = null;
+        }
+    }
 }

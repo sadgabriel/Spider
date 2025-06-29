@@ -224,29 +224,14 @@ public abstract class Map : MonoBehaviour
         {
             foreach (Node neighbor in pillar.AllNeighbors.ToList())
             {
-                if (neighbor is Bridge bridge)
+                if (neighbor is Bridge)
                 {
                     TemporarilyRemoveNode(neighbor);
                 }
             }
-
-            if (pillar.HasFacility)
-            {
-                pillar.BuiltFacility.Demolish();
-                pillar.BuiltFacility = null;
-            }
-
-            if (pillar.HasExpOrb)
-            {
-                Destroy(pillar.ExpOrb.gameObject);
-            }
         }
 
-        if (node.IsOccupied)
-        {
-            node.OccupyingUnit.Die();
-        }
-
+        node.Clear();
         node.gameObject.SetActive(false);
 
         int currentTurnCount = GameStateManager.Instance.TurnCount;
