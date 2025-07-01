@@ -7,7 +7,8 @@ public enum EnemyType
     Pursuer,
     Spawner,
     Runner,
-    Corroder
+    Corroder,
+    Boss,
 }
 
 [System.Serializable]
@@ -57,6 +58,22 @@ public class UnitManager : MonoBehaviour
         }
     }
 
+    public void SpawnEnemyWithBoss()
+    {
+        Boss boss = Enemies.OfType<Boss>().FirstOrDefault();
+        if (boss != null && boss.IsReadyToSpawn)
+        {
+            foreach (Node spawnPoint in boss.SpawnPoints)
+            {
+                if (!spawnPoint.IsOccupied)
+                {
+                    SpawnEnemy(spawnPoint, EnemyType.Runner);
+                }
+            }
+            boss.IsReadyToSpawn = false;
+        }
+    }
+
     public void SpawnEnemyWithSpawner(Dictionary<EnemyType, float> enemyProportions)
     {
         List<Spawner> spawners = Enemies.Where(enemy => enemy is Spawner)
@@ -101,6 +118,11 @@ public class UnitManager : MonoBehaviour
         {
             SpawnEnemyAtRandomSpawnPoint(EnemyType.Spawner);
         }
+    }
+
+    public void SpawnBoss()
+    {
+        SpawnEnemyAtRandomSpawnPoint(EnemyType.Boss);
     }
 
     public void SpawnEnemyAtRandomSpawnPoint(EnemyType type)

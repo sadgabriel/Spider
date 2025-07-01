@@ -205,6 +205,13 @@ public abstract class Map : MonoBehaviour
         TemporarilyRemoveNode(bridge);
     }
 
+    public void SmashPillar(Pillar pillar)
+    {
+        if (pillar == null) return;
+
+        TemporarilyRemoveNode(pillar);
+    }
+
     protected Pillar InstantiatePillar(GameObject prefab, Vector3 position, Quaternion rotation, string name)
     {
         GameObject pillarGO = Instantiate(prefab, position, rotation, transform);

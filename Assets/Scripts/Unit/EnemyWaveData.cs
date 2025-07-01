@@ -7,10 +7,11 @@ public class EnemyWaveData : ScriptableObject
     [System.Serializable]
     public struct EnemySpawnEntry
     {
-        public EnemyType type;
-        public float proportion;
+        public EnemyType Type;
+        public float Proportion;
     }
 
     public int MaxSpawners;
-    public List<EnemySpawnEntry> enemies;
+    public List<EnemySpawnEntry> Enemies;
+    public bool IsBossWave;
 }

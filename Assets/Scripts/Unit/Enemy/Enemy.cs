@@ -6,7 +6,7 @@ using NUnit.Framework;
 public enum EnemyState
 {
     Idle,
-    Alerted
+    Alerted,
 }
 
 public abstract class Enemy : Unit
@@ -64,6 +64,16 @@ public abstract class Enemy : Unit
     {
         IsDestroyed = true;
         Destroy(gameObject);
+    }
+
+    protected void SetVisualsVisible(bool visible)
+    {
+        if (childrenRenderers == null) return;
+
+        foreach (var r in childrenRenderers)
+        {
+            r.enabled = visible;
+        }
     }
 
     private void SetStartNode(Node node)

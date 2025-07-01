@@ -22,6 +22,12 @@ public class UnitSystem : MonoBehaviour
     {
         UnitManager.Instance.InitializePlayer();
         UnitManager.Instance.SpawnSpawners(EnemyWaveManager.Instance.GetMaxSpawners(0));
+        
+        if (EnemyWaveManager.Instance.IsBossWave(0))
+        {
+            UnitManager.Instance.SpawnBoss();
+        }
+        
         GameStateManager.Instance.OnTurnChange += HandleTurnChange;
         InputManager.Instance.OnMouseButtonDown += HandleMouseButtonDown;
         Player.Instance.OnLevelUp += HandleLevelUp;
@@ -76,9 +82,15 @@ public class UnitSystem : MonoBehaviour
             int maxSpawners = EnemyWaveManager.Instance.GetMaxSpawners(WaveIndex);
             int currentSpawners = UnitManager.Instance.Enemies.Count(e => e is Spawner);
             UnitManager.Instance.SpawnSpawners(Mathf.Max(0, maxSpawners - currentSpawners));
+
+            if (EnemyWaveManager.Instance.IsBossWave(WaveIndex))
+            {
+                UnitManager.Instance.SpawnBoss();
+            }
         }
 
         UnitManager.Instance.SpawnEnemyWithSpawner(EnemyWaveManager.Instance.GetEnemyProportions(WaveIndex));
+        UnitManager.Instance.SpawnEnemyWithBoss();
 
         GameStateManager.Instance.EndEnemyTurn();
     }

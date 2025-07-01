@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Wave 4
   m_EditorClassIdentifier: 
   MaxSpawners: 3
-  enemies:
-  - type: 0
-    proportion: 0.8
-  - type: 2
-    proportion: 0.2
+  Enemies:
+  - Type: 0
+    Proportion: 0.8
+  - Type: 0
+    Proportion: 0.2
+  IsBossWave: 0

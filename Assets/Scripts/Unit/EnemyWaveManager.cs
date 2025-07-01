@@ -8,7 +8,7 @@ class EnemyWaveManager : MonoBehaviour
     [SerializeField] private List<EnemyWaveData> enemyWaveDatas;
 
     public int MaxWaves => enemyWaveDatas.Count;
-    
+
     private void Awake()
     {
         Instance = this;
@@ -33,19 +33,19 @@ class EnemyWaveManager : MonoBehaviour
         }
 
         Dictionary<EnemyType, float> enemyProportions = new();
-        
-        var enemies = enemyWaveDatas[waveIndex].enemies;
+
+        var enemies = enemyWaveDatas[waveIndex].Enemies;
         float totalProportion = 0f;
 
         foreach (var enemy in enemies)
         {
-            if (enemy.proportion < 0f)
+            if (enemy.Proportion < 0f)
             {
-                Debug.LogError($"Negative proportion for enemy type {enemy.type} in wave {waveIndex}: {enemy.proportion}");
+                Debug.LogError($"Negative proportion for enemy type {enemy.Type} in wave {waveIndex}: {enemy.Proportion}");
                 continue;
             }
 
-            totalProportion += enemy.proportion;
+            totalProportion += enemy.Proportion;
         }
 
         if (totalProportion == 0f)
@@ -56,9 +56,19 @@ class EnemyWaveManager : MonoBehaviour
 
         foreach (var enemy in enemies)
         {
-            enemyProportions[enemy.type] = enemy.proportion / totalProportion;
+            enemyProportions[enemy.Type] = enemy.Proportion / totalProportion;
         }
 
         return enemyProportions;
+    }
+
+    public bool IsBossWave(int waveIndex)
+    {
+        if (enemyWaveDatas == null || enemyWaveDatas.Count <= waveIndex)
+        {
+            Debug.LogError("enemyWaveData is not setted.");
+            return false;
+        }
+        return enemyWaveDatas[waveIndex].IsBossWave;
     }
 }
