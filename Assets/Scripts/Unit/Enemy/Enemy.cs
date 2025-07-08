@@ -14,9 +14,6 @@ public abstract class Enemy : Unit
     [SerializeField] protected int lifeTime = 5;
     [SerializeField] protected int attackDamage = 1;
 
-    [SerializeField] private Material defaultMaterial;
-    [SerializeField] private Material alertedMaterial;
-
     public bool IsDestroyed { get; protected set; } = false;
 
     private EnemyState state = EnemyState.Idle;
@@ -27,7 +24,6 @@ public abstract class Enemy : Unit
         {
             if (state == value) return;
             state = value;
-            UpdateMaterial();
         }
     }
 
@@ -51,7 +47,6 @@ public abstract class Enemy : Unit
     protected virtual void Awake()
     {
         childrenRenderers = GetComponentsInChildren<Renderer>();
-        UpdateMaterial();
     }
 
     public virtual void Initialize(Node startNode, Player player)
@@ -128,27 +123,5 @@ public abstract class Enemy : Unit
     public virtual void Act()
     {
         LifeTime--;
-    }
-
-    private void UpdateMaterial()
-    {
-        if (childrenRenderers == null || childrenRenderers.Length == 0)
-        {
-            Debug.LogWarning("No renderers found for enemy material update.");
-            return;
-        }
-
-        foreach (Renderer childRenderer in childrenRenderers)
-        {
-            switch (State)
-            {
-                case EnemyState.Idle:
-                    childRenderer.material = defaultMaterial;
-                    break;
-                case EnemyState.Alerted:
-                    childRenderer.material = alertedMaterial;
-                    break;
-            }
-        }
     }
 }

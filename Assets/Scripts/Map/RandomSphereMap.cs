@@ -18,7 +18,7 @@ class RandomSphereMap : Map
         {
             return Pillars
                 .Where(p => p.isActiveAndEnabled)
-                .Where(p => p.Size == PillarSize.Small)
+                .Where(p => p.Size == PillarSize.Large)
                 .Where(p => !p.HasFacility)
                 .Where(p => !p.IsOccupied)
                 .Select(p => p as Node)

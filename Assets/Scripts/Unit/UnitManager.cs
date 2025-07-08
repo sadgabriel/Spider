@@ -128,6 +128,7 @@ public class UnitManager : MonoBehaviour
     public void SpawnEnemyAtRandomSpawnPoint(EnemyType type)
     {
         List<Node> spawnPoints = Map.Instance.SpawnPoints;
+
         if (spawnPoints.Count > 0)
         {
             List<Node> emptySpawnPoints = spawnPoints.FindAll(node => !node.IsOccupied);
