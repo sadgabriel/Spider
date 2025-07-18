@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -54,12 +55,17 @@ public class UnitSystem : MonoBehaviour
 
     private void StartEnemyTurn()
     {
-        if (GameStateManager.Instance.CurrentGameState == GameState.GameCleared || 
+        if (GameStateManager.Instance.CurrentGameState == GameState.GameCleared ||
             GameStateManager.Instance.CurrentGameState == GameState.GameOver)
         {
             return;
         }
 
+        StartCoroutine(DoEnemyTurn());
+    }
+
+    private IEnumerator DoEnemyTurn()
+    {
         UnitManager.Instance.RemoveDestroyedEnemies();
         foreach (var enemy in UnitManager.Instance.Enemies)
         {
@@ -70,6 +76,15 @@ public class UnitSystem : MonoBehaviour
         }
         UnitManager.Instance.RemoveDestroyedEnemies();
 
+        SpawnEnemies();
+
+        yield return new WaitForSeconds(0.5f);
+
+        GameStateManager.Instance.EndEnemyTurn();
+    }
+    
+    private void SpawnEnemies()
+    {
         if (GameStateManager.Instance.TurnCount % waveInterval == 0)
         {
             if (WaveIndex >= EnemyWaveManager.Instance.MaxWaves)
@@ -91,8 +106,6 @@ public class UnitSystem : MonoBehaviour
 
         UnitManager.Instance.SpawnEnemyWithSpawner(EnemyWaveManager.Instance.GetEnemyProportions(WaveIndex));
         UnitManager.Instance.SpawnEnemyWithBoss();
-
-        GameStateManager.Instance.EndEnemyTurn();
     }
 
     private void HandleMouseButtonDown(int button, Vector3 position, GameObject clickedGO)
@@ -104,12 +117,12 @@ public class UnitSystem : MonoBehaviour
                 Node targetNode = Utils.GetNodeFromGameObject(clickedGO);
 
                 if (targetNode != null && GameStateManager.Instance.CurrentGameState == GameState.Idle)
+                {
+                    if (Player.Instance.TryMoveTo(targetNode))
                     {
-                        if (Player.Instance.TryMoveTo(targetNode))
-                        {
-                            GameStateManager.Instance.EndPlayerTurn();
-                        }
+                        GameStateManager.Instance.EndPlayerTurn();
                     }
+                }
             }
         }
     }

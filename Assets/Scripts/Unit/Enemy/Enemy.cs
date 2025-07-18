@@ -13,6 +13,7 @@ public abstract class Enemy : Unit
 {
     [SerializeField] protected int lifeTime = 5;
     [SerializeField] protected int attackDamage = 1;
+    [SerializeField] protected GameObject alertedEffect;
 
     public bool IsDestroyed { get; protected set; } = false;
 
@@ -24,6 +25,7 @@ public abstract class Enemy : Unit
         {
             if (state == value) return;
             state = value;
+            UpdateAlertEffect();
         }
     }
 
@@ -59,6 +61,11 @@ public abstract class Enemy : Unit
     {
         IsDestroyed = true;
         Destroy(gameObject);
+    }
+
+    public virtual void Act()
+    {
+        LifeTime--;
     }
 
     protected void SetVisualsVisible(bool visible)
@@ -120,8 +127,9 @@ public abstract class Enemy : Unit
         player.TakeDamage(attackDamage);
     }
 
-    public virtual void Act()
+    private void UpdateAlertEffect()
     {
-        LifeTime--;
+        if (alertedEffect == null) return;
+        alertedEffect.SetActive(State == EnemyState.Alerted);
     }
 }
