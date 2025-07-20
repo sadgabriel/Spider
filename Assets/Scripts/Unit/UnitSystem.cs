@@ -71,6 +71,7 @@ public class UnitSystem : MonoBehaviour
         {
             if (enemy.gameObject.activeSelf)
             {
+                //yield return enemy.DoAct();
                 enemy.Act();
             }
         }

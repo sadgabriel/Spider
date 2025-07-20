@@ -1,3 +1,4 @@
+using System.Collections;  
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -39,6 +40,17 @@ public class Spawner : Enemy
     public override void Act()
     {
         base.Act();
+
+        spawnTimer++;
+        if (spawnTimer >= spawnInterval - 1)
+        {
+            State = EnemyState.Alerted;
+        }
+    }
+
+    public override IEnumerator DoAct()
+    {
+        yield return base.DoAct();
 
         spawnTimer++;
         if (spawnTimer >= spawnInterval - 1)

@@ -1,6 +1,8 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 
 class Pursuer : Mover
 {
@@ -23,6 +25,38 @@ class Pursuer : Mover
             Attack();
             Die();
             return;
+        }
+
+        TryMoveTo(nextNode);
+
+        if (CurrentNode == currentTargetPillar)
+        {
+            currentTargetPillar = null;
+            LookAt(null);
+        }
+        else
+        {
+            nextNode = FindNextNodeTowards(currentTargetPillar);
+            LookAt(nextNode);
+        }
+    }
+
+    public override IEnumerator DoAct()
+    {
+        yield return base.DoAct();
+
+        if (currentTargetPillar == null)
+        {
+            SetNextPillar();
+        }
+
+        Node nextNode = FindNextNodeTowards(currentTargetPillar);
+
+        if (IsAttackable())
+        {
+            Attack();
+            Die();
+            yield break;
         }
 
         TryMoveTo(nextNode);

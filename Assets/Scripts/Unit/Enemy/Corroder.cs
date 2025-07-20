@@ -1,10 +1,11 @@
 using UnityEngine;
+using System.Collections;
 
 class Corroder : Mover
 {
     [SerializeField] private int recognitionDistance = 4;
     [SerializeField] private int alertedLifeTime = 5;
-    
+
     public override void Act()
     {
         base.Act();
@@ -33,17 +34,56 @@ class Corroder : Mover
         }
 
         if (CurrentNode == currentTargetPillar)
-            {
-                currentTargetPillar = null;
-                LookAt(null);
-            }
-            else
-            {
-                nextNode = FindNextNodeTowards(currentTargetPillar);
-                LookAt(nextNode);
-            }
+        {
+            currentTargetPillar = null;
+            LookAt(null);
+        }
+        else
+        {
+            nextNode = FindNextNodeTowards(currentTargetPillar);
+            LookAt(nextNode);
+        }
     }
-    
+
+    public override IEnumerator DoAct()
+    {
+        yield return base.DoAct();
+
+        if (currentTargetPillar == null)
+        {
+            SetNextPillar();
+        }
+
+        Node nextNode = FindNextNodeTowards(currentTargetPillar);
+
+        if (IsAttackable())
+        {
+            Attack();
+            Die();
+            yield break;
+        }
+
+        Node lastNode = CurrentNode;
+        if (TryMoveTo(nextNode))
+        {
+            if (lastNode is Bridge bridge)
+            {
+                Map.Instance.CorrodeBridge(bridge);
+            }
+        }
+
+        if (CurrentNode == currentTargetPillar)
+        {
+            currentTargetPillar = null;
+            LookAt(null);
+        }
+        else
+        {
+            nextNode = FindNextNodeTowards(currentTargetPillar);
+            LookAt(nextNode);
+        }
+    }
+
     private void SetNextPillar()
     {
         Node nextPillar = FindNextPillarTowardsPlayerIfInRange(recognitionDistance);

@@ -107,7 +107,7 @@ public class Player : Unit
 
     public void Initialize(Node startNode)
     {
-        MoveTo(startNode);
+        PutOn(startNode);
     }
 
     public override void Die()

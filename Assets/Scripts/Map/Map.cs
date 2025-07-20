@@ -241,6 +241,8 @@ public abstract class Map : MonoBehaviour
         node.Clear();
         node.gameObject.SetActive(false);
 
+        regenerationQueue = new Queue<(Node, int)>(regenerationQueue.Where(e => e.Item1 != node));
+
         int currentTurnCount = GameStateManager.Instance.TurnCount;
         regenerationQueue.Enqueue((node, currentTurnCount + regenerationDelay));
     }

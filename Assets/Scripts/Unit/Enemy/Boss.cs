@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -73,10 +74,50 @@ public class Boss : Enemy
         }
     }
 
+    public override IEnumerator DoAct()
+    {
+        yield return base.DoAct();
+
+        switch (CurrentPhase)
+        {
+            case BossPhase.Waiting:
+                CurrentPhase = BossPhase.SpawningPreparation;
+                break;
+
+            case BossPhase.SpawningPreparation:
+                State = EnemyState.Alerted;
+                CurrentPhase = BossPhase.Spawning;
+                break;
+
+            case BossPhase.Spawning:
+                State = EnemyState.Idle;
+                IsReadyToSpawn = true;
+                CurrentPhase = BossPhase.JumpingPreparation;
+                break;
+
+            case BossPhase.JumpingPreparation:
+                CurrentPhase = BossPhase.Jumping;
+                break;
+
+            case BossPhase.Jumping:
+                currentTargetPillar = FindNextPillar();
+                JumpToAir();
+                NotifyNextPillar(currentTargetPillar);
+                CurrentPhase = BossPhase.Landing;
+                break;
+
+            case BossPhase.Landing:
+                JumpToGround(currentTargetPillar);
+                CurrentPhase = BossPhase.Waiting;
+                break;
+        }
+    }
+
     public override bool CanMoveTo(Node targetNode)
     {
         return targetNode != null &&
                targetNode is Pillar pillar &&
+               targetNode != CurrentNode &&
                pillar.Size == PillarSize.Large;
     }
 
@@ -124,7 +165,7 @@ public class Boss : Enemy
                 Pillar adjacentPillar = playerCurrentPillar.NeighborPillars.FirstOrDefault();
                 if (adjacentPillar != null && adjacentPillar != targetPillar)
                 {
-                    player.MoveTo(adjacentPillar);
+                    player.PutOn(adjacentPillar);
                     Attack();
                 }
                 else
@@ -138,7 +179,7 @@ public class Boss : Enemy
             }
         }
 
-        MoveTo(targetPillar);
+        PutOn(targetPillar);
         SetVisualsVisible(true);
     }
 

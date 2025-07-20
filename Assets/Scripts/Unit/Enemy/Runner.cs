@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections;
 
 class Runner : Mover
 {
@@ -10,6 +11,42 @@ class Runner : Mover
     public override void Act()
     {
         base.Act();
+
+        for (int i = 0; i < runningSpeed; i++)
+        {
+            if (currentTargetPillar == null)
+            {
+                SetNextPillar();
+            }
+
+            Node nextNode = FindNextNodeTowards(currentTargetPillar);
+
+            if (IsAttackable())
+            {
+                Attack();
+                Die();
+            }
+            else
+            {
+                TryMoveTo(nextNode);
+
+                if (CurrentNode == currentTargetPillar)
+                {
+                    currentTargetPillar = null;
+                    LookAt(null);
+                }
+                else
+                {
+                    nextNode = FindNextNodeTowards(currentTargetPillar);
+                    LookAt(nextNode);
+                }
+            }
+        }
+    }
+
+    public override IEnumerator DoAct()
+    {
+        yield return base.DoAct();
 
         for (int i = 0; i < runningSpeed; i++)
         {

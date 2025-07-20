@@ -99,7 +99,7 @@ public class TeleportFacility : Facility
                     selectedTeleportFacility = null;
                     return;
                 }
-                Player.Instance.MoveTo(clickedPillar);
+                Player.Instance.PutOn(clickedPillar);
                 selectedTeleportFacility.StartCoolDown();
                 gameStateManager.ResetGameState();
                 selectedTeleportFacility = null;

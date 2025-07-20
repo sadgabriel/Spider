@@ -74,9 +74,9 @@ abstract class Mover : Enemy
 
     public override void Die()
     {
-        if (IsDestroyed) return;
+        if (IsDead) return;
 
-        IsDestroyed = true;
+        IsDead = true;
 
         if (State == EnemyState.Alerted)
         {
