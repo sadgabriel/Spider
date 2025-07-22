@@ -64,7 +64,12 @@ class Runner : Mover
             }
             else
             {
-                TryMoveTo(nextNode);
+                yield return DoTryMoveTo(nextNode);
+
+                if (this == null || gameObject == null || this is Enemy enemy && enemy.IsDead)
+                {
+                    yield break;
+                }
 
                 if (CurrentNode == currentTargetPillar)
                 {

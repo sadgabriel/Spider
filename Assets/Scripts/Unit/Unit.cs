@@ -34,12 +34,25 @@ public abstract class Unit : MonoBehaviour
 
     public virtual void MoveTo(Node targetNode)
     {
-        //StartCoroutine(DoMoveTo(targetNode));
         PutOn(targetNode);
+    }
+
+    public virtual IEnumerator DoTryMoveTo(Node targetNode)
+    {
+        if (CanMoveTo(targetNode))
+        {
+            yield return DoMoveTo(targetNode);
+        }
     }
 
     protected virtual IEnumerator DoMoveTo(Node targetNode, float duration = 0.5f)
     {
+        if (currentNode == null)
+        {
+            Debug.LogWarning("Current node is null, cannot move to target node.");
+            yield break;
+        }
+
         List<Node> path = Map.Instance.FindPath(CurrentNode, targetNode);
         if (path == null || path.Count == 0)
         {
@@ -52,12 +65,9 @@ public abstract class Unit : MonoBehaviour
             yield break;
         }
 
-        if (CurrentNode != null)
-        {
-            CurrentNode.OccupyingUnit = null;
-        }
+        CurrentNode.OccupyingUnit = null;
         targetNode.OccupyingUnit = this;
-        CurrentNode = null;
+        CurrentNode = targetNode;
 
         for (int i = 0; i < path.Count - 1; i++)
         {
@@ -66,16 +76,19 @@ public abstract class Unit : MonoBehaviour
 
             yield return DoMoveStepTo(startNode, endNode, duration / (path.Count - 1));
         }
-
-        CurrentNode = targetNode;
     }
 
     protected virtual IEnumerator DoMoveStepTo(Node startNode, Node endNode, float duration = 0.25f)
     {
         float elapsed = 0f;
-        
+
         while (elapsed < duration)
         {
+            if (this == null || gameObject == null || this is Enemy enemy && enemy.IsDead)
+            {
+                yield break;
+            }
+
             Vector3 startPosition = CalcUnitPosition(startNode);
             Vector3 endPosition = CalcUnitPosition(endNode);
 
@@ -86,6 +99,9 @@ public abstract class Unit : MonoBehaviour
             elapsed += Time.deltaTime;
             yield return null;
         }
+
+        transform.position = CalcUnitPosition(endNode);
+        transform.rotation = CalcUnitRotation(endNode);
     }
 
     public void PutOn(Node targetNode)
@@ -127,6 +143,11 @@ public abstract class Unit : MonoBehaviour
 
     protected void LookAt(Node targetNode = null)
     {
+        if (this == null || gameObject == null || this is Enemy enemy && enemy.IsDead)
+        {
+            return;
+        }
+
         if (targetNode == null)
         {
             transform.rotation = CalcUnitRotation(CurrentNode);

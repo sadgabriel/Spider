@@ -67,21 +67,32 @@ public class UnitSystem : MonoBehaviour
     private IEnumerator DoEnemyTurn()
     {
         UnitManager.Instance.RemoveDestroyedEnemies();
-        foreach (var enemy in UnitManager.Instance.Enemies)
+
+        List<bool> isDoneList = new();
+
+        List<Enemy> enemies = UnitManager.Instance.Enemies;
+        for (int i = 0; i < enemies.Count; i++)
         {
-            if (enemy.gameObject.activeSelf)
-            {
-                //yield return enemy.DoAct();
-                enemy.Act();
-            }
+            int index = i;
+            isDoneList.Add(false);
+
+            IEnumerator wrapped = RunAndNotify(enemies[index].DoAct(), () => isDoneList[index] = true);
+            StartCoroutine(wrapped); 
         }
+
+        yield return new WaitUntil(() => isDoneList.All(done => done));
+
         UnitManager.Instance.RemoveDestroyedEnemies();
 
         SpawnEnemies();
 
-        yield return new WaitForSeconds(0.5f);
-
         GameStateManager.Instance.EndEnemyTurn();
+    }
+
+    private IEnumerator RunAndNotify(IEnumerator coroutine, System.Action onComplete)
+    {
+        yield return coroutine;
+        onComplete?.Invoke();
     }
     
     private void SpawnEnemies()

@@ -64,7 +64,15 @@ class Corroder : Mover
         }
 
         Node lastNode = CurrentNode;
-        if (TryMoveTo(nextNode))
+
+        yield return DoTryMoveTo(nextNode);
+
+        if (this == null || gameObject == null || this is Enemy enemy && enemy.IsDead)
+        {
+            yield break;
+        }
+
+        if (lastNode != null && CurrentNode != lastNode)
         {
             if (lastNode is Bridge bridge)
             {
