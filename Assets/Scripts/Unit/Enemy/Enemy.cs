@@ -47,8 +47,9 @@ public abstract class Enemy : Unit
 
     private Renderer[] childrenRenderers;
 
-    protected virtual void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         childrenRenderers = GetComponentsInChildren<Renderer>();
     }
 

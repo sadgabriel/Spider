@@ -7,12 +7,19 @@ public abstract class Unit : MonoBehaviour
 {
     [SerializeField] protected float verticalOffset = 0.5f;
 
+    protected Animator animator;
+
     private Node currentNode;
 
     public Node CurrentNode
     {
         get => currentNode;
         protected set => currentNode = value;
+    }
+
+    protected virtual void Awake()
+    {
+        animator = GetComponent<Animator>();
     }
 
     public bool TryMoveTo(Node targetNode)
@@ -34,7 +41,7 @@ public abstract class Unit : MonoBehaviour
 
     public virtual void MoveTo(Node targetNode)
     {
-        PutOn(targetNode);
+        StartCoroutine(DoMoveTo(targetNode));
     }
 
     public virtual IEnumerator DoTryMoveTo(Node targetNode)
@@ -80,6 +87,11 @@ public abstract class Unit : MonoBehaviour
 
     protected virtual IEnumerator DoMoveStepTo(Node startNode, Node endNode, float duration = 0.25f)
     {
+        if (animator != null)
+        {
+            animator.SetBool("IsWalking", true);
+        }
+
         float elapsed = 0f;
 
         while (elapsed < duration)
@@ -102,6 +114,11 @@ public abstract class Unit : MonoBehaviour
 
         transform.position = CalcUnitPosition(endNode);
         transform.rotation = CalcUnitRotation(endNode);
+
+        if (animator != null)
+        {
+            animator.SetBool("IsWalking", false);
+        }
     }
 
     public void PutOn(Node targetNode)

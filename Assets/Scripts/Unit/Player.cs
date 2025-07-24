@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class Player : Unit
 {
@@ -93,8 +94,9 @@ public class Player : Unit
     }
 
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         if (Instance == null)
         {
             Instance = this;

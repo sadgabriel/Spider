@@ -5517,7 +5517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59fb31af31bae1f43b33c38c47dba8f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 6222183571581326639, guid: 3dfb6b6dbdaff2b438627b2fd96c33d0, type: 3}
+  playerPrefab: {fileID: 8096770454051302281, guid: 3dfb6b6dbdaff2b438627b2fd96c33d0, type: 3}
   enemyEntries:
   - type: 0
     prefab: {fileID: 3501125267379104198, guid: 0398152630234aa41a522369ddad3074, type: 3}
