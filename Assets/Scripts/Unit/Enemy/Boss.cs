@@ -15,6 +15,8 @@ public enum BossPhase
 
 public class Boss : Enemy
 {
+    [SerializeField] private GameObject arrowPrefab;
+
     public BossPhase CurrentPhase = BossPhase.Waiting;
     public bool IsReadyToSpawn { get; set; } = false;
     public List<Node> SpawnPoints
@@ -34,6 +36,8 @@ public class Boss : Enemy
         }
     }
     private Pillar currentTargetPillar;
+
+    private GameObject arrow;
 
     public override void Act()
     {
@@ -107,6 +111,8 @@ public class Boss : Enemy
                 break;
 
             case BossPhase.Landing:
+                Destroy(arrow);
+                yield return new WaitForSeconds(0.55f);
                 JumpToGround(currentTargetPillar);
                 CurrentPhase = BossPhase.Waiting;
                 break;
@@ -185,6 +191,21 @@ public class Boss : Enemy
 
     private void NotifyNextPillar(Pillar nextPillar)
     {
+        Vector3 arrowPosition = nextPillar.TopPosition + nextPillar.transform.up * 4f;
 
+        Vector3 forward;
+        if (nextPillar.DirectionFromOrigin != Vector3.up)
+        {
+            forward = Vector3.Cross(nextPillar.DirectionFromOrigin, Vector3.up).normalized;
+        }
+        else
+        {
+            forward = Vector3.Cross(nextPillar.DirectionFromOrigin, Vector3.right).normalized;
+        }
+        Vector3 upward = Vector3.Cross(forward, nextPillar.DirectionFromOrigin).normalized;
+
+        Quaternion arrowRotation = Quaternion.LookRotation(forward, upward);
+
+        arrow = Instantiate(arrowPrefab, arrowPosition, arrowRotation, Map.Instance.transform);
     }
 }
