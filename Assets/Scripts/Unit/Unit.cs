@@ -6,8 +6,10 @@ using Unity.VisualScripting;
 public abstract class Unit : MonoBehaviour
 {
     [SerializeField] protected float verticalOffset = 0.5f;
+    [SerializeField] protected AudioClip WalkSound;
 
     protected Animator animator;
+    protected AudioSource audioSource;
 
     private Node currentNode;
 
@@ -20,6 +22,7 @@ public abstract class Unit : MonoBehaviour
     protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     public bool TryMoveTo(Node targetNode)
@@ -92,6 +95,8 @@ public abstract class Unit : MonoBehaviour
             animator.SetBool("IsWalking", true);
         }
 
+        PlayWalkSound();
+
         float elapsed = 0f;
 
         while (elapsed < duration)
@@ -118,6 +123,24 @@ public abstract class Unit : MonoBehaviour
         if (animator != null)
         {
             animator.SetBool("IsWalking", false);
+        }
+
+        StopWalkSound();
+    }
+
+    protected void PlayWalkSound()
+    {
+        if (WalkSound != null && audioSource != null && audioSource.enabled && audioSource.gameObject.activeInHierarchy)
+        {
+            audioSource.PlayOneShot(WalkSound);
+        }
+    }
+
+    protected void StopWalkSound()
+    {
+        if (audioSource != null && audioSource.isPlaying)
+        {
+            audioSource.Stop();
         }
     }
 
