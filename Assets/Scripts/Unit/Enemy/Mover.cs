@@ -5,8 +5,6 @@ using Unity.Burst.Intrinsics;
 
 abstract class Mover : Enemy
 {
-    [SerializeField] protected int expOnDeath = 10;
-
     protected Node currentTargetPillar;
 
     protected Node FindRandomAdjacentPillar()
@@ -70,19 +68,5 @@ abstract class Mover : Enemy
             }
         }
         return null;
-    }
-
-    public override void Die()
-    {
-        if (IsDead) return;
-
-        IsDead = true;
-
-        if (State == EnemyState.Alerted)
-        {
-            Map.Instance.AddExpOn(CurrentNode, expOnDeath);
-        }
-
-        Destroy(gameObject);
     }
 }

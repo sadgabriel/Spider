@@ -15,6 +15,7 @@ public abstract class Enemy : Unit
     [SerializeField] protected int lifeTime = 5;
     [SerializeField] protected int attackDamage = 1;
     [SerializeField] protected GameObject alertedEffect;
+    [SerializeField] protected int expOnDeath = 0;
 
     public bool IsDead { get; protected set; } = false;
 
@@ -40,7 +41,14 @@ public abstract class Enemy : Unit
             lifeTime = value;
             if (lifeTime <= 0)
             {
-                Die();
+                if (state == EnemyState.Alerted)
+                {
+                    DieWithExp();
+                }
+                else
+                {
+                    DieWithoutExp();
+                }
             }
         }
     }
@@ -61,13 +69,27 @@ public abstract class Enemy : Unit
 
     public override void Die()
     {
+        DieWithoutExp();
+    }
+
+    protected void DieWithExp()
+    {
+        if (IsDead) return;
+
         IsDead = true;
+        if (expOnDeath > 0)
+        {
+            Map.Instance.AddExpOn(CurrentNode, expOnDeath);
+        }
         Destroy(gameObject);
     }
 
-    public virtual void Act()
+    protected void DieWithoutExp()
     {
-        LifeTime--;
+        if (IsDead) return;
+
+        IsDead = true;
+        Destroy(gameObject);
     }
 
     public virtual IEnumerator DoAct()

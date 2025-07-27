@@ -183,20 +183,6 @@ public class Player : Unit
             Debug.LogError("Target node is null.");
             return;
         }
-
-        List<Node> path = Map.Instance.FindPath(CurrentNode, targetNode, true);
-
-        if (path != null && path.Count > 0)
-        {
-            foreach (Node node in path)
-            {
-                if (node.HasExpOrb)
-                {
-                    node.ExpOrb.Collect();
-                }
-            }
-        }
-
         
         if (targetNode.OccupyingUnit is Spawner spawner)
         {

@@ -39,45 +39,6 @@ public class Boss : Enemy
 
     private GameObject arrow;
 
-    public override void Act()
-    {
-        base.Act();
-
-        switch (CurrentPhase)
-        {
-            case BossPhase.Waiting:
-                CurrentPhase = BossPhase.SpawningPreparation;
-                break;
-
-            case BossPhase.SpawningPreparation:
-                State = EnemyState.Alerted;
-                CurrentPhase = BossPhase.Spawning;
-                break;
-
-            case BossPhase.Spawning:
-                State = EnemyState.Idle;
-                IsReadyToSpawn = true;
-                CurrentPhase = BossPhase.JumpingPreparation;
-                break;
-
-            case BossPhase.JumpingPreparation:
-                CurrentPhase = BossPhase.Jumping;
-                break;
-
-            case BossPhase.Jumping:
-                currentTargetPillar = FindNextPillar();
-                JumpToAir();
-                NotifyNextPillar(currentTargetPillar);
-                CurrentPhase = BossPhase.Landing;
-                break;
-
-            case BossPhase.Landing:
-                JumpToGround(currentTargetPillar);
-                CurrentPhase = BossPhase.Waiting;
-                break;
-        }
-    }
-
     public override IEnumerator DoAct()
     {
         yield return base.DoAct();

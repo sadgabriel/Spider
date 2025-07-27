@@ -14,6 +14,14 @@ public class ExpOrb : MonoBehaviour
 
     public int ExpAmount { get; set; } = 10;
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Collect();
+        }
+    }
+
     public void Initialize(Node currentNode, int expAmount)
     {
         CurrentNode = currentNode;

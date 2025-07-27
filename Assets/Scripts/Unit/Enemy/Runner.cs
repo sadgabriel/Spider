@@ -8,42 +8,6 @@ class Runner : Mover
     [SerializeField] private int runningSpeed = 2;
     [SerializeField] private int alertedLifeTime = 5;
 
-    public override void Act()
-    {
-        base.Act();
-
-        for (int i = 0; i < runningSpeed; i++)
-        {
-            if (currentTargetPillar == null)
-            {
-                SetNextPillar();
-            }
-
-            Node nextNode = FindNextNodeTowards(currentTargetPillar);
-
-            if (IsAttackable())
-            {
-                Attack();
-                Die();
-            }
-            else
-            {
-                TryMoveTo(nextNode);
-
-                if (CurrentNode == currentTargetPillar)
-                {
-                    currentTargetPillar = null;
-                    LookAt(null);
-                }
-                else
-                {
-                    nextNode = FindNextNodeTowards(currentTargetPillar);
-                    LookAt(nextNode);
-                }
-            }
-        }
-    }
-
     public override IEnumerator DoAct()
     {
         yield return base.DoAct();
@@ -60,7 +24,7 @@ class Runner : Mover
             if (IsAttackable())
             {
                 Attack();
-                Die();
+                DieWithoutExp();
             }
             else
             {

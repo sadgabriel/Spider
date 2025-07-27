@@ -8,38 +8,6 @@ class Pursuer : Mover
 {
     [SerializeField] private int recognitionDistance = 4;
     [SerializeField] private int alertedLifeTime = 5;
-    
-    public override void Act()
-    {
-        base.Act();
-
-        if (currentTargetPillar == null)
-        {
-            SetNextPillar();
-        }
-
-        Node nextNode = FindNextNodeTowards(currentTargetPillar);
-
-        if (IsAttackable())
-        {
-            Attack();
-            Die();
-            return;
-        }
-
-        TryMoveTo(nextNode);
-
-        if (CurrentNode == currentTargetPillar)
-        {
-            currentTargetPillar = null;
-            LookAt(null);
-        }
-        else
-        {
-            nextNode = FindNextNodeTowards(currentTargetPillar);
-            LookAt(nextNode);
-        }
-    }
 
     public override IEnumerator DoAct()
     {
@@ -55,7 +23,7 @@ class Pursuer : Mover
         if (IsAttackable())
         {
             Attack();
-            Die();
+            DieWithoutExp();
             yield break;
         }
 

@@ -37,16 +37,6 @@ public class Spawner : Enemy
         base.Awake();
         spawnTimer = spawnInterval - 2;
     }
-    public override void Act()
-    {
-        base.Act();
-
-        spawnTimer++;
-        if (spawnTimer >= spawnInterval - 1)
-        {
-            State = EnemyState.Alerted;
-        }
-    }
 
     public override IEnumerator DoAct()
     {
