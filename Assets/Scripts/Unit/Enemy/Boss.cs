@@ -43,6 +43,11 @@ public class Boss : Enemy
     {
         yield return base.DoAct();
 
+        if (this == null || gameObject == null || this is Enemy enemy && enemy.IsDead)
+        {
+            yield break;
+        }
+
         switch (CurrentPhase)
         {
             case BossPhase.Waiting:

@@ -2884,6 +2884,7 @@ MonoBehaviour:
   lifeTime: 60
   attackDamage: 1
   alertedEffect: {fileID: 130364739871453116}
+  expOnDeath: 0
   arrowPrefab: {fileID: 7832161169808493996, guid: 6e2e610044c5f5d4ba724aabff60a0bb, type: 3}
   CurrentPhase: 0
 --- !u!95 &2078289609749178165

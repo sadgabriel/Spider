@@ -3,9 +3,9 @@ using UnityEngine;
 public class ExpOrb : MonoBehaviour
 {
     [SerializeField] protected float verticalOffset = 0.5f;
+    [SerializeField] protected AudioClip collectSound;
 
     private Node currentNode;
-
     public Node CurrentNode
     {
         get => currentNode;
@@ -34,6 +34,10 @@ public class ExpOrb : MonoBehaviour
     public void Collect()
     {
         Player.Instance.GainExperience(ExpAmount);
+        if (collectSound != null)
+        {
+            AudioManager.Instance.PlaySfx(collectSound, 0.5f);
+        }
         Destroy(gameObject);
     }
 
