@@ -71,15 +71,14 @@ public class Boss : Enemy
 
             case BossPhase.Jumping:
                 currentTargetPillar = FindNextPillar();
-                JumpToAir();
+                yield return JumpToAir();
                 NotifyNextPillar(currentTargetPillar);
                 CurrentPhase = BossPhase.Landing;
                 break;
 
             case BossPhase.Landing:
                 Destroy(arrow);
-                yield return new WaitForSeconds(0.55f);
-                JumpToGround(currentTargetPillar);
+                yield return JumpToGround(currentTargetPillar);
                 CurrentPhase = BossPhase.Waiting;
                 break;
         }
@@ -118,15 +117,33 @@ public class Boss : Enemy
         return closestPillar;
     }
 
-    private void JumpToAir()
+    private IEnumerator JumpToAir(float duration = 0.5f, float height = 10f)
     {
+        Node lastNode = CurrentNode;
+
         CurrentNode.OccupyingUnit = null;
         Map.Instance.SmashPillar(CurrentNode as Pillar);
         CurrentNode = null;
+        
+
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            Vector3 startPosition = CalcUnitPosition(lastNode);
+            Vector3 endPosition = CalcUnitPosition(lastNode) + lastNode.DirectionFromOrigin.normalized * height;
+
+            float t = elapsed / duration;
+            transform.position = Vector3.Lerp(startPosition, endPosition, t);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
         SetVisualsVisible(false);
     }
 
-    private void JumpToGround(Pillar targetPillar)
+    private IEnumerator JumpToGround(Pillar targetPillar, float duration = 0.5f, float height = 10f)
     {
         if (targetPillar.IsOccupied)
         {
@@ -151,8 +168,22 @@ public class Boss : Enemy
             }
         }
 
-        PutOn(targetPillar);
         SetVisualsVisible(true);
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            Vector3 startPosition = CalcUnitPosition(targetPillar) + targetPillar.DirectionFromOrigin.normalized * height;
+            Vector3 endPosition = CalcUnitPosition(targetPillar);
+
+            float t = elapsed / duration;
+            transform.position = Vector3.Lerp(startPosition, endPosition, t);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        PutOn(targetPillar);
     }
 
     private void NotifyNextPillar(Pillar nextPillar)
