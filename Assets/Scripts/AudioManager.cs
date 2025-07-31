@@ -13,6 +13,8 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private float demolitionVolume = 0.5f;
     [SerializeField] private AudioClip buildClip;
     [SerializeField] private float buildVolume = 0.5f;
+    [SerializeField] private AudioClip enemyAttackClip;
+    [SerializeField] private float enemyAttackVolume = 0.5f;
 
     private void Awake()
     {
@@ -63,5 +65,10 @@ public class AudioManager : MonoBehaviour
     public void PlayBuildSfx()
     {
         PlaySfx(buildClip, buildVolume);
+    }
+
+    public void PlayEnemyAttackSfx()
+    {
+        PlaySfx(enemyAttackClip, enemyAttackVolume);
     }
 }

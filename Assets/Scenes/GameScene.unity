@@ -6591,6 +6591,8 @@ MonoBehaviour:
   demolitionVolume: 0.5
   buildClip: {fileID: 8300000, guid: d54afb1ee6d8d714dbee040c20b4193b, type: 3}
   buildVolume: 0.5
+  enemyAttackClip: {fileID: 8300000, guid: 1f9a8b727f2e5d34ba5f96294ac333ce, type: 3}
+  enemyAttackVolume: 0.5
 --- !u!4 &1207053406
 Transform:
   m_ObjectHideFlags: 0

@@ -71,14 +71,14 @@ public class Boss : Enemy
 
             case BossPhase.Jumping:
                 currentTargetPillar = FindNextPillar();
-                yield return JumpToAir();
+                yield return DoJumpToAir();
                 NotifyNextPillar(currentTargetPillar);
                 CurrentPhase = BossPhase.Landing;
                 break;
 
             case BossPhase.Landing:
                 Destroy(arrow);
-                yield return JumpToGround(currentTargetPillar);
+                yield return DoJumpToGround(currentTargetPillar);
                 CurrentPhase = BossPhase.Waiting;
                 break;
         }
@@ -117,7 +117,7 @@ public class Boss : Enemy
         return closestPillar;
     }
 
-    private IEnumerator JumpToAir(float duration = 0.5f, float height = 10f)
+    private IEnumerator DoJumpToAir(float duration = 0.5f, float height = 10f)
     {
         Node lastNode = CurrentNode;
 
@@ -143,7 +143,7 @@ public class Boss : Enemy
         SetVisualsVisible(false);
     }
 
-    private IEnumerator JumpToGround(Pillar targetPillar, float duration = 0.5f, float height = 10f)
+    private IEnumerator DoJumpToGround(Pillar targetPillar, float duration = 0.5f, float height = 10f)
     {
         if (targetPillar.IsOccupied)
         {
@@ -155,7 +155,7 @@ public class Boss : Enemy
                 if (adjacentPillar != null && adjacentPillar != targetPillar)
                 {
                     player.PutOn(adjacentPillar);
-                    Attack();
+                    AttackWithoutMotion();
                 }
                 else
                 {

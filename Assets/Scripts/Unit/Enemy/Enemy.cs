@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using Unity.Mathematics;
 
 public enum EnemyState
 {
@@ -118,9 +119,30 @@ public abstract class Enemy : Unit
         this.player = player;
     }
 
-    protected void Attack()
+    protected void AttackWithoutMotion()
     {
         player.TakeDamage(attackDamage);
+        AudioManager.Instance.PlayEnemyAttackSfx();
+    }
+
+    protected IEnumerator DoAttackWithMotion(float duration = 0.2f)
+    {
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            Vector3 startPosition = CalcUnitPosition(CurrentNode);
+            Vector3 endPosition = CalcUnitPosition(player.CurrentNode);
+
+            float t = elapsed / duration;
+            transform.position = Vector3.Lerp(startPosition, endPosition, t);
+            
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        player.TakeDamage(attackDamage);
+        AudioManager.Instance.PlayEnemyAttackSfx();
     }
 
     private void UpdateAlertEffect()

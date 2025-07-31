@@ -22,7 +22,7 @@ class Pursuer : Mover
 
         if (IsAttackable())
         {
-            Attack();
+            yield return DoAttackWithMotion();
             DieWithoutExp();
             yield break;
         }

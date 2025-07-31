@@ -23,8 +23,9 @@ class Runner : Mover
 
             if (IsAttackable())
             {
-                Attack();
+                yield return DoAttackWithMotion();
                 DieWithoutExp();
+                yield break;
             }
             else
             {
