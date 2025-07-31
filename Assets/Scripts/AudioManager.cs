@@ -4,9 +4,15 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance { get; private set; }
 
-    [SerializeField] private AudioSource BgmSource;
-    [SerializeField] private AudioSource SfxSource;
-    [SerializeField] private AudioClip BgmClip;
+    [SerializeField] private AudioSource bgmSource;
+    [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private AudioClip bgmClip;
+    [SerializeField] private AudioClip expGainClip;
+    [SerializeField] private float expGainVolume = 0.5f;
+    [SerializeField] private AudioClip demolitionClip;
+    [SerializeField] private float demolitionVolume = 0.5f;
+    [SerializeField] private AudioClip buildClip;
+    [SerializeField] private float buildVolume = 0.5f;
 
     private void Awake()
     {
@@ -20,27 +26,42 @@ public class AudioManager : MonoBehaviour
 
     public void PlayBgm()
     {
-        if (BgmSource != null && BgmClip != null)
+        if (bgmSource != null && bgmClip != null)
         {
-            BgmSource.clip = BgmClip;
-            BgmSource.loop = true;
-            BgmSource.Play();
+            bgmSource.clip = bgmClip;
+            bgmSource.loop = true;
+            bgmSource.Play();
         }
     }
 
     public void StopBgm()
     {
-        if (BgmSource != null)
+        if (bgmSource != null)
         {
-            BgmSource.Stop();
+            bgmSource.Stop();
         }
     }
 
     public void PlaySfx(AudioClip clip, float volume = 1.0f)
     {
-        if (SfxSource != null && clip != null)
+        if (sfxSource != null && clip != null)
         {
-            SfxSource.PlayOneShot(clip, volume);
+            sfxSource.PlayOneShot(clip, volume);
         }
+    }
+
+    public void PlayExpGainSfx()
+    {
+        PlaySfx(expGainClip, expGainVolume);
+    }
+
+    public void PlayDemolitionSfx()
+    {
+        PlaySfx(demolitionClip, demolitionVolume);
+    }
+
+    public void PlayBuildSfx()
+    {
+        PlaySfx(buildClip, buildVolume);
     }
 }

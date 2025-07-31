@@ -62,6 +62,8 @@ public class FacilityManager : MonoBehaviour
 
         Facilities.Add(facility);
 
+        AudioManager.Instance.PlayBuildSfx();
+
         return facility;
     }
 

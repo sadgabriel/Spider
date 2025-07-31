@@ -34,6 +34,7 @@ public class Demolition : SpecialAction
                 }
 
                 Map.Instance.DemolishBridge(bridge);
+                AudioManager.Instance.PlayDemolitionSfx();
 
                 if (NeedTurnEnd)
                 {

@@ -6582,9 +6582,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ecf2d59e9ab20f438e54184fd8bc115, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BgmSource: {fileID: 1206076280}
-  SfxSource: {fileID: 817914279}
-  BgmClip: {fileID: 8300000, guid: 06de925ffafa31e43ad6594ed73e72bb, type: 3}
+  bgmSource: {fileID: 1206076280}
+  sfxSource: {fileID: 817914279}
+  bgmClip: {fileID: 8300000, guid: 06de925ffafa31e43ad6594ed73e72bb, type: 3}
+  expGainClip: {fileID: 8300000, guid: b22635958622b45428aac75a296f588f, type: 3}
+  expGainVolume: 0.5
+  demolitionClip: {fileID: 8300000, guid: 2516eed0c450ef7438e1690309294586, type: 3}
+  demolitionVolume: 0.5
+  buildClip: {fileID: 8300000, guid: d54afb1ee6d8d714dbee040c20b4193b, type: 3}
+  buildVolume: 0.5
 --- !u!4 &1207053406
 Transform:
   m_ObjectHideFlags: 0
