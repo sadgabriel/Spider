@@ -170,6 +170,8 @@ public class Boss : Enemy
 
         SetVisualsVisible(true);
 
+        PutOn(targetPillar);
+
         float elapsed = 0f;
         while (elapsed < duration)
         {
@@ -179,11 +181,11 @@ public class Boss : Enemy
             float t = elapsed / duration;
             transform.position = Vector3.Lerp(startPosition, endPosition, t);
 
+            transform.rotation = CalcUnitRotation(targetPillar);
+
             elapsed += Time.deltaTime;
             yield return null;
         }
-
-        PutOn(targetPillar);
     }
 
     private void NotifyNextPillar(Pillar nextPillar)

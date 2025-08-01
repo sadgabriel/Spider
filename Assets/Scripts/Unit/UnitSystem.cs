@@ -76,26 +76,20 @@ public class UnitSystem : MonoBehaviour
             int index = i;
             isDoneList.Add(false);
 
-            IEnumerator wrapped = RunAndNotify(enemies[index].DoAct(), () => isDoneList[index] = true);
+            IEnumerator wrapped = Utils.DoRunAndNotify(enemies[index].DoAct(), () => isDoneList[index] = true);
             StartCoroutine(wrapped); 
         }
-
+        
         yield return new WaitUntil(() => isDoneList.All(done => done));
 
         UnitManager.Instance.RemoveDestroyedEnemies();
 
-        SpawnEnemies();
+        yield return DoSpawnEnemies();
 
         GameStateManager.Instance.EndEnemyTurn();
     }
 
-    private IEnumerator RunAndNotify(IEnumerator coroutine, System.Action onComplete)
-    {
-        yield return coroutine;
-        onComplete?.Invoke();
-    }
-    
-    private void SpawnEnemies()
+    private IEnumerator DoSpawnEnemies()
     {
         if (GameStateManager.Instance.TurnCount % waveInterval == 0)
         {
@@ -103,7 +97,7 @@ public class UnitSystem : MonoBehaviour
             {
                 Debug.Log("Game Completed! No more waves.");
                 GameStateManager.Instance.SetGameState(GameState.GameCleared);
-                return;
+                yield break;
             }
 
             int maxSpawners = EnemyWaveManager.Instance.GetMaxSpawners(WaveIndex);
@@ -116,8 +110,16 @@ public class UnitSystem : MonoBehaviour
             }
         }
 
-        UnitManager.Instance.SpawnEnemyWithSpawner(EnemyWaveManager.Instance.GetEnemyProportions(WaveIndex));
-        UnitManager.Instance.SpawnEnemyWithBoss();
+        bool spawnWithSpawnerIsDone = false;
+        bool spawnWithBossIsDone = false;
+
+        IEnumerator wrappedSpawnWithSpawner = Utils.DoRunAndNotify(UnitManager.Instance.DoSpawnEnemyWithSpawner(EnemyWaveManager.Instance.GetEnemyProportions(WaveIndex)), () => spawnWithSpawnerIsDone = true);
+        IEnumerator wrappedSpawnWithBoss = Utils.DoRunAndNotify(UnitManager.Instance.DoSpawnEnemyWithBoss(), () => spawnWithBossIsDone = true);
+
+        StartCoroutine(wrappedSpawnWithSpawner);
+        StartCoroutine(wrappedSpawnWithBoss);
+        
+        yield return new WaitUntil(() => spawnWithSpawnerIsDone && spawnWithBossIsDone);
     }
 
     private void HandleMouseButtonDown(int button, Vector3 position, GameObject clickedGO)

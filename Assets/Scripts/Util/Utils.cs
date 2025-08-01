@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public static class Utils
 {
@@ -35,9 +36,15 @@ public static class Utils
             if (expOrb != null)
             {
                 node = expOrb.CurrentNode;
-            }   
+            }
         }
 
         return node;
+    }
+    
+    public static IEnumerator DoRunAndNotify(IEnumerator coroutine, System.Action onComplete)
+    {
+        yield return coroutine;
+        onComplete?.Invoke();
     }
 }

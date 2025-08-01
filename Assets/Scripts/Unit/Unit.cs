@@ -146,13 +146,19 @@ public abstract class Unit : MonoBehaviour
 
     public void PutOn(Node targetNode)
     {
-        if (targetNode == null || (targetNode.IsOccupied && targetNode.OccupyingUnit != this && !(targetNode.OccupyingUnit is Enemy enemy && enemy.IsDead)))
+        if (targetNode == null)
         {
-            Debug.LogWarning("Cannot put unit on the node: " + (targetNode == null ? "Node is null" : "Node is occupied"));
+            Debug.LogWarning("Cannot put unit on a null node.");
             return;
         }
 
-        if (currentNode != null)
+        if (targetNode.IsOccupied && targetNode.OccupyingUnit != this && !(targetNode.OccupyingUnit is Enemy enemy && enemy.IsDead))
+        {
+            Debug.LogWarning("Target node is already occupied by another unit: " + targetNode.OccupyingUnit);
+            return;
+        }
+
+        if (currentNode != null && currentNode.OccupyingUnit == this)
         {
             CurrentNode.OccupyingUnit = null;
         }
@@ -166,12 +172,12 @@ public abstract class Unit : MonoBehaviour
 
     public abstract void Die();
     
-    protected Vector3 CalcUnitPosition(Node node)
+    public Vector3 CalcUnitPosition(Node node)
     {
         return node.TopPosition + node.transform.up * verticalOffset;
     }
 
-    protected Quaternion CalcUnitRotation(Node node)
+    public Quaternion CalcUnitRotation(Node node)
     {
         Vector3 forward = Vector3.ProjectOnPlane(transform.forward, node.DirectionFromOrigin).normalized;
 
@@ -221,7 +227,7 @@ public abstract class Unit : MonoBehaviour
 
     protected virtual void OnDestroy()
     {
-        if (CurrentNode != null)
+        if (CurrentNode != null && CurrentNode.OccupyingUnit == this)
         {
             CurrentNode.OccupyingUnit = null;
         }

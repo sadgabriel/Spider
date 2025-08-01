@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.Collections;
 
 public enum EnemyType
 {
@@ -58,33 +59,45 @@ public class UnitManager : MonoBehaviour
         }
     }
 
-    public void SpawnEnemyWithBoss()
+    public IEnumerator DoSpawnEnemyWithBoss()
     {
         Boss boss = Enemies.OfType<Boss>().FirstOrDefault();
         if (boss != null && boss.IsReadyToSpawn)
         {
+            List<bool> isDoneList = new List<bool>();
+
             foreach (Node spawnPoint in boss.SpawnPoints)
             {
                 if (!spawnPoint.IsOccupied)
                 {
-                    SpawnEnemy(spawnPoint, EnemyType.Runner);
+                    isDoneList.Add(false);
+                    int index = isDoneList.Count - 1;
+                    IEnumerator wrapped = Utils.DoRunAndNotify(DoSpawnEnemyWithMotion(spawnPoint, EnemyType.Runner, boss.CurrentNode), () => isDoneList[index] = true);
+                    StartCoroutine(wrapped);
                 }
             }
+
+            yield return new WaitUntil(() => isDoneList.All(done => done));
+
             boss.IsReadyToSpawn = false;
         }
     }
 
-    public void SpawnEnemyWithSpawner(Dictionary<EnemyType, float> enemyProportions)
+    public IEnumerator DoSpawnEnemyWithSpawner(Dictionary<EnemyType, float> enemyProportions)
     {
         List<Spawner> spawners = Enemies.Where(enemy => enemy is Spawner)
                                          .Cast<Spawner>()
                                          .ToList();
         if (spawners.Count > 0)
         {
+            List<List<bool>> isDoneList = new List<List<bool>>();
+
             foreach (Spawner spawner in spawners)
             {
                 if (spawner.IsReadyToSpawn)
                 {
+                    isDoneList.Add(new List<bool>());
+
                     List<Node> spawnPoints = spawner.SpawnPoints;
                     foreach (Node spawnPoint in spawnPoints)
                     {
@@ -102,13 +115,21 @@ public class UnitManager : MonoBehaviour
                                     break;
                                 }
                             }
-                            SpawnEnemy(spawnPoint, enemyType);
+
+                            isDoneList.Last().Add(false);
+                            int spawnerIndex = isDoneList.Count - 1;
+                            int spawnIndex = isDoneList.Last().Count - 1;
+
+                            IEnumerator wrapped = Utils.DoRunAndNotify(DoSpawnEnemyWithMotion(spawnPoint, enemyType, spawner.CurrentNode), () => isDoneList[spawnerIndex][spawnIndex] = true);
+                            StartCoroutine(wrapped);
                         }
                     }
 
                     spawner.ResetSpawnTimer();
                 }
             }
+
+            yield return new WaitUntil(() => isDoneList.All(list => list.All(done => done)));
         }
     }
 
@@ -132,16 +153,44 @@ public class UnitManager : MonoBehaviour
         if (spawnPoints.Count > 0)
         {
             List<Node> emptySpawnPoints = spawnPoints.FindAll(node => !node.IsOccupied);
-            SpawnEnemy(emptySpawnPoints[Random.Range(0, emptySpawnPoints.Count)], type);
+            SpawnEnemyWithoutMotion(emptySpawnPoints[Random.Range(0, emptySpawnPoints.Count)], type);
         }
     }
 
-    public void SpawnEnemy(Node node, EnemyType type)
+    public void SpawnEnemyWithoutMotion(Node node, EnemyType type)
     {
         if (node == null || node.IsOccupied) return;
         Enemy enemy = Instantiate(enemyPrefabs[type], Map.Instance.transform);
         enemy.Initialize(node, Player);
         Enemies.Add(enemy);
+    }
+
+    public IEnumerator DoSpawnEnemyWithMotion(Node node, EnemyType type, Node spawnerNode, float duration = 0.2f)
+    {
+        if (node == null || node.IsOccupied) yield break;
+
+        if (spawnerNode == null)
+        {
+            SpawnEnemyWithoutMotion(node, type);
+            yield break;
+        }
+
+        Enemy enemy = Instantiate(enemyPrefabs[type], Map.Instance.transform);
+        enemy.Initialize(node, Player);
+        Enemies.Add(enemy);
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            Vector3 startPosition = enemy.CalcUnitPosition(spawnerNode);
+            Vector3 endPosition = enemy.CalcUnitPosition(node);
+
+            float t = elapsed / duration;
+            enemy.transform.position = Vector3.Lerp(startPosition, endPosition, t);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
     }
 
     public void RemoveDestroyedEnemies()

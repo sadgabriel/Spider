@@ -131,6 +131,11 @@ public abstract class Enemy : Unit
 
         while (elapsed < duration)
         {
+            if (this == null || gameObject == null || IsDead)
+            {
+                yield break;
+            }
+
             Vector3 startPosition = CalcUnitPosition(CurrentNode);
             Vector3 endPosition = CalcUnitPosition(player.CurrentNode);
 
