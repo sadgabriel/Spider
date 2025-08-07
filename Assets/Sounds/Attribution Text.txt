@@ -1,8 +1,17 @@
-dreadfulwhispers
-Music by: Bensound.com/royalty-free-music
-License code: NNHNADGJBU08DBE6
-Artist: : FoePound
+Music & Sound Credits
 
-pull_chain_02.wav by movingplaid -- https://freesound.org/s/88550/ -- License: Attribution 4.0
+"Dreadful Whispers"
+Music by: Bensound
+License Code: NNHNADGJBU08DBE6
 
-wind.wav by ERH -- https://freesound.org/s/34338/ -- License: Attribution NonCommercial 4.0
+Artist: FoePound
+
+"Pull Chain 02"
+by movingplaid
+Source: freesound.org/s/88550
+License: CC BY 4.0
+
+"Wind"
+by ERH
+Source: freesound.org/s/34338
+License: CC BY-NC 4.0
