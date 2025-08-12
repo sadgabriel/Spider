@@ -1655,14 +1655,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.039215688}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5e16c7aea118d68498053518146c9cf9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: beb4ef4d122fefb44bdd1442367a8777, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1671,7 +1671,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 6
+  m_PixelsPerUnitMultiplier: 12
 --- !u!222 &307928194
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3809,39 +3809,35 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Music & Sound Credits
 
-    
 
     "Dreadful Whispers"
 
-    Music by:
-    Bensound
+    Music by: Bensound
 
-    License Code: NNHNADGJBU08DBE6
+    License
+    Code: NNHNADGJBU08DBE6
 
     Artist: FoePound
 
-    
 
-    "Pull
-    Chain 02"
+    "Pull Chain 02"
 
     by movingplaid
 
-    Source: freesound.org/s/88550
+    Source:
+    freesound.org/s/88550
 
-    License:
-    CC BY 4.0
+    License: CC BY 4.0
 
-    
 
     "Wind"
 
     by ERH
 
-    Source: freesound.org/s/34338
+    Source:
+    freesound.org/s/34338
 
-    License:
-    CC BY-NC 4.0'
+    License: CC BY-NC 4.0'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4bd810f1cbcb0f446a8f5a31453e243f, type: 2}
   m_sharedMaterial: {fileID: 21539420542967178, guid: 4bd810f1cbcb0f446a8f5a31453e243f, type: 2}
@@ -5910,7 +5906,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.078431375, g: 0.09803922, b: 0.11764706, a: 0.9607843}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.9607843}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6806,18 +6802,16 @@ MonoBehaviour:
   titleText: Credits
   descriptionText: 'Music & Sound Credits
 
-    
 
     "Dreadful Whispers"
 
-    Music
-    by: Bensound
+    Music by:
+    Bensound
 
     License Code: NNHNADGJBU08DBE6
 
     Artist: FoePound
 
-    
 
     "Pull
     Chain 02"
@@ -6829,7 +6823,6 @@ MonoBehaviour:
     License:
     CC BY 4.0
 
-    
 
     "Wind"
 
@@ -7964,14 +7957,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.213, g: 0.213, b: 0.213, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5e16c7aea118d68498053518146c9cf9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: beb4ef4d122fefb44bdd1442367a8777, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7980,7 +7973,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 6
+  m_PixelsPerUnitMultiplier: 12
 --- !u!222 &1819065593
 CanvasRenderer:
   m_ObjectHideFlags: 0

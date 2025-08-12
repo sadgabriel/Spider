@@ -1404,8 +1404,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   verticalOffset: 0
   WalkSound: {fileID: 0}
-  hp: 100
-  maxHp: 100
+  hp: 10
+  maxHp: 10
   hpRegen: 0
   stamina: 100
   maxStamina: 100
