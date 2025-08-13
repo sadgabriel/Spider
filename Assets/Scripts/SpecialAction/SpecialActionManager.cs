@@ -10,6 +10,9 @@ class SpecialActionManager : MonoBehaviour
 
     public SpecialAction SelectedSpecialAction => specialActions.Count > 0 && selectedActionIndex >= 0 ? specialActions[selectedActionIndex] : null;
 
+    public SpecialAction LastSpecialAction => specialActions.Count > 1 ? specialActions[(selectedActionIndex - 1 + specialActions.Count) % specialActions.Count] : null;
+    public SpecialAction NextSpecialAction => specialActions.Count > 1 ? specialActions[(selectedActionIndex + 1) % specialActions.Count] : null;
+
     private readonly List<SpecialAction> specialActions = new List<SpecialAction>();
     private int selectedActionIndex = -1;
 

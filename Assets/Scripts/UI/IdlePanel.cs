@@ -6,7 +6,9 @@ public class IdlePanel : Panel<NoData>
 {
     [SerializeField] private TextMeshProUGUI hpText;
     [SerializeField] private TextMeshProUGUI staminaText;
+    [SerializeField] private RawImage lastSpecialActionIcon;
     [SerializeField] private RawImage selectedSpecialActionIcon;
+    [SerializeField] private RawImage NextSpecialActionIcon;
     [SerializeField] private Image HpBar;
     [SerializeField] private Image StaminaBar;
 
@@ -53,6 +55,17 @@ public class IdlePanel : Panel<NoData>
             StaminaBar.rectTransform.anchoredPosition = new Vector2(BarLeftEdge + 0.5f * BarMaxWidth * staminaPercentage, StaminaBar.rectTransform.anchoredPosition.y);
         }
 
+        if (lastSpecialActionIcon != null && SpecialActionManager.Instance.LastSpecialAction != null)
+        {
+            lastSpecialActionIcon.texture = SpecialActionManager.Instance.LastSpecialAction.Icon;
+            lastSpecialActionIcon.color = new Color(0f, 0f, 1f, 1f);
+        }
+        else
+        {
+            lastSpecialActionIcon.texture = null;
+            lastSpecialActionIcon.color = new Color(0f, 0f, 0f, 0f);
+        }
+
         if (selectedSpecialActionIcon != null && SpecialActionManager.Instance.SelectedSpecialAction != null)
         {
             selectedSpecialActionIcon.texture = SpecialActionManager.Instance.SelectedSpecialAction.Icon;
@@ -62,6 +75,17 @@ public class IdlePanel : Panel<NoData>
         {
             selectedSpecialActionIcon.texture = null;
             selectedSpecialActionIcon.color = new Color(0f, 0f, 0f, 0f);
+        }
+
+        if (NextSpecialActionIcon != null && SpecialActionManager.Instance.NextSpecialAction != null)
+        {
+            NextSpecialActionIcon.texture = SpecialActionManager.Instance.NextSpecialAction.Icon;
+            NextSpecialActionIcon.color = new Color(0f, 0f, 1f, 1f);
+        }
+        else
+        {
+            NextSpecialActionIcon.texture = null;
+            NextSpecialActionIcon.color = new Color(0f, 0f, 0f, 0f);
         }
     }
 
