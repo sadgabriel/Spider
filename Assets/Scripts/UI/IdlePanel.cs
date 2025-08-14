@@ -9,6 +9,7 @@ public class IdlePanel : Panel<NoData>
     [SerializeField] private RawImage lastSpecialActionIcon;
     [SerializeField] private RawImage selectedSpecialActionIcon;
     [SerializeField] private RawImage NextSpecialActionIcon;
+    [SerializeField] private TextMeshProUGUI selectedSpecialActionText;
     [SerializeField] private Image HpBar;
     [SerializeField] private Image StaminaBar;
 
@@ -70,11 +71,13 @@ public class IdlePanel : Panel<NoData>
         {
             selectedSpecialActionIcon.texture = SpecialActionManager.Instance.SelectedSpecialAction.Icon;
             selectedSpecialActionIcon.color = new Color(0f, 0f, 1f, 1f);
+            selectedSpecialActionText.text = SpecialActionManager.Instance.SelectedSpecialAction.Name;
         }
         else
         {
             selectedSpecialActionIcon.texture = null;
             selectedSpecialActionIcon.color = new Color(0f, 0f, 0f, 0f);
+            selectedSpecialActionText.text = string.Empty;
         }
 
         if (NextSpecialActionIcon != null && SpecialActionManager.Instance.NextSpecialAction != null)

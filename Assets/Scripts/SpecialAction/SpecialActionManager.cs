@@ -34,6 +34,9 @@ class SpecialActionManager : MonoBehaviour
 
         Sprint.Instance.Icon = SprintIcon;
         Demolition.Instance.Icon = DemolitionIcon;
+
+        Sprint.Instance.Name = "Sprint";
+        Demolition.Instance.Name = "Demolition";
     }
 
     public void AddSpecialAction(SpecialAction action)

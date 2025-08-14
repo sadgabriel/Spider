@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public abstract class SpecialAction
 {
     public Texture2D Icon { get; set; }
+    public string Name { get; set; }
     public bool IsActive { get; private set; } = false;
     public void Activate()
     {
