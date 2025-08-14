@@ -24,9 +24,13 @@ public class FacilitySelectionPanel : Panel<List<FacilityData>>
     private FacilityData middleChoiceData;
     private FacilityData rightChoiceData;
 
+    private List<FacilityData> lastData;
+
     public override void Show(List<FacilityData> data = null)
     {
-        if (data == null) data = new List<FacilityData>();
+        if (data == null) data = lastData;
+        
+        lastData = data;
 
         while (data.Count < NumChoices)
         {
