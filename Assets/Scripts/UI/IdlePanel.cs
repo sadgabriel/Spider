@@ -8,8 +8,9 @@ public class IdlePanel : Panel<NoData>
     [SerializeField] private TextMeshProUGUI staminaText;
     [SerializeField] private RawImage lastSpecialActionIcon;
     [SerializeField] private RawImage selectedSpecialActionIcon;
-    [SerializeField] private RawImage NextSpecialActionIcon;
+    [SerializeField] private RawImage nextSpecialActionIcon;
     [SerializeField] private TextMeshProUGUI selectedSpecialActionText;
+    [SerializeField] private RawImage selectedSpecialActionFrame;
     [SerializeField] private Image HpBar;
     [SerializeField] private Image StaminaBar;
 
@@ -23,6 +24,8 @@ public class IdlePanel : Panel<NoData>
             BarMaxWidth = HpBar.rectTransform.sizeDelta.x;
             BarLeftEdge = HpBar.rectTransform.anchoredPosition.x - (BarMaxWidth * 0.5f);
         }
+
+        GameStateManager.Instance.OnGameStateChange += HandleGameStateChange;
     }
 
     private void Update()
@@ -80,20 +83,32 @@ public class IdlePanel : Panel<NoData>
             selectedSpecialActionText.text = string.Empty;
         }
 
-        if (NextSpecialActionIcon != null && SpecialActionManager.Instance.NextSpecialAction != null)
+        if (nextSpecialActionIcon != null && SpecialActionManager.Instance.NextSpecialAction != null)
         {
-            NextSpecialActionIcon.texture = SpecialActionManager.Instance.NextSpecialAction.Icon;
-            NextSpecialActionIcon.color = new Color(0f, 0f, 1f, 1f);
+            nextSpecialActionIcon.texture = SpecialActionManager.Instance.NextSpecialAction.Icon;
+            nextSpecialActionIcon.color = new Color(0f, 0f, 1f, 1f);
         }
         else
         {
-            NextSpecialActionIcon.texture = null;
-            NextSpecialActionIcon.color = new Color(0f, 0f, 0f, 0f);
+            nextSpecialActionIcon.texture = null;
+            nextSpecialActionIcon.color = new Color(0f, 0f, 0f, 0f);
         }
     }
 
     public override void Show(NoData data = default)
     {
         gameObject.SetActive(true);
-    }   
+    }
+
+    public void HandleGameStateChange(GameState newState)
+    {
+        if (newState == GameState.SpecialAction)
+        {
+            selectedSpecialActionFrame.GetComponent<Animator>().SetTrigger("TurnOnBlink");
+        }
+        else 
+        {
+            selectedSpecialActionFrame.GetComponent<Animator>().SetTrigger("TurnOffBlink");
+        }
+    }
 }

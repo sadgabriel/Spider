@@ -9816,8 +9816,9 @@ MonoBehaviour:
   staminaText: {fileID: 1427727263}
   lastSpecialActionIcon: {fileID: 1375150396}
   selectedSpecialActionIcon: {fileID: 498139480}
-  NextSpecialActionIcon: {fileID: 2068299971}
+  nextSpecialActionIcon: {fileID: 2068299971}
   selectedSpecialActionText: {fileID: 1447540199}
+  selectedSpecialActionFrame: {fileID: 1882463520}
   HpBar: {fileID: 1000685955}
   StaminaBar: {fileID: 209580588}
 --- !u!222 &1605289064
@@ -11166,6 +11167,7 @@ GameObject:
   - component: {fileID: 1882463519}
   - component: {fileID: 1882463521}
   - component: {fileID: 1882463520}
+  - component: {fileID: 1882463522}
   m_Layer: 5
   m_Name: SelectedSpecialActionIconFrame
   m_TagString: Untagged
@@ -11227,6 +11229,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1882463518}
   m_CullTransparentMesh: 1
+--- !u!95 &1882463522
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1882463518}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b304090c6f3c34944a7cf2bfff306307, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1894959388
 GameObject:
   m_ObjectHideFlags: 0
