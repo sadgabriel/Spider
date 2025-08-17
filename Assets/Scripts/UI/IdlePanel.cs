@@ -6,6 +6,7 @@ public class IdlePanel : Panel<NoData>
 {
     [SerializeField] private TextMeshProUGUI hpText;
     [SerializeField] private TextMeshProUGUI staminaText;
+    [SerializeField] private TextMeshProUGUI expText;
     [SerializeField] private RawImage lastSpecialActionIcon;
     [SerializeField] private RawImage selectedSpecialActionIcon;
     [SerializeField] private RawImage nextSpecialActionIcon;
@@ -13,6 +14,7 @@ public class IdlePanel : Panel<NoData>
     [SerializeField] private RawImage selectedSpecialActionFrame;
     [SerializeField] private Image HpBar;
     [SerializeField] private Image StaminaBar;
+    [SerializeField] private Image ExpBar;
 
     private float BarMaxWidth;
     private float BarLeftEdge;
@@ -35,7 +37,7 @@ public class IdlePanel : Panel<NoData>
 
         if (hpText != null)
         {
-            hpText.text = $"HP: {player.Hp}/{player.MaxHp}";
+            hpText.text = $"HP {player.Hp}/{player.MaxHp}";
         }
 
         if (HpBar != null)
@@ -48,7 +50,7 @@ public class IdlePanel : Panel<NoData>
 
         if (staminaText != null)
         {
-            staminaText.text = $"Stamina: {player.Stamina}/{player.MaxStamina}";
+            staminaText.text = $"Stamina {player.Stamina}/{player.MaxStamina}";
         }
 
         if (StaminaBar != null)
@@ -57,6 +59,19 @@ public class IdlePanel : Panel<NoData>
             StaminaBar.rectTransform.sizeDelta = new Vector2(BarMaxWidth * staminaPercentage, StaminaBar.rectTransform.sizeDelta.y);
 
             StaminaBar.rectTransform.anchoredPosition = new Vector2(BarLeftEdge + 0.5f * BarMaxWidth * staminaPercentage, StaminaBar.rectTransform.anchoredPosition.y);
+        }
+
+        if (expText != null)
+        {
+            expText.text = $"Exp {player.Exp}/{player.MaxExp}";
+        }
+
+        if (ExpBar != null)
+        {
+            float expPercentage = (float)player.Exp / player.MaxExp;
+            ExpBar.rectTransform.sizeDelta = new Vector2(BarMaxWidth * expPercentage, ExpBar.rectTransform.sizeDelta.y);
+
+            ExpBar.rectTransform.anchoredPosition = new Vector2(BarLeftEdge + 0.5f * BarMaxWidth * expPercentage, ExpBar.rectTransform.anchoredPosition.y);
         }
 
         if (lastSpecialActionIcon != null && SpecialActionManager.Instance.LastSpecialAction != null)

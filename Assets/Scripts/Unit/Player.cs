@@ -13,8 +13,6 @@ public class Player : Unit
     [SerializeField] private int stamina = 0;
     [SerializeField] private int maxStamina = 100;
     [SerializeField] private int staminaRegen = 5;
-
-    private int exp = 0;
     private int level = 1;
 
     public event System.Action<int> OnLevelUp;
@@ -93,6 +91,8 @@ public class Player : Unit
         set => staminaRegen = value;
     }
 
+    public int Exp { get; private set; } = 0;
+    public int MaxExp => level * 100;
 
     protected override void Awake()
     {
@@ -149,10 +149,10 @@ public class Player : Unit
 
     public void GainExperience(int amount)
     {
-        exp += amount;
-        while (exp >= level * 100)
+        Exp += amount;
+        while (Exp >= MaxExp)
         {
-            exp -= level * 100;
+            Exp -= MaxExp;
             level++;
             OnLevelUp?.Invoke(level);
         }
