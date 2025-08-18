@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using Michsky.MUIP;
 
 public class Player : Unit
 {
@@ -224,12 +225,12 @@ public class Player : Unit
             }
             else
             {
-                Debug.Log("Not enough stamina.");
+                UiManager.Instance.ShowNotification("Not enough stamina", $"You need at least {staminaConsume} stamina to sprint to this pillar.");
             }
         }
         else
         {
-            Debug.Log("Target pillar is too far.");
+            UiManager.Instance.ShowNotification("Invalid Move", "You cannot sprint to this pillar. Ensure it is within range and not occupied by an enemy unit.");
         }
         return false;
     }

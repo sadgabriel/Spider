@@ -21,7 +21,7 @@ public class Demolition : SpecialAction
             {
                 if (StaminaConsume > Player.Instance.Stamina)
                 {
-                    Debug.Log("Not enough stamina.");
+                    UiManager.Instance.ShowNotification("Not enough stamina", $"You need at least {StaminaConsume} stamina to demolish this bridge.");
                     FinishSpecialActionWithoutTurnEnd();
                     return;
                 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Michsky.MUIP;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,6 +28,7 @@ public class PanelEntry
 public class UiManager : MonoBehaviour
 {
     [SerializeField] private List<PanelEntry> panelEntries;
+    [SerializeField] private GameObject notification;
 
     public static UiManager Instance { get; private set; }
 
@@ -49,6 +51,15 @@ public class UiManager : MonoBehaviour
     public void Initialize()
     {
         SetHandlers();
+    }
+
+    public void ShowNotification(string title, string description)
+    {
+        NotificationManager notificationManager = notification.GetComponent<NotificationManager>();
+        notificationManager.title = title;
+        notificationManager.description = description;
+        notificationManager.UpdateUI();
+        notificationManager.OpenNotification();
     }
 
     private void SetHandlers()
