@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6a4249e9794a6be49864342fd6d29b3a, type: 2}
+  - {fileID: 2100000, guid: 4a1d374ad631d064bb6888f42141f74a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -155,7 +155,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   iconSurface: {fileID: 2705439970721032637}
-  ringPrefab: {fileID: 482007586333451469, guid: 698c258c84e9db8478c96eedcaa940b4, type: 3}
+  ringPrefab: {fileID: 482007586333451469, guid: 3e01565ee7368ea4bac89340ed98f8bc, type: 3}
+  ringColor: {r: 0, g: 0, b: 1, a: 0}
   facilityData: {fileID: 11400000, guid: e77bb1cf1d845bb4186e907ac2b81fca, type: 2}
   firstRingOffset: -0.5
   ringGap: 0.3

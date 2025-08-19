@@ -8,6 +8,7 @@ public abstract class Facility : MonoBehaviour
 {
     [SerializeField] private GameObject iconSurface;
     [SerializeField] private GameObject ringPrefab;
+    [SerializeField] private Color ringColor;
     [SerializeField] private FacilityData facilityData;
     [SerializeField] private float firstRingOffset = -0.5f;
     [SerializeField] private float ringGap = 0.3f;
@@ -83,6 +84,38 @@ public abstract class Facility : MonoBehaviour
     {
         ApplyUpgradeLevel(0);
         Destroy(gameObject);
+    }
+
+    protected void TurnOnBlink()
+    {
+        foreach (var ring in rings)
+        {
+            ring.GetComponent<Ring>().TurnOnBlink();
+        }
+    }
+
+    protected void TurnOffBlink()
+    {
+        foreach (var ring in rings)
+        {
+            ring.GetComponent<Ring>().TurnOffBlink();
+        }
+    }
+
+    protected void LightOn()
+    {
+        foreach (var ring in rings)
+        {
+            ring.GetComponent<Ring>().LightOn();
+        }
+    }
+
+    protected void LightOff()
+    {
+        foreach (var ring in rings)
+        {
+            ring.GetComponent<Ring>().LightOff();
+        }
     }
 
     private void MoveToPillar(Pillar pillar)
@@ -170,6 +203,8 @@ public abstract class Facility : MonoBehaviour
         Vector3 ringPosition = firstRingPosition - rings.Count * ringGap * CurrentPillar.transform.up;
 
         GameObject ring = Instantiate(ringPrefab, ringPosition, CurrentPillar.transform.rotation, transform);
+        ring.GetComponent<Ring>().SetBaseColor(ringColor);
+
         float ringDiameter = CurrentPillar.Diameter + 0.01f;
 
         float localScaleMultiplier = ringDiameter / ring.transform.lossyScale.x;
