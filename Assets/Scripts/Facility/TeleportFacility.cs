@@ -21,6 +21,7 @@ public class TeleportFacility : Facility
         {
             coolDown = maxCoolDown;
         }
+        LightOff();
     }
 
     public void ResetCoolDown()
@@ -81,29 +82,42 @@ public class TeleportFacility : Facility
     private static void HandleMouseButtonDown(int button, Vector3 position, GameObject clickedGO)
     {
         Node clickedNode = Utils.GetNodeFromGameObject(clickedGO);
-        if (clickedNode != null && clickedNode is Pillar clickedPillar && clickedPillar.BuiltFacility is TeleportFacility clickedTeleportFacility && clickedTeleportFacility.IsAvailable)
+        if (clickedNode != null && clickedNode is Pillar clickedPillar)
         {
             var gameStateManager = GameStateManager.Instance;
             if (!gameStateManager.IsPlayerTurn || !gameStateManager.IsIdleUiState) return;
 
-            if (gameStateManager.IsIdleGameState && button == 1 && Map.Instance.CalcPathPillarDistance(clickedPillar, Player.Instance.CurrentNode) <= 1)
+            if (clickedPillar.BuiltFacility is TeleportFacility clickedTeleportFacility && clickedTeleportFacility.IsAvailable)
             {
-                gameStateManager.SetGameState(GameState.Teleport);
-                selectedTeleportFacility = clickedTeleportFacility;
-            }
-            else if (gameStateManager.CurrentGameState == GameState.Teleport && button == 0)
-            {
-                if (clickedTeleportFacility == selectedTeleportFacility || clickedPillar.IsOccupied || clickedTeleportFacility.ClampedUpgradeLevel <= 0)
+                if (gameStateManager.IsIdleGameState && button == 1 && Map.Instance.CalcPathPillarDistance(clickedPillar, Player.Instance.CurrentNode) <= 1)
                 {
-                    gameStateManager.ResetGameState();
-                    selectedTeleportFacility = null;
+                    gameStateManager.SetGameState(GameState.Teleport);
+                    selectedTeleportFacility = clickedTeleportFacility;
+                    selectedTeleportFacility.TurnOnBlink();
                     return;
                 }
-                Player.Instance.PutOn(clickedPillar);
-                selectedTeleportFacility.StartCoolDown();
-                gameStateManager.ResetGameState();
+                else if (gameStateManager.CurrentGameState == GameState.Teleport && button == 0)
+                {
+                    if (clickedTeleportFacility != selectedTeleportFacility && !clickedPillar.IsOccupied && clickedTeleportFacility.ClampedUpgradeLevel > 0)
+                    {
+                        Player.Instance.PutOn(clickedPillar);
+                        selectedTeleportFacility.StartCoolDown();
+                        clickedTeleportFacility.StartCoolDown();
+
+                        gameStateManager.ResetGameState();
+                        selectedTeleportFacility.TurnOffBlink();
+                        selectedTeleportFacility = null;
+                        gameStateManager.EndPlayerTurn();
+                        return;
+                    }
+                }
+            }
+
+            gameStateManager.ResetGameState();
+            if (selectedTeleportFacility != null)
+            {
+                selectedTeleportFacility.TurnOffBlink();
                 selectedTeleportFacility = null;
-                gameStateManager.EndPlayerTurn();
             }
         }
     }
@@ -115,6 +129,10 @@ public class TeleportFacility : Facility
             if (coolDown > 0)
             {
                 coolDown--;
+                if (coolDown == 0)
+                {
+                    LightOn();
+                }
             }
         }
     }

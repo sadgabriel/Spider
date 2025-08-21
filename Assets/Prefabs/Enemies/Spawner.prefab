@@ -1249,9 +1249,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   verticalOffset: 0
+  WalkSound: {fileID: 0}
   lifeTime: 15
   attackDamage: 0
   alertedEffect: {fileID: 53017628043570550}
+  expOnDeath: 0
   spawnInterval: 5
   enemyCount: 3
   expGain: 100
