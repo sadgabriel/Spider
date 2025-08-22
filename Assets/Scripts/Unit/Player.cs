@@ -115,7 +115,8 @@ public class Player : Unit
 
     public override void Die()
     {
-        Debug.Log("Player has died.");
+        GameStateManager.Instance.SetGameState(GameState.GameOver);
+        GameStateManager.Instance.SetUiState(UiState.GameOver, null);
     }
 
     public void TakeDamage(int damage)

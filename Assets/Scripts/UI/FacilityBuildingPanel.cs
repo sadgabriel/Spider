@@ -47,7 +47,7 @@ public class FacilityBuildingPanel : Panel<FacilityData>
         Pillar pillar = clickedGO.GetComponent<Pillar>();
         if (pillar == null)
         {
-            Debug.LogWarning($"Clicked object tagged as Pillar but has no Pillar component.");
+            Debug.LogError($"Clicked object tagged as Pillar but has no Pillar component.");
             return;
         }
 

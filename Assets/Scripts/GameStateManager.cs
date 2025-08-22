@@ -21,6 +21,8 @@ public enum UiState
     Idle,
     FacilitySelection,
     FacilityBuilding,
+    GameCleared,
+    GameOver,
 }
 
 public class GameStateManager : MonoBehaviour

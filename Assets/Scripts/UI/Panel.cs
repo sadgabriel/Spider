@@ -23,7 +23,7 @@ public abstract class Panel<T> : MonoBehaviour, IPanel
         }
         else
         {
-            Debug.LogWarning($"[{name} / Panel<{typeof(T).Name}>] Invalid data type: received {data.GetType().Name}, expected {typeof(T).Name}.");
+            Debug.LogError($"[{name} / Panel<{typeof(T).Name}>] Invalid data type: received {data.GetType().Name}, expected {typeof(T).Name}.");
         }
     }
 
