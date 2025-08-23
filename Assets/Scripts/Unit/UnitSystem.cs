@@ -95,8 +95,8 @@ public class UnitSystem : MonoBehaviour
         {
             if (WaveIndex >= EnemyWaveManager.Instance.MaxWaves)
             {
-                Debug.Log("Game Completed! No more waves.");
                 GameStateManager.Instance.SetGameState(GameState.GameCleared);
+                GameStateManager.Instance.SetUiState(UiState.GameCleared, null);
                 yield break;
             }
 
