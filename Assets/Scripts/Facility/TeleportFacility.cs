@@ -94,6 +94,7 @@ public class TeleportFacility : Facility
                     gameStateManager.SetGameState(GameState.Teleport);
                     selectedTeleportFacility = clickedTeleportFacility;
                     selectedTeleportFacility.TurnOnBlink();
+                    UiManager.Instance.ShowNotification("Teleport Mode", "Right click on another available teleport facility to teleport there.");
                     return;
                 }
                 else if (gameStateManager.CurrentGameState == GameState.Teleport && button == 0)

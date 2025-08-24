@@ -195,6 +195,11 @@ public abstract class Map : MonoBehaviour
     {
         if (bridge == null) return;
 
+        if (bridge.IsOccupied && bridge.OccupyingUnit is Enemy enemy)
+        {
+            Player.Instance.GainExperience(enemy.ExpOnDeath);
+        }
+
         TemporarilyRemoveNode(bridge);
     }
 

@@ -51,13 +51,22 @@ public class FacilityBuildingPanel : Panel<FacilityData>
             return;
         }
 
-        if (pillar.Size == selectedFacilityData.Size)
+        if (pillar.Size != selectedFacilityData.Size)
         {
-            Facility builtFacility = FacilityManager.Instance.BuildFacility(pillar, selectedFacilityData.FacilityType);
-            if (builtFacility != null)
-            {
-                FinishFacilityBuilding();
-            }
+            UiManager.Instance.ShowNotification("Invaild Pillar Size", $"This facility must be built on {selectedFacilityData.Size.ToString().ToLower()} pillar.");
+            return;
+        }
+
+        if (pillar.HasFacility)
+        {
+            UiManager.Instance.ShowNotification("Pillar Occupied", "This pillar already has a facility built on it.");
+            return;
+        }
+        
+        Facility builtFacility = FacilityManager.Instance.BuildFacility(pillar, selectedFacilityData.FacilityType);
+        if (builtFacility != null)
+        {
+            FinishFacilityBuilding();
         }
     }
 

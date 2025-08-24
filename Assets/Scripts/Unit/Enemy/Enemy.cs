@@ -34,6 +34,11 @@ public abstract class Enemy : Unit
 
     protected Player player;
 
+    public int ExpOnDeath
+    {
+        get => expOnDeath;
+    }
+
     protected int LifeTime
     {
         get => lifeTime;
@@ -78,9 +83,9 @@ public abstract class Enemy : Unit
         if (IsDead) return;
 
         IsDead = true;
-        if (expOnDeath > 0)
+        if (ExpOnDeath > 0)
         {
-            Map.Instance.AddExpOn(CurrentNode, expOnDeath);
+            Map.Instance.AddExpOn(CurrentNode, ExpOnDeath);
         }
         Destroy(gameObject);
     }

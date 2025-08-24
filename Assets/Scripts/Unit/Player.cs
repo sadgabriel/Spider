@@ -226,7 +226,7 @@ public class Player : Unit
             }
             else
             {
-                UiManager.Instance.ShowNotification("Not enough stamina", $"You need at least {staminaConsume} stamina to sprint to this pillar.");
+                UiManager.Instance.ShowNotification("Not Enough Stamina", $"You need at least {staminaConsume} stamina to sprint to this pillar.");
             }
         }
         else
