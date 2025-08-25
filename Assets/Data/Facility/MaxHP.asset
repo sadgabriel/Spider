@@ -18,3 +18,24 @@ MonoBehaviour:
   IconTexture: {fileID: 2800000, guid: 4584598b3b8cd474488445e2a4166f53, type: 3}
   Name: Max HP
   Description: Increase Max HP
+  BuildEffectDescription: 'Max Upgrade Level: 7
+
+    Upgrade Effects:
+
+    - Level
+    1: Increase Max HP By 30
+
+    - Level 2: Increase Max HP By 30
+
+    - Level 3:
+    Increase Max HP By 40
+
+    - Level 4: Increase HP Regen By 10
+
+    - Level 5:
+    Increase Max HP By 50
+
+    - Level 6: Increase Max HP By 50
+
+    - Level 7: Increase
+    HP Regen By 10'

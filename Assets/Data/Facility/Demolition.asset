@@ -17,4 +17,27 @@ MonoBehaviour:
   IsUnique: 1
   IconTexture: {fileID: 2800000, guid: d54b4dd822b22fa4f8f07e32a45a433a, type: 3}
   Name: Demolition
-  Description: Unlock Demolition
+  Description: Unlock special action to demolish bridges.
+  BuildEffectDescription: 'Base Stamina Consume: 50
+
+    Max Upgrade Level: 7
+
+    Upgrade
+    Effects:
+
+    - Level 1: Unlock Demolition
+
+    - Level 2: Stamina Consume -10
+
+    -
+    Level 3: Stamina Consume -10
+
+    - Level 4: No More Need Turn End
+
+    - Level
+    5: Stamina Consume -10
+
+    - Level 6: Stamina Consume -10
+
+    - Level 7: Gain
+    HP If Enemy Die'

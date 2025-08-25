@@ -27,7 +27,7 @@ public class FacilityBuildingPanel : Panel<FacilityData>
         selectedFacilityData = data;
         facilityIcon.sprite = Sprite.Create(data.IconTexture, new Rect(0, 0, data.IconTexture.width, data.IconTexture.height), new Vector2(0.5f, 0.5f));
         facilityNameText.text = data.Name;
-        facilityDescriptionText.text = data.Description;
+        facilityDescriptionText.text = data.BuildEffectDescription;
         gameObject.SetActive(true);
     }
 

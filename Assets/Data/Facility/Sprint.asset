@@ -17,4 +17,29 @@ MonoBehaviour:
   IsUnique: 1
   IconTexture: {fileID: 2800000, guid: 6de69620b99a6b54095461fbf7b11ebe, type: 3}
   Name: Sprint
-  Description: Unlock Sprint
+  Description: Unlock special action to sprint.
+  BuildEffectDescription: 'Base Stamina Consume: 50
+
+    Base Reach: 2
+
+    Max Upgrade
+    Level: 7
+
+    Upgrade Effects:
+
+    - Level 1: Unlock Sprint
+
+    - Level 2:
+    Stamina Consume -10
+
+    - Level 3: Stamina Consume -10
+
+    - Level 4: Reach
+    +1
+
+    - Level 5: Stamina Consume -10
+
+    - Level 6: Stamina Consume -10
+
+    -
+    Level 7: Reach +1'

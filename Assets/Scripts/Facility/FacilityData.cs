@@ -9,4 +9,5 @@ public class FacilityData : ScriptableObject
     public Texture2D IconTexture;
     public string Name;
     [TextArea] public string Description;
+    [TextArea] public string BuildEffectDescription;
 }

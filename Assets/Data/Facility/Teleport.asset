@@ -17,4 +17,17 @@ MonoBehaviour:
   IsUnique: 0
   IconTexture: {fileID: 2800000, guid: 6008746820be4f64fb3ae0e945bc7af3, type: 3}
   Name: Teleport
-  Description: Teleport to another teleport facility
+  Description: Can Teleport To Another Teleport Facility
+  BuildEffectDescription: 'Base Cooldown: 20
+
+    Max Upgrade Level: 3
+
+    Upgrade
+    Effects:
+
+    - Level 1: Teleport Enabled
+
+    - Level 2: Cooldown -5
+
+    -
+    Level 3: Cooldown -5'
