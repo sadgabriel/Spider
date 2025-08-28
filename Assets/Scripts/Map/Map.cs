@@ -11,7 +11,8 @@ public abstract class Map : MonoBehaviour
     [SerializeField] protected GameObject SmallPillarPrefab;
     [SerializeField] protected GameObject bridgePrefab;
     [SerializeField] protected GameObject ExpOrbPrefab;
-    [SerializeField] protected float bridgeOffset = -0.5f;
+    [SerializeField] protected float bridgeVerticalOffset = -0.1f;
+    [SerializeField] protected float bridgeHorizontalOffset = 0.48f;
     [SerializeField] protected int regenerationDelay = 10;
 
     public List<Node> Nodes
@@ -254,7 +255,22 @@ public abstract class Map : MonoBehaviour
 
     protected Vector3 CalcBridgeJointPosition(Pillar pillar)
     {
-        return pillar.TopPosition + pillar.transform.up * bridgeOffset;
+        return pillar.TopPosition + pillar.transform.up * bridgeVerticalOffset;
+    }
+
+    protected Vector3 CalcBridgeJointPosition(Pillar pillar, Vector3 directionToOther)
+    {
+        Vector3 up = pillar.transform.up;
+        Vector3 outward = Vector3.ProjectOnPlane(directionToOther.normalized, up).normalized;
+
+        Vector3 offset = up * bridgeVerticalOffset + outward * bridgeHorizontalOffset;
+
+        if (pillar.Size == PillarSize.Large)
+        {
+            offset += outward * bridgeHorizontalOffset * 0.5f;
+        }
+
+        return pillar.TopPosition + offset;
     }
 
     public abstract void GenerateMap();

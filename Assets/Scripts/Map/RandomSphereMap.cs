@@ -55,8 +55,9 @@ class RandomSphereMap : Map
 
         Bridge bridge = Instantiate(bridgePrefab, transform).GetComponent<Bridge>();
 
-        Vector3 from = CalcBridgeJointPosition(pillar1);
-        Vector3 to = CalcBridgeJointPosition(pillar2);
+        Vector3 direction = pillar2.TopPosition - pillar1.TopPosition;
+        Vector3 from = CalcBridgeJointPosition(pillar1, direction);
+        Vector3 to = CalcBridgeJointPosition(pillar2, -direction);
 
         Vector3 upwards = (from + to) / 2 - Origin;
 
