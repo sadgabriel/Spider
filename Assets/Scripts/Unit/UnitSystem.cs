@@ -14,6 +14,8 @@ public class UnitSystem : MonoBehaviour
     private bool isHandlingLevelUp = false;
     private readonly Queue<int> pendingLevelUps = new();
 
+    private Node delayedTargetNode = null;
+
     private void Awake()
     {
         Instance = this;
@@ -50,6 +52,12 @@ public class UnitSystem : MonoBehaviour
         {
             Player.Instance.RegenerateHp();
             Player.Instance.RegenerateStamina();
+
+            if (delayedTargetNode != null)
+            {
+                MovePlayerTo(delayedTargetNode);
+                delayedTargetNode = null;
+            }
         }
     }
 
@@ -130,13 +138,25 @@ public class UnitSystem : MonoBehaviour
             {
                 Node targetNode = Utils.GetNodeFromGameObject(clickedGO);
 
-                if (targetNode != null && GameStateManager.Instance.CurrentGameState == GameState.Idle)
+                MovePlayerTo(targetNode);
+            }
+            else if (GameStateManager.Instance.IsEnemyTurn)
+            {
+                if (delayedTargetNode == null)
                 {
-                    if (Player.Instance.TryMoveTo(targetNode))
-                    {
-                        GameStateManager.Instance.EndPlayerTurn();
-                    }
+                    delayedTargetNode = Utils.GetNodeFromGameObject(clickedGO);
                 }
+            }
+        }
+    }
+
+    private void MovePlayerTo(Node targetNode)
+    {
+        if (targetNode != null && GameStateManager.Instance.CurrentGameState == GameState.Idle)
+        {
+            if (Player.Instance.TryMoveTo(targetNode))
+            {
+                GameStateManager.Instance.EndPlayerTurn();
             }
         }
     }
