@@ -2882,7 +2882,7 @@ MonoBehaviour:
   verticalOffset: 0
   WalkSound: {fileID: 0}
   lifeTime: 60
-  attackDamage: 1
+  attackDamage: 100
   alertedEffect: {fileID: 130364739871453116}
   expOnDeath: 0
   arrowPrefab: {fileID: 7832161169808493996, guid: 6e2e610044c5f5d4ba724aabff60a0bb, type: 3}

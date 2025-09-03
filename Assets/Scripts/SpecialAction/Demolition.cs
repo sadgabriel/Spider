@@ -6,6 +6,7 @@ public class Demolition : SpecialAction
     private Demolition() { }
 
     public int StaminaConsume { get; set; } = 50;
+    public int BonusExp { get; set; } = 10;
     public int HpGain { get; set; } = 0;
     public bool NeedTurnEnd { get; set; } = true;
 
@@ -28,8 +29,9 @@ public class Demolition : SpecialAction
 
                 Player.Instance.UseStamina(StaminaConsume);
 
-                if (bridge.IsOccupied && bridge.OccupyingUnit is Enemy)
+                if (bridge.IsOccupied && bridge.OccupyingUnit is Enemy enemy)
                 {
+                    Player.Instance.GainExperience(enemy.ExpOnDeath + BonusExp);
                     Player.Instance.RegenerateHp(HpGain);
                 }
 

@@ -55,6 +55,12 @@ public class UnitSystem : MonoBehaviour
 
             if (delayedTargetNode != null)
             {
+                if (delayedTargetNode == Player.Instance.CurrentNode)
+                {
+                    delayedTargetNode = null;
+                    return;
+                }
+                
                 MovePlayerTo(delayedTargetNode);
                 delayedTargetNode = null;
             }

@@ -1700,7 +1700,7 @@ MonoBehaviour:
   verticalOffset: 0
   WalkSound: {fileID: 8300000, guid: bc0d98c4067fe0140b7d0ca45cb7790f, type: 3}
   lifeTime: 20
-  attackDamage: 1
+  attackDamage: 30
   alertedEffect: {fileID: 2692458659645228328}
   expOnDeath: 10
   recognitionDistance: 4

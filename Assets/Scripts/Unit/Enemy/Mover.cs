@@ -7,6 +7,11 @@ abstract class Mover : Enemy
 {
     protected Node currentTargetPillar;
 
+    public void SetTargetPillar(Node pillar)
+    {
+        currentTargetPillar = pillar;
+    }
+
     protected Node FindRandomAdjacentPillar()
     {
         List<Node> adjacentPillars;

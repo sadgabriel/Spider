@@ -157,12 +157,18 @@ public class UnitManager : MonoBehaviour
         }
     }
 
-    public void SpawnEnemyWithoutMotion(Node node, EnemyType type)
+    public void SpawnEnemyWithoutMotion(Node node, EnemyType type, Node spawnerNode = null)
     {
         if (node == null || node.IsOccupied) return;
         Enemy enemy = Instantiate(enemyPrefabs[type], Map.Instance.transform);
         enemy.Initialize(node, Player);
         Enemies.Add(enemy);
+
+        if (spawnerNode != null && enemy is Mover mover)
+        {
+            Node targetNode = node.Neighbors.FirstOrDefault(n => n != spawnerNode);
+            mover.SetTargetPillar(targetNode);
+        }
     }
 
     public IEnumerator DoSpawnEnemyWithMotion(Node node, EnemyType type, Node spawnerNode, float duration = 0.2f)
@@ -171,13 +177,19 @@ public class UnitManager : MonoBehaviour
 
         if (spawnerNode == null)
         {
-            SpawnEnemyWithoutMotion(node, type);
+            SpawnEnemyWithoutMotion(node, type, spawnerNode);
             yield break;
         }
 
         Enemy enemy = Instantiate(enemyPrefabs[type], Map.Instance.transform);
         enemy.Initialize(node, Player);
         Enemies.Add(enemy);
+
+        if (enemy is Mover mover)
+        {
+            Node targetNode = node.Neighbors.FirstOrDefault(n => n != spawnerNode);
+            mover.SetTargetPillar(targetNode);
+        }
 
         float elapsed = 0f;
         while (elapsed < duration)
