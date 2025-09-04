@@ -121,9 +121,10 @@ public class IdlePanel : Panel<NoData>
         {
             selectedSpecialActionFrame.GetComponent<Animator>().SetTrigger("TurnOnBlink");
         }
-        else 
+        else
         {
             selectedSpecialActionFrame.GetComponent<Animator>().SetTrigger("TurnOffBlink");
+            selectedSpecialActionFrame.color = Color.white;
         }
     }
 }

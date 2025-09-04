@@ -18,7 +18,7 @@ public class MaxHpFacility : Facility
 
     private static readonly Dictionary<int, int> HpRegenBonusByUpgradeLevel = new()
     {
-        { 4, 10 }, { 7, 10 }
+        { 4, 5 }, { 7, 5 }
     };
 
     protected override void HandleUpgradeLevelIncrease(int level)
