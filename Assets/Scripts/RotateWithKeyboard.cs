@@ -25,13 +25,27 @@ public class RotateWithKeyboard : MonoBehaviour
         {
             direction += Vector3.up;
         }
-        
+
         Rotate(direction.normalized);
+
+        if (Input.GetKey(KeyCode.R))
+        {
+            ResetRotation();
+        }
     }
 
     private void Rotate(Vector3 direction)
     {
         float rotationAmount = rotationSpeed * Time.deltaTime;
         transform.Rotate(direction, rotationAmount, Space.World);
+    }
+
+    private void ResetRotation()
+    {
+        Vector3 originToPlayer = (Player.Instance.transform.position - transform.position).normalized;
+        Vector3 originToCamera = (Camera.main.transform.position - transform.position).normalized;
+
+        Quaternion targetRotation = Quaternion.FromToRotation(originToPlayer, originToCamera) * transform.rotation;
+        transform.rotation = targetRotation;
     }
 }
