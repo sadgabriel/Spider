@@ -51,9 +51,16 @@ public abstract class SpecialAction
     private void HandleKeyDown(HashSet<KeyCode> pressedKeys)
     {
         var gameStateManager = GameStateManager.Instance;
-        if (gameStateManager.IsPlayerTurn && gameStateManager.IsIdleGameState && gameStateManager.IsIdleUiState && pressedKeys.Contains(KeyCode.Space))
+        if (gameStateManager.IsPlayerTurn && pressedKeys.Contains(KeyCode.Space))
         {
-            StartSpecialAction();
+            if (gameStateManager.IsIdleGameState && gameStateManager.IsIdleUiState)
+            {
+                StartSpecialAction();
+            }
+            else if (gameStateManager.CurrentGameState == GameState.SpecialAction)
+            {
+                FinishSpecialActionWithoutTurnEnd();
+            }
         }
     }
 
