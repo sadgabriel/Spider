@@ -26,7 +26,16 @@ public class RotateWithKeyboard : MonoBehaviour
             direction += Vector3.up;
         }
 
-        Rotate(direction.normalized);
+        direction = direction.normalized;
+
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            Rotate(direction, true);
+        }
+        else
+        {
+            Rotate(direction, false);
+        }
 
         if (Input.GetKey(KeyCode.R))
         {
@@ -34,9 +43,15 @@ public class RotateWithKeyboard : MonoBehaviour
         }
     }
 
-    private void Rotate(Vector3 direction)
+    private void Rotate(Vector3 direction, bool boost = false)
     {
         float rotationAmount = rotationSpeed * Time.deltaTime;
+
+        if (boost)
+        {
+            rotationAmount *= 2f;
+        }
+        
         transform.Rotate(direction, rotationAmount, Space.World);
     }
 
