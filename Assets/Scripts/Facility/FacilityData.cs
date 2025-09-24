@@ -8,6 +8,7 @@ public class FacilityData : ScriptableObject
     public bool IsUnique;
     public Texture2D IconTexture;
     public string Name;
+    public int Count;
     [TextArea] public string Description;
     [TextArea] public string BuildEffectDescription;
 }

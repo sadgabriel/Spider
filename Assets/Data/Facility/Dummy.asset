@@ -17,4 +17,6 @@ MonoBehaviour:
   IsUnique: 0
   IconTexture: {fileID: 2800000, guid: 684c4b4002aa7e243853bd3d8a64077d, type: 3}
   Name: 
+  Count: 1
   Description: 
+  BuildEffectDescription: 

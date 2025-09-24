@@ -10,6 +10,9 @@ public class FacilityBuildingPanel : Panel<FacilityData>
     [SerializeField] private TMPro.TextMeshProUGUI facilityNameText;
     [SerializeField] private TMPro.TextMeshProUGUI facilityDescriptionText;
 
+    private int leftCount;
+    private List<Facility> builtFacilities = new List<Facility>();
+
     private FacilityData selectedFacilityData;
 
     private void OnEnable()
@@ -24,15 +27,22 @@ public class FacilityBuildingPanel : Panel<FacilityData>
 
     public override void Show(FacilityData data)
     {
+        builtFacilities.Clear();
         selectedFacilityData = data;
         facilityIcon.sprite = Sprite.Create(data.IconTexture, new Rect(0, 0, data.IconTexture.width, data.IconTexture.height), new Vector2(0.5f, 0.5f));
         facilityNameText.text = data.Name;
         facilityDescriptionText.text = data.BuildEffectDescription;
+        leftCount = data.Count;
         gameObject.SetActive(true);
     }
 
     public void ReturnToFacilitySelection()
     {
+        foreach (Facility facility in builtFacilities)
+        {
+            FacilityManager.Instance.DestroryFacility(facility);
+        }
+        builtFacilities.Clear();
         GameStateManager.Instance.SetUiState(UiState.FacilitySelection, null);
     }
 
@@ -66,12 +76,18 @@ public class FacilityBuildingPanel : Panel<FacilityData>
         Facility builtFacility = FacilityManager.Instance.BuildFacility(pillar, selectedFacilityData.FacilityType);
         if (builtFacility != null)
         {
-            FinishFacilityBuilding();
+            leftCount--;
+            builtFacilities.Add(builtFacility);
+            if (leftCount <= 0)
+            {
+                FinishFacilityBuilding();
+            }
         }
     }
 
     private void FinishFacilityBuilding()
     {
+        builtFacilities.Clear();
         GameStateManager.Instance.ResetUiState();
         UnitSystem.Instance.NotifyFacilityBuilt();
     }

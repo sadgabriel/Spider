@@ -66,6 +66,15 @@ public class FacilityManager : MonoBehaviour
 
         return facility;
     }
+    
+    public void DestroryFacility(Facility facility)
+    {
+        if (facility == null || !Facilities.Contains(facility))
+            return;
+
+        Facilities.Remove(facility);
+        facility.Demolish();
+    }
 
     public List<FacilityData> GetAllAvailableFacilityData()
     {
@@ -73,7 +82,7 @@ public class FacilityManager : MonoBehaviour
         List<FacilityType> existingUniqueFacilityTypes = Facilities.Where(facility => facility.Data.IsUnique)
                                                                   .Select(facility => facility.Data.FacilityType)
                                                                   .ToList();
-        
-        return allFacilityData.Where(facilityData => !existingUniqueFacilityTypes.Contains(facilityData.FacilityType)).ToList(); 
+
+        return allFacilityData.Where(facilityData => !existingUniqueFacilityTypes.Contains(facilityData.FacilityType)).ToList();
     }
 }
