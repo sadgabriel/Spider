@@ -62,6 +62,11 @@ public class UiManager : MonoBehaviour
         notificationManager.OpenNotification();
     }
 
+    public void ShowBossWarning()
+    {
+        ShowNotification("Warning", "A boss has appeared!");
+    }
+
     private void SetHandlers()
     {
         GameStateManager.Instance.OnUiStateChange += HandleUiStateChange;

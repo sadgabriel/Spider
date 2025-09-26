@@ -144,6 +144,7 @@ public class UnitManager : MonoBehaviour
     public void SpawnBoss()
     {
         SpawnEnemyAtRandomSpawnPoint(EnemyType.Boss);
+        UiManager.Instance.ShowBossWarning();
     }
 
     public void SpawnEnemyAtRandomSpawnPoint(EnemyType type)

@@ -93,7 +93,7 @@ public class Player : Unit
     }
 
     public int Exp { get; private set; } = 0;
-    public int MaxExp => 50 + level * 50;
+    public int MaxExp => level * 100;
 
     protected override void Awake()
     {
