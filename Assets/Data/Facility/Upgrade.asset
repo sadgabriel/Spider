@@ -16,7 +16,7 @@ MonoBehaviour:
   Size: 0
   IsUnique: 0
   IconTexture: {fileID: 2800000, guid: b597a3b340244df41998020c7b6c85f5, type: 3}
-  Name: Upgrade
+  Name: Upgrade x2
   Count: 2
   Description: Upgrade Adjacent Facilities
   BuildEffectDescription: 'This facility must be built on small pillar.

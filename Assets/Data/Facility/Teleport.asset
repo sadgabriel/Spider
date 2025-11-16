@@ -16,7 +16,7 @@ MonoBehaviour:
   Size: 1
   IsUnique: 0
   IconTexture: {fileID: 2800000, guid: 6008746820be4f64fb3ae0e945bc7af3, type: 3}
-  Name: Teleport
+  Name: Teleport x2
   Count: 2
   Description: Can Teleport To Another Teleport Facility
   BuildEffectDescription: 'Base Cooldown: 20
