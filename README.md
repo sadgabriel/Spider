@@ -26,7 +26,15 @@ This project was built as a portfolio piece to demonstrate system design, archit
 ---
 
 ## 3. Demo Video
-(Will be added after final capture)
+<p align="center">
+  <img src="screenshots/s1.png" width="45%" />
+  <img src="screenshots/s2.png" width="45%" />
+</p>
+
+<p align="center">
+  <img src="screenshots/s3.png" width="45%" />
+  <img src="screenshots/s4.png" width="45%" />
+</p>
 
 ---
 
