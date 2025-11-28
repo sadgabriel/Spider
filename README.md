@@ -1,8 +1,8 @@
 # Spider
 
 ## 1. Overview
-Spider is a turn-based roguelite escape game inspired by puzzle-like chase mechanics.  
-The player has **no combat abilities** and must escape from pursuing enemies using installed facilities, special actions, and graph-based (tile-node) map movement.
+Spider is a turn-based roguelite escape game inspired by a mini game of Cube Escape.  
+The player has **no combat abilities** and must escape from pursuing enemies using facilities, special actions, and graph-based map movement.
 
 - **Genre:** Turn-based / Roguelite / Puzzle
 - **Development Period:** 2025

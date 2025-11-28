@@ -1,0 +1,35 @@
+@startuml Spider
+
+class GameManager
+abstract class Map
+class GameStateManager
+class InputManager
+class AudioManager
+class FacilityManager
+class SpecialActionManager
+class UiManager
+class UnitSystem
+class UnitManager
+class EnemyWaveManager
+
+GameManager --> Map
+GameManager --> UnitSystem
+GameManager --> SpecialActionManager
+GameManager --> UiManager
+
+FacilityManager --> AudioManager
+
+SpecialActionManager --> InputManager
+
+UiManager --> GameStateManager
+
+UnitSystem --> GameStateManager
+UnitSystem --> InputManager
+UnitSystem --> FacilityManager
+UnitSystem --> UnitManager
+UnitSystem --> EnemyWaveManager
+
+UnitManager --> Map
+UnitManager --> UiManager
+
+@enduml

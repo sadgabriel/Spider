@@ -1,0 +1,81 @@
+@startuml Spider
+
+class FacilityManager {
+    + {static} FacilityManager Instance
+    + List<Facility> Facilities
+    + Facility BuildFacility(Pillar pillar, FacilityType type)
+    + void DestroyFacility(Facility facility)
+    + List<FacilityData> GetAllAvailableFacilityData()
+}
+
+class FacilityEntry {
+    + FacilityType type
+    + GameObject prefab
+    + FacilityData data
+}
+
+class FacilityData {
+    + FacilityType FacilityType
+    + PillarSize Size
+    + bool IsUnique
+    + Texture2D IconTexture
+    + string Name
+    + int Count
+    + string Description
+    + string BuildEffectDescription
+}
+
+abstract class Facility {
+    + FacilityData Data
+    + Pillar CurrentPillar
+    + {abstract} int MaxUpgradeLevel
+    + {abstract} int MinUpgradeLevel
+    + int ClampedUpgradeLevel
+    + void BuildOn(Pillar pillar)
+    + void Demolish()
+}
+
+class MaxHpFacility {
+    + int MaxUpgradeLevel
+    + int MinUpgradeLevel
+}
+
+class SprintFacility {
+    + int MaxUpgradeLevel
+    + int MinUpgradeLevel
+}
+
+class DemolitionFacility {
+    + int MaxUpgradeLevel
+    + int MinUpgradeLevel
+}
+
+class UpgradeFacility {
+    + int MaxUpgradeLevel
+    + int MinUpgradeLevel
+    + void Demolish()
+}
+
+class TeleportFacility {
+    + int MaxUpgradeLevel
+    + int MinUpgradeLevel
+    + bool IsAvailable
+    + void StartCooldown()
+    + void ResetCooldown()
+    + void Demolish()
+}
+
+FacilityManager --> FacilityEntry
+FacilityManager --> FacilityData
+FacilityManager --> Facility
+FacilityManager --> Pillar
+
+MaxHpFacility --|> Facility
+SprintFacility --|> Facility
+DemolitionFacility --|> Facility
+UpgradeFacility --|> Facility
+TeleportFacility --|> Facility
+
+Facility --> Pillar
+
+@enduml

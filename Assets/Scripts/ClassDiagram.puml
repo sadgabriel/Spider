@@ -3,8 +3,10 @@
 ' Enums
 enum GameState {
     Idle
-    FacilityBuilding
     SpecialAction
+    Teleport
+    GameCleared
+    GameOver
 }
 
 enum TurnState {
@@ -16,6 +18,8 @@ enum UiState {
     Idle
     FacilitySelection
     FacilityBuilding
+    GameCleared
+    GameOver
 }
 
 enum FacilityType {
@@ -23,6 +27,8 @@ enum FacilityType {
     MaxHp
     Sprint
     Upgrade
+    Teleport
+    Demolition
 }
 
 enum PillarSize {
@@ -34,6 +40,8 @@ enum EnemyType {
     Pursuer
     Spawner
     Runner
+    Corrorder
+    Boss
 }
 
 enum EnemyState {

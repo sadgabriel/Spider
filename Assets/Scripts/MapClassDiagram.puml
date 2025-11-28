@@ -1,0 +1,77 @@
+@startuml Spider
+
+class Node {
+    + List<Node> Neighbors
+    + List<Node> AllNeighbors
+    + bool IsOccupied
+    + Unit OccupyingUnit
+    + bool HasExpOrb
+    + ExpOrb ExpOrb
+    + Vector3 TopPosition
+    + Vector3 DirectionFromOrigin
+    + void ConnectTo(Node other)
+    + void DisconnectFrom(Node other)
+    + {abstract} void Clear()
+}
+
+class Pillar {
+    + bool HasFacility
+    + Facility BuiltFacility
+    + int FacilityUpgradeLevel
+    + Action<int> OnFacilityUpgradeLevelChange
+    + PillarSize Size
+    + float Height
+    + float Diameter
+    + List<Pillar> NeighborPillars
+    + List<Pillar> AllNeighborPillars
+    + Bridge GetBridgeTo(Pillar other)
+    + void Clear()
+}
+
+class Bridge {
+    + void Initialize(Vector3 from, Vector3 to, Vector3 upwards)
+}
+
+abstract class Map {
+    + {static} Map Instance
+    + List<Node> Nodes
+    + List<Pillar> Pillars
+    + List<Bridge> Bridges
+    + List<Node> SpawnPoints
+    + Vector3 Origin
+    + {abstract} Pillar StartPillar
+    + void Initialize()
+    + void AddExpOn(Node node, int amount)
+    + List<Node> FindPath(Node from, Node to, bool ignoreOccupied)
+    + int CalcTruePillarDistance(Node from, Node to)
+    + int CalcPathPillarDistance(Node from, Node to)
+    + int CalcTrueNodeDistance(Node from, Node to)
+    + int CalcPathNodeDistance(Node from, Node to)
+    + Bridge ConnectPillars(Pillar pillar1, Pillar pillar2)
+    + void DomolishBridge(Bridge bridge)
+    + void CorrodeBridge(Bridge bridge)
+    + void SmashPillar(Pillar pillar)
+    + {abstract} void GenerateMap()
+}
+
+class RandomSphereMap {
+
+    + List<Node> SpawnPoints
+    + Pillar StartPillar
+    + void GenerateMap()
+    + Bridge ConnectPillars(Pillar pillar1, Pillar pillar2)
+}
+
+RandomSphereMap --|> Map
+Pillar --|> Node
+Bridge --|> Node
+
+Map --> Node
+Map --> Pillar
+Map --> Bridge
+
+RandomSphereMap --> Node
+RandomSphereMap --> Pillar
+RandomSphereMap --> Bridge
+
+@enduml

@@ -1,0 +1,66 @@
+@startuml Spider
+
+interface IPanel {
+    + void Show(object data)
+    + void Hide()
+    + bool IsVisible
+}
+
+abstract class Panel {
+    + bool IsVisible
+    + void Show(object data)
+    + {abstract} void Show(object data)
+    + void Hide()
+}
+
+class PanelEntry {
+    + UiState uiState
+    + MonoBehaviour panel
+    + IPanel GetPanel()
+}
+
+class UiManager {
+    + {static} UiManager Instance
+    + void Initialize()
+    + void ShowNotification(string title, string description)
+    + Void ShowBossWarning()
+    + void HideAllPanels()
+}
+
+class FacilitySelectionPanel {
+    + void Show(List<FacilityData> data)
+    + void ChooseLeft()
+    + void ChooseMiddle()
+    + void ChooseRight()
+}
+
+class FacilityBuildingPanel {
+    + void Show(FacilityData data)
+    + void ReturnToFacilitySelection()
+}
+
+class IdlePanel {
+    + void Show(NoData data)
+}
+
+class GameOverPanel {
+    + void Show(Nodata data)
+    + void RestartGame()
+}
+
+class GameClearPanel {
+    + void Show(Nodata data)
+    + void RestartGame()
+}
+
+UiManager --> PanelEntry
+UiManager --> IPanel
+
+Panel --|> IPanel
+FacilitySelectionPanel --|> Panel
+FacilityBuildingPanel --|> Panel
+IdlePanel --|> Panel
+GameOverPanel --|> Panel
+GameClearPanel --|> Panel
+
+@enduml

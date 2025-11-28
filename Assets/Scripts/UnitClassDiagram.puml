@@ -1,0 +1,134 @@
+@startuml Spider
+
+class UnitSystem {
+    + {static} UnitSystem Instance
+    + int waveIndex
+    + void Initialize()
+    + void NotifyFacilityBuilt()
+}
+
+class UnitManager {
+    + {static} UnitManager Instance
+    + Player Player
+    + List<Enemy> Enemies
+    + void InitializePlayer()
+    + IEnumerator DoSpawnEnemyFromBoss()
+    + IEnumerator DoSpawnEnemyFromSpawner(Dictionary<EnemyType, float> enemyProportions)
+    + void SpawnSpawners(int count)
+    + void SpawnBoss()
+    + void SpawnEnemyAtRandomSpawnPoint(EnemyType type)
+    + void SpawnEnemyWithoutMotion(Node node, EnemyType type, Node spawnerNode)
+    + IEnumerator DoSpawnEnemyWithMotion(Node node, EnemyType type, Node spawnerNode, float duration)
+    + void RemoveDestroyedEnemies()
+}
+
+class EnemyWaveManager {
+    + {static} EnemyWaveManager Instance
+    + int MaxWaves
+    + int GetMaxSpawners(int waveIndex)
+    + Dictionary<EnemyType, float> GetEnemyProportions(int waveIndex)
+    + bool IsBossWave(int waveIndex)
+}
+
+abstract class Unit {
+    + Node CurrentNode
+    + bool TryMoveTo(Node targetNode)
+    + virtual bool CanMoveTo(Node targetNode)
+    + virtual void MoveTo(Node targetNode)
+    + IEnumerator DoTryMoveTo(Node targetNode)
+    + void PutOn(Node targetNode)
+    + {abstract} void Die()
+    + Vector3 CalcUnitPosition(Node node)
+    + Quaternion CalcUnitRotation(Node node)
+}
+
+class Player {
+    + {static} Player Instance
+    + event Action<int> OnLevelUp
+    + int Hp
+    + int MaxHp
+    + int HpRegen
+    + int Stamina
+    + int MaxStamina
+    + int StaminaRegen
+    + int Exp
+    + int MaxExp
+    + void Initialize(Node startNode)
+    + void Die()
+    + void TakeDamage(int damage)
+    + void RegenerateHp(int amount)
+    + void RegenerateHp()
+    + void UseStamina(int amount)
+    + void RegenerateStamina(int amount)
+    + void RegenerateStamina()
+    + void GainExperience(int amount)
+    + bool CanMoveTo(Node targetNode)
+    + void MoveTo(Node targetNode)
+    + bool TrySprintTo(Node targetNode, int maxPillarDistance, int baseStaminaConsume)
+}
+
+abstract class Enemy {
+    + bool IsDead
+    + EnemyState State
+    + int ExpOnDeath
+    + {abstract} void Initialize(Node startNode, Player player)
+    + void Die()
+    + IEnumerator DoAct()
+}
+
+abstract class Mover {
+    + void SetTargetPillar(Node pillar)
+}
+
+class Pursuer {
+    + IEnumerator DoAct()
+}
+
+class Runner {
+    + IEnumerator DoAct()
+}
+
+class Corroder {
+    + IEnumerator DoAct()
+}
+
+class Spawner {
+    + int ExpGain
+    + List<Node> SpawnPoints
+    + bool IsReadyToSpawn
+    + IEnumerator DoAct()
+    + void ResetSpawnTimer()
+}
+
+class Boss {
+    + BossPhase CurrentPhase
+    + bool IsReadyToSpawn
+    + List<Node> SpawnPoints
+    + IEnumerator DoAct()
+    + bool CanMoveTo(Node targetNode)
+}
+
+UnitSystem --> UnitManager
+UnitSystem --> EnemyWaveManager
+UnitSystem --> Player
+
+UnitManager --> Player
+UnitManager --> Enemy
+UnitManager --> Map
+
+Enemy --> Player
+Enemy --> Node
+Mover --> Map
+
+Player --|> Unit
+Enemy --|> Unit
+
+Mover --|> Enemy
+Spawner --|> Enemy
+Boss --|> Enemy
+
+Pursuer --|> Mover
+Runner --|> Mover
+Corroder --|> Mover
+
+@enduml

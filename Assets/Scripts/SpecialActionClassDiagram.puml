@@ -1,0 +1,42 @@
+@startuml Spider
+
+class SpecialActionManager {
+    + {static} SpecialActionManager Instance
+    + SpecialAction SelectedSpecialAction
+    + SpecialAction LastSpecialAction
+    + SpecialAction NextSpecialAction
+    + void Initialize()
+    + void AddSpecialAction(SpecialAction action)
+    + void RemoveSpecialAction(SpecialAction action)
+    + void SelectNextAction()
+    + void SelectPreviousAction()
+}
+
+abstract class SpecialAction {
+    + Texture2D Icon
+    + string Name
+    + bool IsActive
+    + void Activate()
+    + void Deactivate()
+}
+
+class Sprint {
+    + {static} Sprint Instance
+    + int Reach
+    + int BaseStaminaConsume
+}
+
+class Demolition {
+    + {static} Sprint Instance
+    + int StaminaConsume
+    + int BonusExp
+    + int HpGain
+    + bool NeedTurnEnd
+}
+
+SpecialActionManager --> SpecialAction
+
+Sprint --|> SpecialAction
+Demolition --|> SpecialAction
+
+@enduml

@@ -59,7 +59,7 @@ public class UnitManager : MonoBehaviour
         }
     }
 
-    public IEnumerator DoSpawnEnemyWithBoss()
+    public IEnumerator DoSpawnEnemyFromBoss()
     {
         Boss boss = Enemies.OfType<Boss>().FirstOrDefault();
         if (boss != null && boss.IsReadyToSpawn)
@@ -83,7 +83,7 @@ public class UnitManager : MonoBehaviour
         }
     }
 
-    public IEnumerator DoSpawnEnemyWithSpawner(Dictionary<EnemyType, float> enemyProportions)
+    public IEnumerator DoSpawnEnemyFromSpawner(Dictionary<EnemyType, float> enemyProportions)
     {
         List<Spawner> spawners = Enemies.Where(enemy => enemy is Spawner)
                                          .Cast<Spawner>()
