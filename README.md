@@ -86,8 +86,7 @@ For detailed explanations, see the Architecture Document.
 ---
 
 ## 7. Documentation
-- **Architecture Document:** *(to be added)*  
-- **Problem Solving Log:** *(to be added)*  
+- **Architecture Document:** [Architecture Document](Architecture.md)
 
 These documents include implementation details, reasoning behind decisions, system diagrams, and debugging records.
 
