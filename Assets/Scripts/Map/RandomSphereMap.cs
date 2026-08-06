@@ -148,7 +148,7 @@ class RandomSphereMap : Map
                 System.Math.Min(possibleBridges[idx].Item1.Neighbors.Count, possibleBridges[idx].Item2.Neighbors.Count))
             .ToArray();
 
-        HashSet<(Pillar, Pillar)> vaild = new HashSet<(Pillar, Pillar)>(possibleBridges);
+        HashSet<(Pillar, Pillar)> valid = new HashSet<(Pillar, Pillar)>(possibleBridges);
 
         foreach (int idx in order)
         {
@@ -157,7 +157,7 @@ class RandomSphereMap : Map
             if (crossCount[idx] == 0) continue;
 
             bool removed = true;
-            vaild.Remove(bridge);
+            valid.Remove(bridge);
 
             if (removed)
             {
@@ -168,7 +168,7 @@ class RandomSphereMap : Map
                 }
             }
         }
-        return vaild.ToList();
+        return valid.ToList();
     }
 
     private static bool SegmentsCross(Pillar a1, Pillar a2, Pillar b1, Pillar b2, Vector3 origin)
