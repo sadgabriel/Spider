@@ -5,7 +5,7 @@ Spider is a turn-based roguelite escape game inspired by a mini game of Cube Esc
 The player has **no combat abilities** and must escape from pursuing enemies using facilities, special actions, and graph-based map movement.
 
 - **Genre:** Turn-based / Roguelite / Puzzle
-- **Development Period:** 2025
+- **Development Period:** 2025.04 ~ 2025.09
 - **Team:** Solo (Design, Programming, Art Integration, UI/UX, Audio)  
 - **Engine:** Unity  
 - **Platform:** WebGL
